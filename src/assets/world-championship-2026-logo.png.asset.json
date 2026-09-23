@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "d24899ab-6e1b-47e1-ae75-116347116c36",
-  "project_id": "d65e534e-7232-4945-a952-5da1a78028ba",
-  "url": "/__l5e/assets-v1/d24899ab-6e1b-47e1-ae75-116347116c36/world-championship-2026-logo.png",
-  "r2_key": "a/v1/d65e534e-7232-4945-a952-5da1a78028ba/d24899ab-6e1b-47e1-ae75-116347116c36/world-championship-2026-logo.png",
-  "original_filename": "world-championship-2026-logo.png",
-  "size": 405036,
   "content_type": "image/png",
-  "created_at": "2026-08-07T13:08:40Z"
+  "created_at": "2026-08-07T13:08:40Z",
+  "original_filename": "world-championship-2026-logo.png",
+  "project_id": "06481cc8-2738-45e9-8eba-f35381b14ff6",
+  "r2_key": "a/v1/06481cc8-2738-45e9-8eba-f35381b14ff6/d24899ab-6e1b-47e1-ae75-116347116c36/world-championship-2026-logo.png",
+  "size": 405036,
+  "url": "/__l5e/assets-v1/d24899ab-6e1b-47e1-ae75-116347116c36/world-championship-2026-logo.png",
+  "version": 1
 }
