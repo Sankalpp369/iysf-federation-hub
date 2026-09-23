@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell, PageHeader, Section, Prose } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
-import { JoinForm } from "../components/join-form";
+import { InquiryForm } from "../components/inquiry-form";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -86,11 +86,10 @@ function ContactPage() {
               Send an inquiry
             </h2>
             <p className="mt-2 text-sm" style={{ color: IYSF.charcoal }}>
-              Federation and general inquiries use the same form — tell us what you need in the
-              message field.
+              Tell us what you need and the IYSF office will route your message to the right team.
             </p>
             <div className="mt-6">
-              <JoinForm />
+              <InquiryForm kind="contact" />
             </div>
           </div>
         </div>

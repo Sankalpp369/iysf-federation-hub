@@ -32,10 +32,6 @@ type RuleDoc = {
   id: string;
   title: string;
   accent: string;
-  version: string;
-  effective: string;
-  updated: string;
-  pdfHref: string;
   blocks: RuleBlock[];
 };
 

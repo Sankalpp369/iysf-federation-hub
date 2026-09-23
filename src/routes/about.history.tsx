@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { FileText, ArrowRight, ArrowDown, MapPin } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { submitNewsletterSignup } from "@/lib/submissions.functions";
 import { Nav, Footer } from "../components/site-chrome";
 import {
   Reveal,
@@ -780,6 +782,9 @@ function JoinMovement() {
 function KeepUpdated() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const subscribe = useServerFn(submitNewsletterSignup);
   return (
     <section style={{ background: "#FAAF40" }}>
       <div className="mx-auto max-w-[1240px] px-5 py-16 md:px-8 md:py-20">
@@ -806,9 +811,18 @@ function KeepUpdated() {
           ) : (
             <form
               className="flex flex-col gap-3 sm:flex-row"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                setDone(true);
+                setSaving(true);
+                setError("");
+                try {
+                  await subscribe({ data: { email, source: "history" } });
+                  setDone(true);
+                } catch {
+                  setError("We couldn't add you right now. Please try again.");
+                } finally {
+                  setSaving(false);
+                }
               }}
             >
               <label htmlFor="history-newsletter" className="sr-only">
@@ -824,12 +838,14 @@ function KeepUpdated() {
                 className="w-full rounded-md border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:ring-2"
                 style={{ color: "#414042" }}
               />
+              {error && <p role="alert" className="text-sm font-semibold text-[#5A3A05] sm:basis-full">{error}</p>}
               <button
                 type="submit"
+                disabled={saving}
                 className="shrink-0 rounded-md px-5 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5"
                 style={{ background: "#414042", color: "#fff" }}
               >
-                Subscribe
+                {saving ? "Subscribing…" : "Subscribe"}
               </button>
             </form>
           )}

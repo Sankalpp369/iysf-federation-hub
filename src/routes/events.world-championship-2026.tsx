@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { PageShell, Section, Prose } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
+import { useServerFn } from "@tanstack/react-start";
+import { submitNewsletterSignup } from "@/lib/submissions.functions";
 
 export const Route = createFileRoute("/events/world-championship-2026")({
   head: () => ({
