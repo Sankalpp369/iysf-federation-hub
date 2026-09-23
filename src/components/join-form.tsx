@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { submitFederationApplication } from "@/lib/submissions.functions";
 
 const REGIONS = ["Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
 const MEMBERSHIP = ["Full member", "Provisional member", "Observer"] as const;
@@ -68,6 +69,7 @@ function Field({
 }
 
 export function JoinForm() {
+  const saveApplication = useServerFn(submitFederationApplication);
   const [values, setValues] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
@@ -96,21 +98,21 @@ export function JoinForm() {
 
     setStatus("saving");
     const d = parsed.data;
-    const { error } = await supabase.from("federation_applications").insert({
-      organisation_name: d.organisation_name,
-      country: d.country,
-      region: d.region,
-      contact_name: d.contact_name,
-      contact_role: d.contact_role || null,
-      email: d.email,
-      phone: d.phone || null,
-      website: d.website || null,
-      athletes_estimate: d.athletes_estimate || null,
-      membership_type: d.membership_type,
-      message: d.message || null,
-    });
-
-    if (error) {
+    try {
+      await saveApplication({ data: {
+        organisation_name: d.organisation_name,
+        country: d.country,
+        region: d.region,
+        contact_name: d.contact_name,
+        contact_role: d.contact_role || null,
+        email: d.email,
+        phone: d.phone || null,
+        website: d.website || null,
+        athletes_estimate: d.athletes_estimate || null,
+        membership_type: d.membership_type,
+        message: d.message || null,
+      } });
+    } catch {
       setStatus("error");
       setServerError("We couldn't submit your application. Please try again in a moment.");
       return;
