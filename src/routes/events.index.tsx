@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { Search, MapPin, X } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
+import { useServerFn } from "@tanstack/react-start";
+import { submitEventRegistration } from "@/lib/submissions.functions";
 import {
   upcomingEvents,
   pastEvents,
@@ -512,6 +514,9 @@ function RegisterModal({
   onClose: () => void;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const submitRegistration = useServerFn(submitEventRegistration);
   const [form, setForm] = useState({ name: "", email: "", federation: "" });
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -631,9 +636,18 @@ function RegisterModal({
           </div>
         ) : (
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              setSubmitted(true);
+              setSaving(true);
+              setSubmitError("");
+              try {
+                await submitRegistration({ data: { event_slug: event.slug, event_name: event.name, full_name: form.name, email: form.email, federation: form.federation } });
+                setSubmitted(true);
+              } catch {
+                setSubmitError("We couldn't save your registration. Please try again.");
+              } finally {
+                setSaving(false);
+              }
             }}
             className="space-y-4 px-5 py-5"
           >
@@ -667,12 +681,14 @@ function RegisterModal({
                 className="w-full rounded-md border border-black/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#4298D3] focus:ring-2 focus:ring-[#4298D3]/25"
               />
             </Field>
+            {submitError && <p role="alert" className="text-sm font-semibold text-[#DE007A]">{submitError}</p>}
             <button
               type="submit"
+              disabled={saving}
               className="mt-2 w-full rounded-md px-4 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4298D3]"
               style={{ background: "#FAAF40", color: "#3A2400" }}
             >
-              Submit registration
+              {saving ? "Submitting…" : "Submit registration"}
             </button>
           </form>
         )}

@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { submitDonationPledge } from "@/lib/submissions.functions";
 import { IYSF, Nav, Footer } from "../components/site-chrome";
 
 export const Route = createFileRoute("/donate")({
@@ -47,12 +49,25 @@ function DonatePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const submitPledge = useServerFn(submitDonationPledge);
 
   const amount = preset ?? (customAmount ? Number(customAmount) : null);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
+    if (!amount || amount <= 0) return;
+    setSaving(true);
+    setSubmitError("");
+    try {
+      await submitPledge({ data: { full_name: name, email, amount: String(amount), frequency } });
+      setSubmitted(true);
+    } catch {
+      setSubmitError("We couldn't record your pledge. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -199,12 +214,14 @@ function DonatePage() {
                     </div>
                   </div>
 
+                  {submitError && <p role="alert" className="text-sm font-semibold text-[#DE007A]">{submitError}</p>}
                   <button
                     type="submit"
+                    disabled={saving || !amount}
                     className="w-full rounded-[10px] px-4 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3A2400]/40"
                     style={{ background: IYSF.orange }}
                   >
-                    Donate {amount ? `$${amount}` : ""}
+                    {saving ? "Recording…" : `Donate ${amount ? `$${amount}` : ""}`}
                     {frequency === "monthly" ? " / month" : ""}
                   </button>
                   <p className="text-xs text-[#414042]">

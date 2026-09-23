@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { submitEventRegistration } from "@/lib/submissions.functions";
 import { Nav, Footer, Breadcrumb } from "../components/site-chrome";
 import {
   getEvent,
@@ -381,6 +383,9 @@ function EventDetailPage() {
 
 function RegistrationSection({ event }: { event: NonNullable<ReturnType<typeof getEvent>> }) {
   const [submitted, setSubmitted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const submitRegistration = useServerFn(submitEventRegistration);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -426,9 +431,18 @@ function RegistrationSection({ event }: { event: NonNullable<ReturnType<typeof g
             </div>
           ) : (
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                setSubmitted(true);
+                setSaving(true);
+                setSubmitError("");
+                try {
+                  await submitRegistration({ data: { event_slug: event.slug, event_name: `${event.name} — ${form.division}`, full_name: form.name, email: form.email, federation: form.federation } });
+                  setSubmitted(true);
+                } catch {
+                  setSubmitError("We couldn't save your registration. Please try again.");
+                } finally {
+                  setSaving(false);
+                }
               }}
               className="space-y-4"
             >
@@ -505,12 +519,14 @@ function RegistrationSection({ event }: { event: NonNullable<ReturnType<typeof g
                   ))}
                 </select>
               </div>
+              {submitError && <p role="alert" className="text-sm font-semibold text-[#DE007A]">{submitError}</p>}
               <button
                 type="submit"
+                disabled={saving}
                 className="mt-2 w-full rounded-md px-4 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4298D3]"
                 style={{ background: "#FAAF40", color: "#3A2400" }}
               >
-                Submit registration
+                {saving ? "Submitting…" : "Submit registration"}
               </button>
             </form>
           )}

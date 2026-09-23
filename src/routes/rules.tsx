@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Search, FileDown, Menu, X } from "lucide-react";
+import { Search, FileText, Download, Menu, X } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
 import { Link } from "@tanstack/react-router";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/rules")({
       {
         property: "og:description",
         content:
-          "Judging criteria, athlete eligibility, anti-doping, code of conduct, and competition format.",
+          "Judging criteria, athlete eligibility, competition format, and the current and forthcoming IYSF rulebooks.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -26,19 +26,12 @@ export const Route = createFileRoute("/rules")({
   component: RulesPage,
 });
 
-type RuleBlock =
-  | { type: "p"; text: string }
-  | { type: "h3"; text: string }
-  | { type: "ul"; items: string[] };
+type RuleBlock = { type: "p"; text: string };
 
 type RuleDoc = {
   id: string;
   title: string;
   accent: string;
-  version: string;
-  effective: string;
-  updated: string;
-  pdfHref: string;
   blocks: RuleBlock[];
 };
 
@@ -47,107 +40,36 @@ const DOCS: RuleDoc[] = [
     id: "judging-criteria",
     title: "Judging Criteria",
     accent: "#FAAF40",
-    version: "v0.0",
-    effective: "Effective Jan 2026",
-    updated: "Last updated",
-    pdfHref: "/documents/rules/judging-criteria.pdf",
     blocks: [
-      { type: "p", text: "Judging Criteria — how IYSF-certified judges evaluate a competitive Yogasana routine." },
-      { type: "h3", text: "Scoring domains" },
-      { type: "ul", items: [
-        "technical execution of each asana.",
-        "hold duration and stability.",
-        "transition quality and sequencing.",
-        "artistic and presentation elements.",
-      ]},
-      { type: "h3", text: "Panel composition" },
-      { type: "p", text: "Placeholder paragraph — describe judging panel size, chief judge role, and cross-panel deviation rules once confirmed by the governance committee." },
+      { type: "p", text: "IYSF judges score every posture on difficulty, minimum expression, and recommended execution, weighing balance, flexibility, and strength across the routine. Each posture is scored out of 10, with deductions for execution errors and rewards for extra skills. A panel of judges plus a dedicated time judge score every competition live, with results displayed immediately via the IYSF tabulation grid. Full scoring procedures and posture-by-posture criteria are set out in the Posture Guidelines above." },
     ],
   },
   {
     id: "athlete-eligibility",
     title: "Athlete Eligibility",
     accent: "#4298D3",
-    version: "v0.0",
-    effective: "Effective Jan 2026",
-    updated: "Last updated",
-    pdfHref: "/documents/rules/athlete-eligibility.pdf",
     blocks: [
-      { type: "p", text: "Placeholder summary text for Athlete Eligibility — replace with real policy language covering who may compete under IYSF sanction." },
-      { type: "h3", text: "Categories" },
-      { type: "ul", items: [
-        "age category framework, to be confirmed.",
-        "national federation membership requirement.",
-        "certification prerequisites for international events.",
-      ]},
-      { type: "h3", text: "Registration & licensing" },
-      { type: "p", text: "Placeholder paragraph — describe the athlete licensing pathway, medical clearance and transfer of national allegiance once finalized." },
-    ],
-  },
-  {
-    id: "anti-doping",
-    title: "Anti-Doping Policy",
-    accent: "#DE007A",
-    version: "v0.0",
-    effective: "Effective Jan 2026",
-    updated: "Last updated",
-    pdfHref: "/documents/rules/anti-doping.pdf",
-    blocks: [
-      { type: "p", text: "Placeholder summary text for the Anti-Doping Policy — replace with real policy language aligned with the applicable international anti-doping standards." },
-      { type: "h3", text: "Scope" },
-      { type: "ul", items: [
-        "testing pool and event-day controls.",
-        "therapeutic use exemption process.",
-        "results management and athlete rights.",
-      ]},
-      { type: "h3", text: "Sanctions" },
-      { type: "p", text: "Placeholder paragraph — sanction framework to be published alongside the confirmed policy. No specific durations or thresholds are asserted here." },
-    ],
-  },
-  {
-    id: "code-of-conduct",
-    title: "Code of Conduct",
-    accent: "#16264A",
-    version: "v0.0",
-    effective: "Effective Jan 2026",
-    updated: "Last updated",
-    pdfHref: "/documents/rules/code-of-conduct.pdf",
-    blocks: [
-      { type: "p", text: "Placeholder summary text for the Code of Conduct — replace with real policy language governing behavior of athletes, coaches, judges and officials." },
-      { type: "h3", text: "Core principles" },
-      { type: "ul", items: [
-        "respect for competitors, officials and hosts.",
-        "safeguarding of minors and vulnerable participants.",
-        "media, social platform and sponsorship conduct.",
-      ]},
-      { type: "h3", text: "Reporting" },
-      { type: "p", text: "Placeholder paragraph — describe confidential reporting channels and the independent ethics review pathway once operational." },
+      { type: "p", text: "Athletes compete for the national federation of the country whose nationality they hold, across five age divisions: three youth groups (9–11, 12–14, 15–17), Adult (18+), and Senior (50+). National championships generate finalists who qualify for continental and world competition. Judges and coaches are certified at Local, National, or International (A-level) tiers, with A-level certification issued only by IYSF." },
     ],
   },
   {
     id: "competition-format",
     title: "Competition Format",
     accent: "#414042",
-    version: "v0.0",
-    effective: "Effective Jan 2026",
-    updated: "Last updated",
-    pdfHref: "/documents/rules/competition-format.pdf",
     blocks: [
-      { type: "p", text: "Placeholder summary text for Competition Format — replace with real policy language covering event structure at IYSF-sanctioned competitions." },
-      { type: "h3", text: "Rounds & progression" },
-      { type: "ul", items: [
-        "qualification, semi-final and final structure.",
-        "compulsory and optional routine components.",
-        "tie-break resolution methodology.",
-      ]},
-      { type: "h3", text: "Timing & floor" },
-      { type: "p", text: "Placeholder paragraph — floor dimensions, routine timing and equipment specifications to be published in the confirmed format document." },
+      { type: "p", text: "Each athlete performs a routine of six postures — one from each of the six compulsory groups (backbends, forward compressions, tractions, twists, lifts, and inversions) — within a three-minute time limit. Postures must be held in stillness for at least three seconds to score, with a maximum score requiring a five-second hold. Athletes submit their routine and posture order at registration." },
     ],
   },
 ];
 
+const DOWNLOADS = [
+  { title: "Posture Guidelines", status: "Current — used through the 2026 World Championship", tone: "success", description: "Judging criteria, athlete eligibility, and competition format for all IYSF-sanctioned events." },
+  { title: "New Rulebook 2027", status: "Effective from the 2027 season", tone: "warning", description: "Updated rules with tracked changes, replacing the Posture Guidelines from 2027 onward." },
+  { title: "Coaching Manual", status: "Reference guide", tone: "neutral", description: "Posture-by-posture coaching drills and progressions for IYSF-certified coaches." },
+] as const;
+
 function blocksToPlainText(blocks: RuleBlock[]): string {
-  return blocks.map((b) => (b.type === "ul" ? b.items.join(" ") : b.text)).join(" ");
+  return blocks.map((b) => b.text).join(" ");
 }
 
 function highlight(text: string, query: string) {
@@ -230,7 +152,7 @@ function RulesPage() {
               Rules &amp; Regulations
             </h1>
             <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-[#414042]">
-              The official rulebook governing competitive Yogasana under IYSF — published in five documents, updated as governance evolves.
+              The official rules governing competitive Yogasana under IYSF, with current guidance and the forthcoming 2027 rulebook.
             </p>
 
             <div className="mt-6 max-w-[560px]">
@@ -326,6 +248,24 @@ function RulesPage() {
                 </div>
               ) : (
                 <div className="space-y-16">
+                  <section aria-labelledby="rule-downloads-title">
+                    <h2 id="rule-downloads-title" className="sr-only">Rule documents</h2>
+                    <div className="grid gap-5 lg:grid-cols-3 md:grid-cols-2">
+                      {DOWNLOADS.map((doc) => (
+                        <article key={doc.title} className="flex min-h-[270px] flex-col rounded-[12px] border border-black/10 bg-white p-5">
+                          <div className="flex items-start gap-3">
+                            <FileText size={20} className="mt-0.5 shrink-0 text-[#4298D3]" aria-hidden="true" />
+                            <h3 className="text-[18px] font-bold text-[#414042]" style={{ fontFamily: "var(--font-display)" }}>{doc.title}</h3>
+                          </div>
+                          <span className={`mt-4 w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold ${doc.tone === "success" ? "bg-emerald-50 text-emerald-800" : doc.tone === "warning" ? "bg-amber-50 text-amber-900" : "bg-black/5 text-[#414042]"}`}>{doc.status}</span>
+                          <p className="mt-4 text-sm leading-relaxed text-[#414042]">{doc.description}</p>
+                          <button type="button" disabled className="mt-auto inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-md border border-black/15 px-3.5 py-2 text-sm font-medium text-[#414042] opacity-55" aria-label={`${doc.title} download not yet available`}>
+                            <Download size={15} aria-hidden="true" /> Download PDF
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
                   {DOCS.map((d) => {
                     const isMatch = matchesById[d.id];
                     if (q && !isMatch) return null;
@@ -351,27 +291,7 @@ function RulesPage() {
                         >
                           {highlight(d.title, query)}
                         </h2>
-                        <div
-                          className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-[#414042]"
-                          style={{ fontFamily: "var(--font-mono)" }}
-                        >
-                          <span>{d.version}</span>
-                          <span aria-hidden>·</span>
-                          <span>{d.effective}</span>
-                          <span aria-hidden>·</span>
-                          <span>{d.updated}</span>
-                        </div>
-
                         <div className="mt-4">
-                          <a
-                            href={d.pdfHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-md border border-black/15 bg-white px-3.5 py-2 text-sm font-medium text-[#414042] transition-colors hover:bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4298D3]/40"
-                          >
-                            <FileDown size={15} style={{ color: d.accent }} aria-hidden />
-                            <span>Download {d.title} PDF</span>
-                          </a>
                           {d.id === "judging-criteria" && (
                             <div className="mt-3 text-xs text-[#414042]">
                               Related:{" "}
@@ -380,7 +300,7 @@ function RulesPage() {
                               </Link>
                             </div>
                           )}
-                          {(d.id === "athlete-eligibility" || d.id === "anti-doping") && (
+                          {d.id === "athlete-eligibility" && (
                             <div className="mt-3 text-xs text-[#414042]">
                               Related:{" "}
                               <Link to="/academy/athletes" className="underline decoration-black/20 underline-offset-2 hover:text-[#414042]">
@@ -388,32 +308,11 @@ function RulesPage() {
                               </Link>
                             </div>
                           )}
-                          {d.id === "code-of-conduct" && (
-                            <div className="mt-3 text-xs text-[#414042]">
-                              Related:{" "}
-                              <Link to="/academy/coaching" className="underline decoration-black/20 underline-offset-2 hover:text-[#414042]">
-                                Coaching Academy track
-                              </Link>
-                            </div>
-                          )}
                         </div>
 
                         <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-[#414042]/90">
                           {d.blocks.map((b, i) => {
-                            if (b.type === "p") return <p key={i}>{highlight(b.text, query)}</p>;
-                            if (b.type === "h3")
-                              return (
-                                <h3 key={i} className="pt-2 text-[15px] font-semibold text-[#414042]" style={{ fontFamily: "var(--font-display)" }}>
-                                  {highlight(b.text, query)}
-                                </h3>
-                              );
-                            return (
-                              <ul key={i} className="ml-5 list-disc space-y-1.5 marker:text-[#414042]">
-                                {b.items.map((it, j) => (
-                                  <li key={j}>{highlight(it, query)}</li>
-                                ))}
-                              </ul>
-                            );
+                            return <p key={i}>{highlight(b.text, query)}</p>;
                           })}
                         </div>
                       </section>

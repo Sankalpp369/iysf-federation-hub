@@ -3,6 +3,7 @@ import { Quote } from "lucide-react";
 import sponsorshipPosterAsset from "../assets/2026-sponsorship-poster.webp.asset.json";
 import { PageHeader, PageShell, Prose, Section } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
+import { InquiryForm } from "../components/inquiry-form";
 
 export const Route = createFileRoute("/sponsorship")({
   head: () => ({
@@ -28,18 +29,14 @@ function SponsorButtons() {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
       <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#sponsor-inquiry"
         className="inline-flex justify-center rounded-[12px] px-6 py-3.5 text-[15px] font-bold transition-transform hover:-translate-y-0.5"
         style={{ background: IYSF.orange, color: IYSF.charcoal }}
       >
         Studio Sponsor
       </a>
       <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#sponsor-inquiry"
         className="inline-flex justify-center rounded-[12px] border-2 px-6 py-3 text-[15px] font-bold transition-colors hover:bg-[rgba(66,152,211,0.08)]"
         style={{ borderColor: IYSF.blue, color: IYSF.blue }}
       >
@@ -65,6 +62,16 @@ function SponsorshipPage() {
           <div className="mt-6">
             <SponsorButtons />
           </div>
+        </div>
+      </Section>
+
+      <Section>
+        <div id="sponsor-inquiry" className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <h2 className="text-[24px] md:text-[30px]" style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: IYSF.charcoal }}>Become a sponsor</h2>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: IYSF.charcoal }}>Tell us about your organisation and preferred sponsorship level. The IYSF team will follow up with availability and next steps.</p>
+          </div>
+          <InquiryForm kind="sponsorship" />
         </div>
       </Section>
 
