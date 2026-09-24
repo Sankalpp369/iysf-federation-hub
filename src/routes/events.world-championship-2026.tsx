@@ -162,6 +162,9 @@ function SecondaryButton({ children, href }: { children: string; href: string })
 function WorldChampionship2026() {
   const [email, setEmail] = useState("");
   const [signedUp, setSignedUp] = useState(false);
+  const [signupBusy, setSignupBusy] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const subscribe = useServerFn(submitNewsletterSignup);
 
   return (
     <PageShell>
@@ -528,9 +531,18 @@ function WorldChampionship2026() {
             ) : (
               <form
                 className="mt-6 flex flex-col gap-3 sm:flex-row"
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  if (email.trim()) setSignedUp(true);
+                  setSignupBusy(true);
+                  setSignupError("");
+                  try {
+                    await subscribe({ data: { email, source: "world-championship-2026" } });
+                    setSignedUp(true);
+                  } catch {
+                    setSignupError("We couldn't add you right now. Please try again.");
+                  } finally {
+                    setSignupBusy(false);
+                  }
                 }}
               >
                 <label className="relative flex-1">
@@ -549,12 +561,14 @@ function WorldChampionship2026() {
                     className="w-full rounded-[10px] border border-white/25 bg-white/10 px-9 py-3 text-[15px] text-white placeholder:text-white/50 outline-none focus:border-white/60"
                   />
                 </label>
+                {signupError && <p role="alert" className="text-sm font-semibold text-white sm:basis-full">{signupError}</p>}
                 <button
                   type="submit"
+                  disabled={signupBusy}
                   className="rounded-[10px] px-6 py-3 text-[15px] font-bold transition-transform hover:-translate-y-0.5"
                   style={{ background: IYSF.orange, color: IYSF.charcoal }}
                 >
-                  Keep me updated
+                  {signupBusy ? "Subscribing…" : "Keep me updated"}
                 </button>
               </form>
             )}
