@@ -10,7 +10,7 @@ export const Route = createFileRoute("/academy/")({
       {
         name: "description",
         content:
-          "IYSF Academy — resources, standards, and certification pathways for judges, athletes, and coaches in competitive Yogasana.",
+          "IYSF Academy — resources, standards, and certification pathways for judges and coaches in competitive Yogasana.",
       },
       { property: "og:title", content: "Academy — IYSF" },
       {
@@ -29,12 +29,6 @@ const TRACKS = [
     name: "Judging",
     desc: "Certification standards and scoring frameworks for IYSF judges.",
     color: "#4298D3",
-  },
-  {
-    slug: "athletes" as const,
-    name: "Athletes",
-    desc: "Development pathways and competition-readiness for registered athletes.",
-    color: "#FAAF40",
   },
   {
     slug: "coaching" as const,
@@ -87,11 +81,11 @@ function AcademyOverview() {
 
       <section className="bg-white">
         <div className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-20">
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2">
             {TRACKS.map((t) => (
               <Link
                 key={t.slug}
-                to={`/academy/${t.slug}` as "/academy/judging"}
+                to={t.slug === "judging" ? "/academy/judging" : "/academy/coaching"}
                 className="group flex flex-col rounded-lg border border-black/10 bg-white p-7 transition-all hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 style={{ ["--tw-ring-color" as never]: t.color }}
               >
@@ -131,6 +125,40 @@ function AcademyOverview() {
                 </span>
               </Link>
             ))}
+          </div>
+
+          <div
+            className="mt-8 flex flex-col gap-6 rounded-lg border-2 bg-white p-7 md:flex-row md:items-center md:justify-between"
+            style={{ borderColor: "#FAAF40" }}
+          >
+            <div className="max-w-[720px]">
+              <div
+                className="text-[10.5px] font-mono font-medium tracking-widest"
+                style={{ color: "#C07E10", fontFamily: "var(--font-mono)" }}
+              >
+                ONLINE SERIES · FROM $10/SESSION
+              </div>
+              <h2
+                className="mt-1 text-2xl leading-tight"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "#414042" }}
+              >
+                IYSF Academy — Athlete Training Sessions
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: "#414042" }}>
+                A donation-based series of online sessions covering sports medicine, nutrition,
+                technique, and competition preparation. Open to athletes, coaches, and judges.
+              </p>
+            </div>
+            {/* VERIFY: confirm this is IYSF's current active Academy form before launch. */}
+            <a
+              href="https://eu.jotform.com/form/260411558517355"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-fit shrink-0 items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-0.5"
+              style={{ background: "#FAAF40", color: "#3A2400" }}
+            >
+              Register <ArrowRight size={15} aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>

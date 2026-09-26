@@ -25,14 +25,12 @@ import { Route as ResultsIndexRouteImport } from './routes/results.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as DirectoryIndexRouteImport } from './routes/directory.index'
 import { Route as AcademyIndexRouteImport } from './routes/academy.index'
-import { Route as ResultsSlugRouteImport } from './routes/results.$slug'
 import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
 import { Route as DirectorySlugRouteImport } from './routes/directory.$slug'
 import { Route as AcademyTrainingRouteImport } from './routes/academy.training'
 import { Route as AcademyJudgingRouteImport } from './routes/academy.judging'
 import { Route as AcademyCoachingRouteImport } from './routes/academy.coaching'
-import { Route as AcademyAthletesRouteImport } from './routes/academy.athletes'
 import { Route as AboutYogaAsASportRouteImport } from './routes/about.yoga-as-a-sport'
 import { Route as AboutTechnicalCommitteeRouteImport } from './routes/about.technical-committee'
 import { Route as AboutInternationalJudgesRouteImport } from './routes/about.international-judges'
@@ -123,11 +121,6 @@ const AcademyIndexRoute = AcademyIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AcademyRoute,
 } as any)
-const ResultsSlugRoute = ResultsSlugRouteImport.update({
-  id: '/results/$slug',
-  path: '/results/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EventsWorldChampionship2026Route =
   EventsWorldChampionship2026RouteImport.update({
     id: '/events/world-championship-2026',
@@ -157,11 +150,6 @@ const AcademyJudgingRoute = AcademyJudgingRouteImport.update({
 const AcademyCoachingRoute = AcademyCoachingRouteImport.update({
   id: '/coaching',
   path: '/coaching',
-  getParentRoute: () => AcademyRoute,
-} as any)
-const AcademyAthletesRoute = AcademyAthletesRouteImport.update({
-  id: '/athletes',
-  path: '/athletes',
   getParentRoute: () => AcademyRoute,
 } as any)
 const AboutYogaAsASportRoute = AboutYogaAsASportRouteImport.update({
@@ -239,14 +227,12 @@ export interface FileRoutesByFullPath {
   '/about/international-judges': typeof AboutInternationalJudgesRoute
   '/about/technical-committee': typeof AboutTechnicalCommitteeRoute
   '/about/yoga-as-a-sport': typeof AboutYogaAsASportRoute
-  '/academy/athletes': typeof AcademyAthletesRoute
   '/academy/coaching': typeof AcademyCoachingRoute
   '/academy/judging': typeof AcademyJudgingRoute
   '/academy/training': typeof AcademyTrainingRoute
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
-  '/results/$slug': typeof ResultsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
@@ -273,14 +259,12 @@ export interface FileRoutesByTo {
   '/about/international-judges': typeof AboutInternationalJudgesRoute
   '/about/technical-committee': typeof AboutTechnicalCommitteeRoute
   '/about/yoga-as-a-sport': typeof AboutYogaAsASportRoute
-  '/academy/athletes': typeof AcademyAthletesRoute
   '/academy/coaching': typeof AcademyCoachingRoute
   '/academy/judging': typeof AcademyJudgingRoute
   '/academy/training': typeof AcademyTrainingRoute
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
-  '/results/$slug': typeof ResultsSlugRoute
   '/academy': typeof AcademyIndexRoute
   '/directory': typeof DirectoryIndexRoute
   '/events': typeof EventsIndexRoute
@@ -310,14 +294,12 @@ export interface FileRoutesById {
   '/about/international-judges': typeof AboutInternationalJudgesRoute
   '/about/technical-committee': typeof AboutTechnicalCommitteeRoute
   '/about/yoga-as-a-sport': typeof AboutYogaAsASportRoute
-  '/academy/athletes': typeof AcademyAthletesRoute
   '/academy/coaching': typeof AcademyCoachingRoute
   '/academy/judging': typeof AcademyJudgingRoute
   '/academy/training': typeof AcademyTrainingRoute
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
-  '/results/$slug': typeof ResultsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
@@ -347,14 +329,12 @@ export interface FileRouteTypes {
     | '/about/international-judges'
     | '/about/technical-committee'
     | '/about/yoga-as-a-sport'
-    | '/academy/athletes'
     | '/academy/coaching'
     | '/academy/judging'
     | '/academy/training'
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
-    | '/results/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
@@ -381,14 +361,12 @@ export interface FileRouteTypes {
     | '/about/international-judges'
     | '/about/technical-committee'
     | '/about/yoga-as-a-sport'
-    | '/academy/athletes'
     | '/academy/coaching'
     | '/academy/judging'
     | '/academy/training'
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
-    | '/results/$slug'
     | '/academy'
     | '/directory'
     | '/events'
@@ -417,14 +395,12 @@ export interface FileRouteTypes {
     | '/about/international-judges'
     | '/about/technical-committee'
     | '/about/yoga-as-a-sport'
-    | '/academy/athletes'
     | '/academy/coaching'
     | '/academy/judging'
     | '/academy/training'
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
-    | '/results/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
@@ -456,7 +432,6 @@ export interface RootRouteChildren {
   DirectorySlugRoute: typeof DirectorySlugRoute
   EventsSlugRoute: typeof EventsSlugRoute
   EventsWorldChampionship2026Route: typeof EventsWorldChampionship2026Route
-  ResultsSlugRoute: typeof ResultsSlugRoute
   DirectoryIndexRoute: typeof DirectoryIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   ResultsIndexRoute: typeof ResultsIndexRoute
@@ -576,13 +551,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcademyIndexRouteImport
       parentRoute: typeof AcademyRoute
     }
-    '/results/$slug': {
-      id: '/results/$slug'
-      path: '/results/$slug'
-      fullPath: '/results/$slug'
-      preLoaderRoute: typeof ResultsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/events/world-championship-2026': {
       id: '/events/world-championship-2026'
       path: '/events/world-championship-2026'
@@ -623,13 +591,6 @@ declare module '@tanstack/react-router' {
       path: '/coaching'
       fullPath: '/academy/coaching'
       preLoaderRoute: typeof AcademyCoachingRouteImport
-      parentRoute: typeof AcademyRoute
-    }
-    '/academy/athletes': {
-      id: '/academy/athletes'
-      path: '/athletes'
-      fullPath: '/academy/athletes'
-      preLoaderRoute: typeof AcademyAthletesRouteImport
       parentRoute: typeof AcademyRoute
     }
     '/about/yoga-as-a-sport': {
@@ -717,7 +678,6 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface AcademyRouteChildren {
-  AcademyAthletesRoute: typeof AcademyAthletesRoute
   AcademyCoachingRoute: typeof AcademyCoachingRoute
   AcademyJudgingRoute: typeof AcademyJudgingRoute
   AcademyTrainingRoute: typeof AcademyTrainingRoute
@@ -725,7 +685,6 @@ interface AcademyRouteChildren {
 }
 
 const AcademyRouteChildren: AcademyRouteChildren = {
-  AcademyAthletesRoute: AcademyAthletesRoute,
   AcademyCoachingRoute: AcademyCoachingRoute,
   AcademyJudgingRoute: AcademyJudgingRoute,
   AcademyTrainingRoute: AcademyTrainingRoute,
@@ -760,7 +719,6 @@ const rootRouteChildren: RootRouteChildren = {
   DirectorySlugRoute: DirectorySlugRoute,
   EventsSlugRoute: EventsSlugRoute,
   EventsWorldChampionship2026Route: EventsWorldChampionship2026Route,
-  ResultsSlugRoute: ResultsSlugRoute,
   DirectoryIndexRoute: DirectoryIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   ResultsIndexRoute: ResultsIndexRoute,

@@ -4,7 +4,6 @@ import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { JoinForm } from "../components/join-form";
 import { PhotoPlaceholder } from "../components/page-shell";
-import { upcomingEvents } from "../data/iysf";
 import { Reveal } from "../components/history-motion";
 import heroVideo from "../assets/hero-video.mp4.asset.json";
 import aboutCompetition from "../assets/about-competition.jpg";

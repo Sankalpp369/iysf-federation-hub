@@ -30,9 +30,18 @@ export const Route = createFileRoute("/academy/judging")({
 const COLOR = "#4298D3";
 
 const TIERS = [
-  { name: "Level 1 — National", desc: "Entry-level certification for domestic events." },
-  { name: "Level 2 — Continental", desc: "Certified to officiate at continental championships." },
-  { name: "Level 3 — International", desc: "Cleared for IYSF world-tier competition." },
+  {
+    name: "International (A-Level)",
+    desc: "Certified directly by IYSF and includes a 2-year IYSF membership ($50). Recommended for world championships and continental cups. Every national federation must have at least one A-level judge as liaison and Head Judge, and all A-level judges are listed on the IYSF website.",
+  },
+  {
+    name: "National (B-Level)",
+    desc: "Trained and certified by the national federation. Judges national championships.",
+  },
+  {
+    name: "Local/Regional (C-Level)",
+    desc: "Trained and certified by the national federation. Judges regional and local events.",
+  },
 ];
 
 const GUIDES = [
@@ -52,7 +61,11 @@ function JudgingTrack() {
         heading="Judging"
         sub="Certification standards, scoring rubrics, and officiating protocol for IYSF judges."
       />
-      <TiersGrid tiers={TIERS} color={COLOR} />
+      <TiersGrid
+        tiers={TIERS}
+        color={COLOR}
+        note="A judge cannot officiate a competition involving a relative. Certified judges may not also serve as a coach."
+      />
       <GuidesList guides={GUIDES} color={COLOR} track="Judging" />
       <SupportingContent track="Judging" color={COLOR} />
       <ClosingCta
