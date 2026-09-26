@@ -64,8 +64,8 @@ function Hero() {
         muted
         loop
         playsInline
-        preload="auto"
-        className="h-[58vh] min-h-[420px] w-full object-cover object-center md:h-[78vh]"
+        preload="metadata"
+        className="h-[40vh] min-h-[240px] max-h-[420px] w-full md:max-h-none object-cover object-center md:h-[78vh]"
       />
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24"

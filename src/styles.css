@@ -189,3 +189,24 @@
     color: var(--color-foreground);
   }
 }
+
+@media (max-width: 639px) {
+  main form input:not([type="checkbox"]):not([type="radio"]),
+  main form select,
+  main form button {
+    min-height: 44px;
+  }
+  main form input:not([type="checkbox"]):not([type="radio"]),
+  main form select,
+  main form textarea,
+  main form button[type="submit"] {
+    width: 100%;
+  }
+  main form > * + * {
+    margin-top: 0.25rem;
+  }
+  main img,
+  main video {
+    max-width: 100%;
+  }
+}
