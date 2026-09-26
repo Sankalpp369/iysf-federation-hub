@@ -280,57 +280,6 @@ function FeaturedOfficers() {
   );
 }
 
-function UpcomingEvents() {
-  const next = upcomingEvents().slice(0, 3);
-  return (
-    <section style={{ background: IYSF.blueWash }}>
-      <div className="mx-auto max-w-[1320px] px-5 py-20 md:px-8 md:py-24">
-        <Reveal>
-          <h2 className="text-[30px] md:text-[44px]" style={H2()}>
-            Upcoming events
-          </h2>
-        </Reveal>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {next.map((e, i) => (
-            <Reveal key={e.slug} delay={i * 80}>
-              <Link
-                to="/events/$slug"
-                params={{ slug: e.slug }}
-                className="block h-full p-6 transition-transform hover:-translate-y-1"
-                style={CARD}
-              >
-                <span
-                  className="inline-block rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.16em] text-white"
-                  style={{ background: IYSF.blue }}
-                >
-                  {e.tier}
-                </span>
-                <h3
-                  className="mt-4 text-[19px] leading-snug"
-                  style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)", fontWeight: 800 }}
-                >
-                  {e.name}
-                </h3>
-                <div className="mt-2 text-[13px]" style={{ fontFamily: "var(--font-mono)", color: IYSF.magenta }}>
-                  {e.date}
-                </div>
-                <p className="mt-2 text-sm" style={{ color: "rgba(65,64,66,0.72)" }}>
-                  {e.location}
-                </p>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-8">
-          <Link to="/events" className="inline-flex items-center gap-1.5 text-sm font-bold" style={{ color: IYSF.magenta }}>
-            Full calendar <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function MembershipCta() {
   return (
     <section style={{ background: IYSF.orange }}>
@@ -529,7 +478,6 @@ function Index() {
         <AboutPreview />
         <WhyJoin />
         <FeaturedOfficers />
-        <UpcomingEvents />
         <News />
         <JoinForm />
         <MembershipCta />

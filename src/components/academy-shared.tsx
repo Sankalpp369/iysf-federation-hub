@@ -61,7 +61,7 @@ export function TrackHeader({
   );
 }
 
-export function TiersGrid({ tiers, color }: { tiers: Tier[]; color: string }) {
+export function TiersGrid({ tiers, color, note }: { tiers: Tier[]; color: string; note?: string }) {
   return (
     <section className="bg-[#FAFAFA]">
       <div className="mx-auto max-w-[1240px] px-5 py-16 md:px-8 md:py-20">
@@ -95,6 +95,11 @@ export function TiersGrid({ tiers, color }: { tiers: Tier[]; color: string }) {
             </div>
           ))}
         </div>
+        {note && (
+          <p className="mt-6 max-w-[760px] text-sm leading-relaxed" style={{ color: "#414042" }}>
+            <span className="font-semibold">Note:</span> {note}
+          </p>
+        )}
       </div>
     </section>
   );
@@ -260,6 +265,7 @@ export function ClosingCta({
               <Download size={15} aria-hidden="true" />
               {primaryLabel}
             </a>
+            {/* VERIFY: confirm this is IYSF's current active Academy form before launch. */}
             <a
               href="https://eu.jotform.com/form/260411558517355"
               target="_blank"

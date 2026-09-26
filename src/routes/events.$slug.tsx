@@ -303,12 +303,11 @@ function EventDetailPage() {
                 )}
                 <div className="mt-6 flex flex-wrap gap-4">
                   <Link
-                    to="/results/$slug"
-                    params={{ slug: event.slug }}
+                    to="/results"
                     className="rounded-md px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5"
                     style={{ background: "#FAAF40", color: "#3A2400" }}
                   >
-                    Full results →
+                    Results coming soon →
                   </Link>
                   <Link
                     to="/results"

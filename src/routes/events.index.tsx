@@ -340,16 +340,6 @@ function EventsPage() {
                     >
                       View event →
                     </Link>
-                    {e.results && (
-                      <Link
-                        to="/results/$slug"
-                        params={{ slug: e.slug }}
-                        className="text-xs font-semibold hover:underline"
-                        style={{ color: "#DE007A" }}
-                      >
-                        Results →
-                      </Link>
-                    )}
                   </div>
                 </li>
               ))}
