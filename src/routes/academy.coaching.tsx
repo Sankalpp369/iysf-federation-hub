@@ -30,9 +30,18 @@ export const Route = createFileRoute("/academy/coaching")({
 const COLOR = "#DE007A";
 
 const TIERS = [
-  { name: "Assistant Coach", desc: "Entry-level coaching credential under supervision." },
-  { name: "Coach", desc: "Certified head-coach status for club and national programs." },
-  { name: "Senior Coach", desc: "Elite tier authorized to prepare international competitors." },
+  {
+    name: "International (A-Level)",
+    desc: "Certified directly by IYSF. Existing World Yoga Champions qualify directly and for free; everyone else needs IYSF training plus a national federation recommendation. Includes a 2-year IYSF membership. Every federation needs an A-level Head Coach as liaison, and A-level coaches become official IYSF ambassadors who may open IYSF Yoga Sport Academies.",
+  },
+  {
+    name: "National (B-Level)",
+    desc: "Trained and certified by the national federation.",
+  },
+  {
+    name: "Local/Regional (C-Level)",
+    desc: "Trained and certified by the national federation.",
+  },
 ];
 
 const GUIDES = [
@@ -52,7 +61,7 @@ function CoachingTrack() {
         heading="Coaching"
         sub="Curriculum and certification tiers for coaches supporting IYSF athletes."
       />
-      <TiersGrid tiers={TIERS} color={COLOR} />
+      <TiersGrid tiers={TIERS} color={COLOR} note="Certified coaches may not also serve as a judge." />
       <GuidesList guides={GUIDES} color={COLOR} track="Coaching" />
       <SupportingContent track="Coaching" color={COLOR} />
       <ClosingCta
@@ -61,7 +70,7 @@ function CoachingTrack() {
         primaryLabel="Download Coaching Guide PDF"
         primaryHref="/documents/academy/coaching/coaching-curriculum-guide.pdf"
         relatedTo="/rules"
-        relatedLabel="Code of conduct"
+        relatedLabel="Rules & regulations"
       />
       <Footer />
     </div>

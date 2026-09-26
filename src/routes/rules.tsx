@@ -303,8 +303,8 @@ function RulesPage() {
                           {d.id === "athlete-eligibility" && (
                             <div className="mt-3 text-xs text-[#414042]">
                               Related:{" "}
-                              <Link to="/academy/athletes" className="underline decoration-black/20 underline-offset-2 hover:text-[#414042]">
-                                Athletes Academy track
+                              <Link to="/academy" className="underline decoration-black/20 underline-offset-2 hover:text-[#414042]">
+                                IYSF Academy
                               </Link>
                             </div>
                           )}
