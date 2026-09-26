@@ -171,7 +171,7 @@ function WorldChampionship2026() {
       <section className="bg-white">
         <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-10 md:px-8 md:pt-16">
           <div
-            className="flex aspect-[2/1] min-h-[240px] flex-col items-center justify-center gap-3 rounded-[16px] border border-dashed text-center"
+            className="flex aspect-[4/3] w-full sm:aspect-[2/1] sm:min-h-[240px] flex-col items-center justify-center gap-3 rounded-[16px] border border-dashed text-center"
             style={{ borderColor: IYSF.blueLine, boxShadow: IYSF.blueShadow }}
             role="img"
             aria-label="Championship artwork placeholder"
