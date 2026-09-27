@@ -191,13 +191,13 @@
 }
 
 @media (max-width: 639px) {
-  main form input:not([type="checkbox"]):not([type="radio"]),
-  main form select,
+  main input:not([type="checkbox"]):not([type="radio"]),
+  main select,
   main form button {
     min-height: 44px;
   }
-  main form input:not([type="checkbox"]):not([type="radio"]),
-  main form select,
+  main input:not([type="checkbox"]):not([type="radio"]),
+  main select,
   main form textarea,
   main form button[type="submit"] {
     width: 100%;
