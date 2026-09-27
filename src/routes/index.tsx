@@ -198,7 +198,7 @@ function AboutPreview() {
           </div>
         </Reveal>
         <Reveal delay={100}>
-           <div className="grid grid-cols-1 gap-4 min-[380px]:grid-cols-2">
+           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {[
               { src: aboutCompetition, alt: "Athlete mid-routine at an IYSF championship" },
               { src: aboutSport, alt: "Judges scoring a competition round" },
@@ -336,10 +336,10 @@ function WhyJoin() {
             Why join IYSF
           </h2>
         </Reveal>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-6 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-3">
           {benefits.map(({ Icon, title, desc }, i) => (
             <Reveal key={title} delay={i * 90}>
-              <div className="h-full p-6 sm:p-7" style={CARD}>
+              <div className="h-full p-4 sm:p-7" style={CARD}>
                 <span
                   className="inline-flex h-12 w-12 items-center justify-center rounded-[12px]"
                   style={{ background: "rgba(66,152,211,0.12)" }}
@@ -361,7 +361,7 @@ function WhyJoin() {
         </div>
 
         <Reveal delay={120}>
-          <div className="mt-10 grid grid-cols-1 gap-4 min-[380px]:grid-cols-2 md:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-3 max-sm:mt-6 sm:gap-4 md:grid-cols-4">
             {strip.map((s) => (
               <img
                 key={s.src}

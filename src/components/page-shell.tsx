@@ -157,7 +157,7 @@ export function InfoCard({
 }) {
   return (
     <div
-      className="rounded-[12px] border bg-white p-6"
+      className="rounded-[12px] border bg-white p-3.5 sm:p-6"
       style={{ borderColor: IYSF.blueLine, boxShadow: IYSF.blueShadow }}
     >
       {photo ? (
@@ -166,21 +166,21 @@ export function InfoCard({
         <div className="h-[3px] w-10" style={{ background: accent }} />
       )}
       <h3
-        className="mt-4 text-[18px]"
+        className="mt-3 text-[15px] sm:mt-4 sm:text-[18px]"
         style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "#414042" }}
       >
         {title}
       </h3>
       {meta && (
         <div
-          className="mt-1 text-[12px] font-semibold uppercase tracking-[0.16em]"
+          className="mt-1 text-[10.5px] font-semibold uppercase tracking-[0.1em] sm:text-[12px] sm:tracking-[0.16em]"
           style={{ color: IYSF.magenta }}
         >
           {meta}
         </div>
       )}
       {children && (
-        <div className="mt-3 text-sm leading-relaxed" style={{ color: IYSF.charcoal }}>
+        <div className="mt-2 text-[12.5px] leading-snug sm:mt-3 sm:text-sm sm:leading-relaxed" style={{ color: IYSF.charcoal }}>
           {children}
         </div>
       )}

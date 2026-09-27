@@ -67,7 +67,7 @@ export function InquiryForm({ kind }: { kind: "contact" | "sponsorship" }) {
     : ["General inquiry", "Athlete inquiry", "Coach or judge inquiry", "Media inquiry"];
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} noValidate className="grid grid-cols-2 gap-3 sm:gap-4">
       {([
         ["organisation_name", "Organisation"],
         ["contact_name", "Your name"],
@@ -75,13 +75,13 @@ export function InquiryForm({ kind }: { kind: "contact" | "sponsorship" }) {
         ["phone", "Phone (optional)"],
         ["country", "Country (optional)"],
       ] as const).map(([key, label]) => (
-        <label key={key} className={key === "organisation_name" ? "sm:col-span-2" : ""}>
+        <label key={key} className={key === "organisation_name" ? "col-span-2" : ""}>
           <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#414042]">{label}</span>
           <input id={`${kind}-${key}`} type={key === "email" ? "email" : "text"} value={values[key]} onChange={set(key)} className={fieldClass} aria-invalid={Boolean(errors[key])} />
           {errors[key] && <span className="mt-1 block text-xs text-[#DE007A]">{errors[key]}</span>}
         </label>
       ))}
-      <label className="sm:col-span-2">
+      <label className="col-span-2">
         <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#414042]">Subject</span>
         <select id={`${kind}-interest`} value={values.interest} onChange={set("interest")} className={fieldClass}>
           {kind === "sponsorship" && <option value="">Select an option</option>}
@@ -89,12 +89,12 @@ export function InquiryForm({ kind }: { kind: "contact" | "sponsorship" }) {
         </select>
         {errors.interest && <span className="mt-1 block text-xs text-[#DE007A]">{errors.interest}</span>}
       </label>
-      <label className="sm:col-span-2">
+      <label className="col-span-2">
         <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#414042]">Message</span>
         <textarea id={`${kind}-message`} rows={5} value={values.message} onChange={set("message")} className={fieldClass} aria-invalid={Boolean(errors.message)} />
         {errors.message && <span className="mt-1 block text-xs text-[#DE007A]">{errors.message}</span>}
       </label>
-      {status === "error" && <p role="alert" className="text-sm font-semibold text-[#DE007A] sm:col-span-2">We couldn't submit your inquiry. Please try again.</p>}
+      {status === "error" && <p role="alert" className="text-sm font-semibold text-[#DE007A] col-span-2">We couldn't submit your inquiry. Please try again.</p>}
       <button type="submit" disabled={status === "saving"} className="w-full rounded-[10px] px-5 py-3 text-sm font-bold disabled:opacity-60 sm:w-fit" style={{ background: IYSF.orange, color: IYSF.charcoal }}>
         {status === "saving" ? "Submitting…" : "Submit inquiry"}
       </button>

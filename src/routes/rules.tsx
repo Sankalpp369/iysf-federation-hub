@@ -250,9 +250,9 @@ function RulesPage() {
                 <div className="space-y-16">
                   <section aria-labelledby="rule-downloads-title">
                     <h2 id="rule-downloads-title" className="sr-only">Rule documents</h2>
-                    <div className="grid gap-5 lg:grid-cols-3 md:grid-cols-2">
+                    <div className="grid gap-5 max-sm:grid-cols-2 max-sm:gap-3 lg:grid-cols-3 md:grid-cols-2">
                       {DOWNLOADS.map((doc) => (
-                        <article key={doc.title} className="flex min-h-[270px] flex-col rounded-[12px] border border-black/10 bg-white p-5">
+                        <article key={doc.title} className="flex flex-col rounded-[12px] border border-black/10 bg-white p-3.5 sm:min-h-[270px] sm:p-5">
                           <div className="flex items-start gap-3">
                             <FileText size={20} className="mt-0.5 shrink-0 text-[#4298D3]" aria-hidden="true" />
                             <h3 className="text-[18px] font-bold text-[#414042]" style={{ fontFamily: "var(--font-display)" }}>{doc.title}</h3>

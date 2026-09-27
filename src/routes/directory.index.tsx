@@ -238,7 +238,7 @@ function DirectoryPage() {
                 {filtered.length === 0 ? (
                   <EmptyState />
                 ) : (
-                  <ul className="flex max-h-[560px] flex-col gap-3 overflow-auto pr-1">
+                  <ul className="flex max-h-[560px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
                     {filtered.map((f) => (
                       <li key={f.id}>
                         <FederationCard
@@ -284,7 +284,7 @@ function DirectoryPage() {
               covering governance, athlete safeguarding and competition standards.
             </p>
 
-            <ol className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-4">
+            <ol className="mt-10 grid grid-cols-1 gap-5 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-4">
               {[
                 { t: "Apply", d: "Submit federation details and documentation." },
                 { t: "Review", d: "IYSF reviews eligibility and standards compliance." },

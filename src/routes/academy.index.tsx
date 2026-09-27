@@ -81,7 +81,7 @@ function AcademyOverview() {
 
       <section className="bg-white">
         <div className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-20">
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-2">
             {TRACKS.map((t) => (
               <Link
                 key={t.slug}

@@ -123,7 +123,7 @@ export function GuidesList({
         >
           Guides & standards
         </div>
-        <ul className="grid gap-4 md:grid-cols-2">
+        <ul className="grid gap-4 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-2">
           {guides.map((g) => (
             <li
               key={g.title}
