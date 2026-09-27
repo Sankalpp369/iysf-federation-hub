@@ -83,7 +83,7 @@ function ExecutiveCommitteePage() {
             elected by the federation's membership and serve fixed terms.
           </p>
         </Prose>
-        <ul className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid gap-5 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-2 lg:grid-cols-3">
           {OFFICERS.map((o) => (
             <li key={o.name}>
               <InfoCard title={o.name} meta={o.role} accent={o.accent} photo>

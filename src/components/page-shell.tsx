@@ -157,7 +157,7 @@ export function InfoCard({
 }) {
   return (
     <div
-      className="rounded-[12px] border bg-white p-6"
+      className="rounded-[12px] border bg-white p-3.5 sm:p-6"
       style={{ borderColor: IYSF.blueLine, boxShadow: IYSF.blueShadow }}
     >
       {photo ? (
@@ -166,7 +166,7 @@ export function InfoCard({
         <div className="h-[3px] w-10" style={{ background: accent }} />
       )}
       <h3
-        className="mt-4 text-[18px]"
+        className="mt-3 text-[15px] sm:mt-4 sm:text-[18px]"
         style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "#414042" }}
       >
         {title}

@@ -191,8 +191,8 @@ export function JoinForm() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <Field id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 md:col-span-2">
+              <form onSubmit={onSubmit} noValidate className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
+                <Field id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
                   <input
                     id="organisation_name"
                     name="organisation_name"
@@ -290,7 +290,7 @@ export function JoinForm() {
                   />
                 </Field>
 
-                <Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 md:col-span-2">
+                <Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
                   <select
                     id="membership_type"
                     value={values.membership_type}
@@ -307,7 +307,7 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 md:col-span-2">
+                <Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
                   <textarea
                     id="message"
                     rows={4}
@@ -319,12 +319,12 @@ export function JoinForm() {
                 </Field>
 
                 {serverError ? (
-                  <p role="alert" className="text-sm font-medium md:col-span-2" style={{ color: "#DE007A" }}>
+                  <p role="alert" className="text-sm font-medium col-span-2 sm:col-span-1 md:col-span-2" style={{ color: "#DE007A" }}>
                     {serverError}
                   </p>
                 ) : null}
 
-                <div className="flex flex-col items-stretch gap-3 md:col-span-2 sm:flex-row sm:items-center sm:gap-4">
+                <div className="flex flex-col items-stretch gap-3 col-span-2 sm:col-span-1 md:col-span-2 sm:flex-row sm:items-center sm:gap-4">
                   <button
                     type="submit"
                     disabled={status === "saving"}

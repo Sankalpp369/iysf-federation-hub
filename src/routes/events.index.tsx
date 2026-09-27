@@ -261,7 +261,7 @@ function EventsPage() {
                 {filtered.length === 0 ? (
                   <EmptyState />
                 ) : (
-                  <ul className="flex max-h-[520px] flex-col gap-3 overflow-auto pr-1">
+                  <ul className="flex max-h-[520px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
                     {filtered.map((e) => (
                       <li key={e.id}>
                         <EventCard
