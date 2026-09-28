@@ -361,9 +361,9 @@ function SocialRow() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`IYSF on ${name}`}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-white/15 transition-colors hover:bg-white/10"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/15 transition-colors hover:bg-white/10 sm:h-9 sm:w-9 sm:rounded-[10px]"
         >
-          <Icon size={16} color={IYSF.blue} aria-hidden="true" />
+          <Icon size={14} color={IYSF.blue} aria-hidden="true" />
         </a>
       ))}
     </div>
@@ -380,25 +380,27 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
           <SocialRow />
         </div>
       ) : (
-      <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-10 px-5 py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-8">
+      <div className="iysf-footer mx-auto grid max-w-[1320px] grid-cols-1 gap-3 px-4 py-4 sm:gap-10 sm:px-5 sm:py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-8">
         <div className="min-w-0">
-          <IysfWordmark light />
-          <p className="mt-4 max-w-[320px] text-sm leading-relaxed text-white/70">
-            International Yoga Sports Federation — the global governing body for Yogasana sport.
-          </p>
-          <div className="mt-5">
+          <div className="flex items-center gap-3 sm:block">
+            <div className="shrink-0 origin-left scale-75 sm:scale-100"><IysfWordmark light /></div>
+            <p className="min-w-0 text-[11px] leading-snug text-white/70 sm:mt-4 sm:max-w-[320px] sm:text-sm sm:leading-relaxed">
+              International Yoga Sports Federation — the global governing body for Yogasana sport.
+            </p>
+          </div>
+          <div className="mt-2 sm:mt-5">
             <SocialRow />
           </div>
         </div>
 
         <div className="min-w-0">
-          <div className="mb-4 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: IYSF.orange }}>
+          <div className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em] sm:mb-4" style={{ color: IYSF.orange }}>
             Explore
           </div>
-          <ul className="grid grid-cols-2 gap-x-5 gap-y-2.5">
+          <ul className="grid grid-cols-3 gap-x-3 gap-y-0.5 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-2.5">
             {links.map((l) => (
-              <li key={l.label}>
-                <Link to={l.to} hash={l.hash} className="text-sm text-white/80 hover:text-white">
+              <li key={l.label} className="min-w-0">
+                <Link to={l.to} hash={l.hash} className="block truncate py-0.5 text-[11px] leading-tight text-white/80 hover:text-white sm:py-0 sm:text-sm">
                   {l.label}
                 </Link>
               </li>
@@ -407,19 +409,20 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
         </div>
 
         <div className="min-w-0">
-          <div className="mb-4 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: IYSF.orange }}>
+          <div className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em] sm:mb-4" style={{ color: IYSF.orange }}>
             Headquarters
           </div>
-          <address className="text-sm not-italic leading-relaxed text-white/80">
+          <address className="text-[11px] not-italic leading-snug text-white/80 sm:text-sm sm:leading-relaxed">
             Maison du Sport International
-            <br />
+            <span className="sm:hidden">, </span>
+            <br className="hidden sm:block" />
             Av de Rhodanie 54
             <br />
             Lausanne, Switzerland
           </address>
           <Link
             to="/contact"
-            className="mt-4 inline-block text-sm font-semibold text-white/85 hover:text-white"
+            className="mt-1.5 inline-block text-[11px] font-semibold text-white/85 hover:text-white sm:mt-4 sm:text-sm"
           >
             Contact IYSF →
           </Link>
@@ -427,7 +430,7 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
       </div>
       )}
       <div className="border-t border-white/10">
-        <div className="mx-auto max-w-[1320px] px-5 py-5 text-center text-xs text-white/60 md:px-8">
+        <div className="mx-auto max-w-[1320px] px-4 py-2 text-center text-[11px] text-white/60 sm:px-5 sm:py-5 sm:text-xs md:px-8">
           © 2026 IYSF
         </div>
       </div>

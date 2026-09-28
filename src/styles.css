@@ -194,8 +194,29 @@
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main form button {
-    min-height: 44px;
+    min-height: 40px;
   }
+  main input:not([type="checkbox"]):not([type="radio"]),
+  main select,
+  main textarea {
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+    font-size: 14px !important;
+  }
+  main { font-size: 13px; line-height: 1.4; }
+  main p, main li { font-size: max(11px, min(13px, 1em)); line-height: 1.4; }
+  main h1 { font-size: 27px !important; line-height: 1.2 !important; }
+  main h2 { font-size: 19px !important; line-height: 1.2 !important; margin-bottom: 0.4rem; }
+  main h3 { font-size: 14.5px !important; line-height: 1.2 !important; }
+  main h2 + p, main h3 + p { margin-top: 0.35rem !important; }
+  main label { font-size: 11px !important; }
+  main [class*="text-[10"], main [class*="text-[9"] { font-size: 11px !important; }
+  main [class*="max-w-[1"] > [class*="gap-"], main [class*="max-w-[1"] [class*="grid-cols-"] { gap: 0.5rem; }
+  main [class*="rounded-[1"][class*="p-5"],
+  main [class*="rounded-[1"][class*="p-6"],
+  main [class*="rounded-[1"][class*="p-4"] { padding: 0.7rem !important; }
+  main [class*="mt-8"], main [class*="mt-10"], main [class*="mt-12"] { margin-top: 1rem; }
+  main [class*="mb-8"], main [class*="mb-10"], main [class*="mb-12"] { margin-bottom: 1rem; }
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main form textarea,
