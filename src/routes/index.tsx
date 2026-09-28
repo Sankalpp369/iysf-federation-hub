@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { JoinForm } from "../components/join-form";
-import { PhotoPlaceholder } from "../components/page-shell";
 import { Reveal } from "../components/history-motion";
 import heroVideo from "../assets/hero-video.mp4.asset.json";
 import aboutCompetition from "../assets/about-competition.jpg";
@@ -13,10 +12,6 @@ import aboutGovernance from "../assets/about-governance.jpg";
 import delegation1 from "../assets/delegation-1.jpg";
 import delegation2 from "../assets/delegation-2.jpg";
 import delegation3 from "../assets/delegation-3.jpg";
-import newsFeatured from "../assets/news-featured.jpg";
-import news1 from "../assets/news-1.jpg";
-import news2 from "../assets/news-2.jpg";
-import news3 from "../assets/news-3.jpg";
 import event1 from "../assets/event-1.jpg";
 
 export const Route = createFileRoute("/")({
@@ -212,68 +207,12 @@ function AboutPreview() {
                 loading="lazy"
                 width={900}
                 height={700}
-                 className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
+                 className="aspect-[3/2] h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3]"
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}
           </div>
         </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function FeaturedOfficers() {
-  const officers = [
-    { name: "Rajashree Choudhury", role: "President (USA)", accent: IYSF.orange },
-    { name: "Mritunjay Kumar Pandey", role: "Secretary General (India)", accent: IYSF.blue },
-    { name: "Christian Scaraglino", role: "Vice-President (Sweden)", accent: IYSF.magenta },
-    { name: "Umang Dawn", role: "Vice-President (India)", accent: IYSF.blue },
-    { name: "Adrian Alarcon", role: "Vice-President (Mexico)", accent: IYSF.magenta },
-  ];
-  return (
-    <section className="bg-white">
-      <div className="mx-auto max-w-[1320px] px-5 pb-20 md:px-8 md:pb-24">
-        <Reveal>
-          <h2 className="text-[30px] md:text-[44px]" style={H2()}>
-            Who runs IYSF
-          </h2>
-          <p className="mt-4 max-w-[620px] text-sm leading-relaxed md:text-base" style={{ color: "rgba(65,64,66,0.72)" }}>
-            The Executive Committee is elected by the membership and carries the federation's
-            day-to-day decisions, from championship oversight to international recognition work.
-          </p>
-        </Reveal>
-        <div className="mt-10 flex flex-wrap justify-center gap-5">
-          {officers.map((o, i) => (
-            <Reveal key={o.name} delay={i * 70} className="w-full sm:w-[calc(50%-0.625rem)] lg:w-[calc(20%-1rem)]">
-              <Link
-                to="/about/executive-committee"
-                className="flex h-full flex-col items-center p-5 text-center transition-transform hover:-translate-y-1"
-                style={CARD}
-              >
-                <PhotoPlaceholder name={o.name} accent={o.accent} />
-                <span
-                  className="mt-4 text-[15px] font-bold leading-snug"
-                  style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
-                >
-                  {o.name}
-                </span>
-                <span className="mt-1 text-[12px] font-semibold" style={{ color: "rgba(65,64,66,0.7)" }}>
-                  {o.role}
-                </span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-8">
-          <Link
-            to="/about/executive-committee"
-            className="inline-flex items-center gap-1.5 text-sm font-bold"
-            style={{ color: IYSF.magenta }}
-          >
-            Full Executive Committee <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
       </div>
     </section>
   );
@@ -370,7 +309,7 @@ function WhyJoin() {
                 loading="lazy"
                 width={720}
                 height={512}
-                className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover md:aspect-auto md:h-36"
+                className="aspect-[3/2] h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] md:aspect-auto md:h-36"
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}
@@ -385,12 +324,13 @@ function WhyJoin() {
 }
 
 function News() {
-  const rows = [
-    { img: news1, title: "International judges complete the 2026 recertification cycle" },
-    { img: news2, title: "Junior division records fall at the continental qualifier" },
-    { img: news3, title: "Two new national federations sign membership agreements" },
-    { img: event1, title: "Host city shortlist announced for the next World Championship" },
-  ];
+  const items = [
+    { to: "/results", title: "World Championship delivers the largest field in IYSF history" },
+    { to: "/events", title: "International judges complete the 2026 recertification cycle" },
+    { to: "/events", title: "Junior division records fall at the continental qualifier" },
+    { to: "/events", title: "Two new national federations sign membership agreements" },
+    { to: "/events", title: "Host city shortlist announced for the next World Championship" },
+  ] as const;
   return (
     <section id="news" className="bg-white">
       <div className="mx-auto max-w-[1320px] px-5 pb-20 md:px-8 md:pb-24">
@@ -399,61 +339,20 @@ function News() {
             News
           </h2>
         </Reveal>
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_1fr]">
-          <Reveal>
-            <Link to="/results" className="group block h-full overflow-hidden" style={CARD}>
-              <img
-                src={newsFeatured}
-                alt="Athletes competing at an IYSF world championship"
-                loading="lazy"
-                width={1200}
-                height={800}
-                className="h-64 w-full object-cover md:h-[340px]"
-              />
-              <div className="p-6">
-                <span
-                  className="inline-block rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.18em] text-white"
-                  style={{ background: IYSF.magenta }}
-                >
-                  Featured
-                </span>
-                <h3
-                  className="mt-3 text-[24px] leading-snug"
-                  style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)", fontWeight: 800 }}
-                >
-                  World Championship delivers the largest field in IYSF history
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>
-                  Athletes from across six continents contested the compulsory and optional rounds under the
-                  federation's standardized scoring system.
-                </p>
-              </div>
-            </Link>
-          </Reveal>
-
-          <div className="grid content-start gap-4">
-            {rows.map((r, i) => (
-              <Reveal key={r.title} delay={i * 70}>
-                <Link to="/events" className="group grid min-w-0 grid-cols-[6rem_minmax(0,1fr)] items-center gap-3 p-3 transition-transform hover:-translate-y-0.5 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4" style={CARD}>
-                  <img
-                    src={r.img}
-                    alt=""
-                    loading="lazy"
-                    width={680}
-                    height={512}
-                    className="h-20 w-24 rounded-[10px] object-cover sm:w-28"
-                  />
-                  <h3
-                    className="min-w-0 text-[14px] font-bold leading-snug sm:text-[15px]"
-                    style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
-                  >
-                    {r.title}
-                  </h3>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+        <ul className="mt-6 max-w-[860px]" style={{ borderTop: `1px solid ${IYSF.blueLine}` }}>
+          {items.map((n) => (
+            <li key={n.title} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+              <Link
+                to={n.to}
+                className="flex items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
+                style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
+              >
+                <span className="min-w-0">{n.title}</span>
+                <ArrowRight size={16} aria-hidden="true" className="shrink-0" style={{ color: IYSF.magenta }} />
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -476,7 +375,6 @@ function Index() {
         <StatStrip />
         <AboutPreview />
         <WhyJoin />
-        <FeaturedOfficers />
         <News />
         <JoinForm />
         <MembershipCta />
