@@ -96,18 +96,18 @@ function Overview() {
             <p className="mx-auto mt-5 max-w-[560px] text-lg font-medium md:mx-0 md:text-xl" style={{ color: "rgba(65,64,66,0.78)" }}>
               64 member federations. Is yours one of them?
             </p>
-            <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center md:justify-start">
+            <div className="mt-8 flex flex-row items-center justify-center gap-2 sm:gap-3 md:justify-start">
               <Link
                 to="/"
                 hash="join"
-                className="rounded-[12px] px-7 py-4 text-center text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+                className="rounded-[12px] px-4 py-3 text-center text-sm font-bold text-white transition-transform hover:-translate-y-0.5 sm:px-7 sm:py-4 sm:text-base"
                 style={{ background: IYSF.orange, boxShadow: "0 16px 36px -16px rgba(250,175,64,0.95)" }}
               >
                 Join a federation
               </Link>
               <Link
                 to="/events"
-                className="rounded-[12px] border-2 px-6 py-[13px] text-center text-base font-bold transition-colors hover:bg-black/5"
+                className="rounded-[12px] border-2 px-4 py-[10px] text-center text-sm font-bold sm:px-6 sm:py-[13px] sm:text-base transition-colors hover:bg-black/5"
                 style={{ borderColor: IYSF.charcoal, color: IYSF.charcoal }}
               >
                 See results
@@ -150,7 +150,7 @@ function StatStrip() {
           <Reveal
             key={s}
             delay={i * 90}
-            className="flex min-h-20 min-w-0 items-center justify-center px-2 py-5 text-center text-[11px] font-bold uppercase leading-snug tracking-[0.08em] text-white sm:px-3 sm:text-[12px] sm:tracking-[0.12em] md:py-6 md:text-[14px] md:tracking-[0.14em]"
+            className="flex min-h-14 min-w-0 items-center justify-center px-2 py-3 text-center text-[10.5px] font-bold uppercase leading-snug tracking-[0.06em] sm:min-h-20 sm:py-5 text-white sm:px-3 sm:text-[12px] sm:tracking-[0.12em] md:py-6 md:text-[14px] md:tracking-[0.14em]"
             style={{
               borderLeft: i % 2 === 1 ? "1px solid rgba(255,255,255,0.25)" : undefined,
               borderTop: i > 1 ? "1px solid rgba(255,255,255,0.2)" : undefined,
@@ -207,7 +207,7 @@ function AboutPreview() {
                 loading="lazy"
                 width={900}
                 height={700}
-                 className="aspect-[3/2] h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3]"
+                 className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}
@@ -277,21 +277,21 @@ function WhyJoin() {
         </Reveal>
         <div className="mt-10 grid grid-cols-1 gap-6 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-3">
           {benefits.map(({ Icon, title, desc }, i) => (
-            <Reveal key={title} delay={i * 90}>
-              <div className="h-full p-4 sm:p-7" style={CARD}>
+            <Reveal key={title} delay={i * 90} className={i === 2 ? "max-sm:col-span-2" : undefined}>
+              <div className="h-full p-3 sm:p-7" style={CARD}>
                 <span
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-[12px]"
+                  className="inline-flex h-9 w-9 items-center sm:h-12 sm:w-12 justify-center rounded-[12px]"
                   style={{ background: "rgba(66,152,211,0.12)" }}
                 >
                   <Icon size={22} color={IYSF.blue} aria-hidden="true" />
                 </span>
                 <h3
-                  className="mt-5 text-[19px] font-bold"
+                  className="mt-3 text-[15px] font-bold leading-tight sm:mt-5 sm:text-[19px]"
                   style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
                 >
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>
+                <p className="mt-1.5 text-[13px] leading-snug sm:mt-2 sm:text-sm sm:leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>
                   {desc}
                 </p>
               </div>
@@ -300,7 +300,7 @@ function WhyJoin() {
         </div>
 
         <Reveal delay={120}>
-          <div className="mt-10 grid grid-cols-2 gap-3 max-sm:mt-6 sm:gap-4 md:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-3 max-sm:mt-5 sm:gap-4 md:grid-cols-4">
             {strip.map((s) => (
               <img
                 key={s.src}
@@ -309,7 +309,7 @@ function WhyJoin() {
                 loading="lazy"
                 width={720}
                 height={512}
-                className="aspect-[3/2] h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] md:aspect-auto md:h-36"
+                className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover md:aspect-auto md:h-36"
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}

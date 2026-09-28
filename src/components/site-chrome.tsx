@@ -395,7 +395,7 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
           <div className="mb-4 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: IYSF.orange }}>
             Explore
           </div>
-          <ul className="grid grid-cols-1 gap-x-5 gap-y-2.5 min-[380px]:grid-cols-2">
+          <ul className="grid grid-cols-2 gap-x-5 gap-y-2.5">
             {links.map((l) => (
               <li key={l.label}>
                 <Link to={l.to} hash={l.hash} className="text-sm text-white/80 hover:text-white">
