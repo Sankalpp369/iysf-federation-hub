@@ -139,21 +139,21 @@ export function JoinForm() {
               National bodies governing competitive Yogasana may apply for IYSF affiliation. Submit
               your details and the membership commission will respond with the next steps.
             </p>
-            <ul className="mt-8 space-y-4 border-l border-black/10 pl-6">
+            <ul className="mt-8 grid grid-cols-2 gap-2 sm:block sm:space-y-4 sm:border-l sm:border-black/10 sm:pl-6">
               {[
                 "Application received and acknowledged",
                 "Eligibility and governance review",
                 "Provisional status granted",
                 "Full membership ratified at congress",
               ].map((s, i) => (
-                <li key={s} className="flex gap-3">
+                <li key={s} className="flex gap-2 rounded-[10px] border border-[rgba(66,152,211,0.28)] p-3 sm:gap-3 sm:rounded-none sm:border-0 sm:p-0">
                   <span
                     className="mt-0.5 text-[12px]"
                     style={{ fontFamily: "var(--font-mono)", color: "#4298D3" }}
                   >
                     0{i + 1}
                   </span>
-                  <span className="text-sm" style={{ color: "#414042" }}>
+                  <span className="text-[13px] leading-snug sm:text-sm" style={{ color: "#414042" }}>
                     {s}
                   </span>
                 </li>
@@ -232,7 +232,7 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <Field id="contact_name" label="Primary contact" error={errors.contact_name} className="min-w-0">
+                <Field id="contact_name" label="Primary contact" error={errors.contact_name} className="min-w-0 col-span-2 sm:col-span-1">
                   <input
                     id="contact_name"
                     value={values.contact_name}
@@ -290,7 +290,7 @@ export function JoinForm() {
                   />
                 </Field>
 
-                <Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
+                <Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 sm:col-span-1 md:col-span-2">
                   <select
                     id="membership_type"
                     value={values.membership_type}
