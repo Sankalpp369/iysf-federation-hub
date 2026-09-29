@@ -1,3 +1,4 @@
+import { useMobileMore, MobileMoreButton } from "../components/mobile-more";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { Search, ExternalLink, X, Users, ArrowRight } from "lucide-react";
@@ -42,6 +43,7 @@ function useHydrated() {
 }
 
 function DirectoryPage() {
+  const more = useMobileMore();
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "All">("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -239,8 +241,8 @@ function DirectoryPage() {
                   <EmptyState />
                 ) : (
                   <ul className="flex max-h-[560px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
-                    {filtered.map((f) => (
-                      <li key={f.id}>
+                    {filtered.map((f, i) => (
+                      <li key={f.id} className={more.hide(i, 4)}>
                         <FederationCard
                           federation={f}
                           onSelect={() => setSelectedId(f.id)}
@@ -249,6 +251,9 @@ function DirectoryPage() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {filtered.length > 4 && (
+                  <MobileMoreButton open={more.open} onToggle={() => more.setOpen((v) => !v)} more={`Show all ${filtered.length} federations`} />
                 )}
               </div>
             </div>

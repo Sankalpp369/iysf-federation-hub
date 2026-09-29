@@ -1,3 +1,4 @@
+import { useMobileMore, MobileMoreButton } from "../components/mobile-more";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { Search, MapPin, X } from "lucide-react";
@@ -50,6 +51,8 @@ function useHydrated() {
 }
 
 function EventsPage() {
+  const upMore = useMobileMore();
+  const arMore = useMobileMore();
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "All">("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -262,8 +265,8 @@ function EventsPage() {
                   <EmptyState />
                 ) : (
                   <ul className="flex max-h-[520px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
-                    {filtered.map((e) => (
-                      <li key={e.id}>
+                    {filtered.map((e, i) => (
+                      <li key={e.id} className={upMore.hide(i, 2)}>
                         <EventCard
                           event={e}
                           onRegister={() => setRegisterFor(e)}
@@ -273,6 +276,9 @@ function EventsPage() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {filtered.length > 2 && (
+                  <MobileMoreButton open={upMore.open} onToggle={() => upMore.setOpen((v) => !v)} more="View full calendar" />
                 )}
               </div>
             </div>
@@ -302,10 +308,10 @@ function EventsPage() {
             </h2>
 
             <ul className="mt-8 divide-y divide-black/[0.08] rounded-lg border border-black/[0.08] bg-white">
-              {ARCHIVE.map((e) => (
+              {ARCHIVE.map((e, i) => (
                 <li
                   key={e.id}
-                  className="grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[160px_1fr_1fr_auto] md:items-center md:gap-6 md:px-5"
+                  className={`${arMore.hide(i, 3)} grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[160px_1fr_1fr_auto] md:items-center md:gap-6 md:px-5`}
                 >
                   <div
                     className="text-[13px]"
@@ -344,6 +350,9 @@ function EventsPage() {
                 </li>
               ))}
             </ul>
+            {ARCHIVE.length > 3 && (
+              <MobileMoreButton open={arMore.open} onToggle={() => arMore.setOpen((v) => !v)} more={`Show all ${ARCHIVE.length} past events`} />
+            )}
           </div>
         </section>
       </main>
