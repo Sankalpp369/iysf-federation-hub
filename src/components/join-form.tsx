@@ -135,25 +135,28 @@ export function JoinForm() {
             >
               Join a federation
             </h2>
-            <p className="mt-5 max-w-[420px] text-base leading-relaxed" style={{ color: "#414042" }}>
+            <p className="mt-2 text-[13px] sm:hidden" style={{ color: "#414042" }}>
+              National Yogasana bodies can apply for IYSF affiliation.
+            </p>
+            <p className="mt-5 hidden max-w-[420px] text-base leading-relaxed sm:block" style={{ color: "#414042" }}>
               National bodies governing competitive Yogasana may apply for IYSF affiliation. Submit
               your details and the membership commission will respond with the next steps.
             </p>
-            <ul className="mt-8 grid grid-cols-2 gap-2 sm:block sm:space-y-4 sm:border-l sm:border-black/10 sm:pl-6">
+            <ul className="mt-3 grid grid-cols-2 gap-1.5 sm:mt-8 sm:block sm:space-y-4 sm:border-l sm:border-black/10 sm:pl-6">
               {[
                 "Application received and acknowledged",
                 "Eligibility and governance review",
                 "Provisional status granted",
                 "Full membership ratified at congress",
               ].map((s, i) => (
-                <li key={s} className="flex gap-2 rounded-[10px] border border-[rgba(66,152,211,0.28)] p-3 sm:gap-3 sm:rounded-none sm:border-0 sm:p-0">
+                <li key={s} className="flex items-center gap-1.5 rounded-full border border-[rgba(66,152,211,0.28)] px-2 py-1 sm:items-start sm:gap-3 sm:rounded-none sm:border-0 sm:p-0">
                   <span
-                    className="mt-0.5 text-[12px]"
+                    className="text-[11px] sm:mt-0.5 sm:text-[12px]"
                     style={{ fontFamily: "var(--font-mono)", color: "#4298D3" }}
                   >
                     0{i + 1}
                   </span>
-                  <span className="text-[13px] leading-snug sm:text-sm" style={{ color: "#414042" }}>
+                  <span className="truncate text-[11px] leading-tight sm:whitespace-normal sm:text-sm sm:leading-snug" style={{ color: "#414042" }}>
                     {s}
                   </span>
                 </li>
