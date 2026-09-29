@@ -194,7 +194,7 @@ export function JoinForm() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={onSubmit} noValidate className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
+              <form onSubmit={onSubmit} noValidate className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
                 <Field id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
                   <input
                     id="organisation_name"
@@ -246,16 +246,6 @@ export function JoinForm() {
                   />
                 </Field>
 
-                <Field id="contact_role" label="Role (optional)" error={errors.contact_role} className="min-w-0">
-                  <input
-                    id="contact_role"
-                    value={values.contact_role}
-                    onChange={set("contact_role")}
-                    maxLength={120}
-                    className={fieldCls}
-                  />
-                </Field>
-
                 <Field id="email" label="Email" error={errors.email} className="min-w-0">
                   <input
                     id="email"
@@ -268,32 +258,7 @@ export function JoinForm() {
                   />
                 </Field>
 
-                <Field id="phone" label="Phone (optional)" error={errors.phone} className="min-w-0">
-                  <input id="phone" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
-                </Field>
-
-                <Field id="website" label="Website (optional)" error={errors.website} className="min-w-0">
-                  <input
-                    id="website"
-                    value={values.website}
-                    onChange={set("website")}
-                    maxLength={255}
-                    placeholder="example.org"
-                    className={fieldCls}
-                  />
-                </Field>
-
-                <Field id="athletes_estimate" label="Registered athletes (optional)" error={errors.athletes_estimate} className="min-w-0">
-                  <input
-                    id="athletes_estimate"
-                    value={values.athletes_estimate}
-                    onChange={set("athletes_estimate")}
-                    maxLength={40}
-                    className={fieldCls}
-                  />
-                </Field>
-
-                <Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 sm:col-span-1 md:col-span-2">
+<Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 sm:col-span-1 md:col-span-1">
                   <select
                     id="membership_type"
                     value={values.membership_type}
@@ -310,7 +275,48 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
+                <details className="group col-span-2 sm:col-span-1 md:col-span-2">
+                  <summary className="flex min-h-[40px] cursor-pointer list-none items-center text-sm font-semibold" style={{ color: "#4298D3" }}>
+                    <span className="mr-2 transition-transform group-open:rotate-90" aria-hidden="true">›</span>
+                    Add more details (optional)
+                  </summary>
+                  <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
+<Field id="contact_role" label="Role (optional)" error={errors.contact_role} className="min-w-0">
+                  <input
+                    id="contact_role"
+                    value={values.contact_role}
+                    onChange={set("contact_role")}
+                    maxLength={120}
+                    className={fieldCls}
+                  />
+                </Field>
+
+<Field id="phone" label="Phone (optional)" error={errors.phone} className="min-w-0">
+                  <input id="phone" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
+                </Field>
+
+<Field id="website" label="Website (optional)" error={errors.website} className="min-w-0">
+                  <input
+                    id="website"
+                    value={values.website}
+                    onChange={set("website")}
+                    maxLength={255}
+                    placeholder="example.org"
+                    className={fieldCls}
+                  />
+                </Field>
+
+<Field id="athletes_estimate" label="Registered athletes (optional)" error={errors.athletes_estimate} className="min-w-0">
+                  <input
+                    id="athletes_estimate"
+                    value={values.athletes_estimate}
+                    onChange={set("athletes_estimate")}
+                    maxLength={40}
+                    className={fieldCls}
+                  />
+                </Field>
+
+<Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
                   <textarea
                     id="message"
                     rows={4}
@@ -320,6 +326,8 @@ export function JoinForm() {
                     className={fieldCls}
                   />
                 </Field>
+                  </div>
+                </details>
 
                 {serverError ? (
                   <p role="alert" className="text-sm font-medium col-span-2 sm:col-span-1 md:col-span-2" style={{ color: "#DE007A" }}>
