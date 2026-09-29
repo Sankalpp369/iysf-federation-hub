@@ -320,25 +320,36 @@ function MobileGroup({
   items: Item[];
   onDone: () => void;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const id = `mnav-${title.toLowerCase()}`;
   return (
-    <div className="py-1">
-      <div
-        className="px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-[0.16em]"
-        style={{ color: IYSF.blue }}
+    <div>
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={id}
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-[rgba(66,152,211,0.08)]"
+        style={{ color: IYSF.charcoal }}
       >
         {title}
-      </div>
-      {items.map((l) => (
-        <Link
-          key={l.to}
-          to={l.to}
-          onClick={onDone}
-          className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-[rgba(66,152,211,0.08)]"
-          style={{ color: IYSF.charcoal }}
-        >
-          {l.label}
-        </Link>
-      ))}
+        <ChevronDown size={18} aria-hidden="true" className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+      </button>
+      {expanded && (
+        <div id={id} className="ml-3 border-l-2 pl-2" style={{ borderColor: IYSF.blueLine }}>
+          {items.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              onClick={onDone}
+              className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-[rgba(66,152,211,0.08)]"
+              style={{ color: IYSF.charcoal }}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
