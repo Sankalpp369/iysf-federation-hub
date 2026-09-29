@@ -136,9 +136,11 @@ export function GuidesList({
                 >
                   {g.title}
                 </div>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: "#414042" }}>
-                  {g.desc}
-                </p>
+                <MobileCollapse label="What's inside">
+                  <p className="mt-2 text-sm leading-relaxed" style={{ color: "#414042" }}>
+                    {g.desc}
+                  </p>
+                </MobileCollapse>
               </div>
               <a
                 href={g.pdf}
@@ -208,7 +210,7 @@ export function SupportingContent({ track, color }: { track: string; color: stri
               key={n}
               role="img"
               aria-label={`Image placeholder — ${track} in practice`}
-              className="flex aspect-[4/3] items-center justify-center rounded-lg border border-dashed border-black/20 bg-white text-center text-xs"
+              className={`flex aspect-[4/3] items-center justify-center rounded-lg border border-dashed border-black/20 bg-white text-center text-xs ${n === 2 ? "max-sm:hidden" : ""}`}
               style={{ color: "#414042", fontFamily: "var(--font-mono)" }}
             >
               Image placeholder — {track} in practice

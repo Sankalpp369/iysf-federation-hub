@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Quote } from "lucide-react";
 import sponsorshipPosterAsset from "../assets/2026-sponsorship-poster.webp.asset.json";
@@ -46,6 +47,18 @@ function SponsorButtons() {
   );
 }
 
+function LetterRest({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className={open ? "" : "max-sm:hidden"}>{children}</div>
+      <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className="rounded-lg border px-4 py-2 text-[14px] font-bold sm:hidden" style={{ borderColor: IYSF.blueLine, color: IYSF.charcoal }}>
+        {open ? "Collapse letter" : "Read full letter"}
+      </button>
+    </>
+  );
+}
+
 function SponsorshipPage() {
   return (
     <PageShell>
@@ -81,6 +94,7 @@ function SponsorshipPage() {
 
           <p>It is with great excitement, humility, and a deeply grateful heart that I invite you to join us for the <strong>17th IYSF World Yoga Asana Championships.</strong></p>
 
+          <LetterRest>
           <p>Seventeen World Championships when I look back, I often ask myself how a dream that began in <strong>2003</strong> could have come this far.</p>
 
           <p>At that time, it was simply an idea in my heart to create a healthy sport through Yoga Asana, where children, adults, and Masters could challenge themselves, develop discipline, learn respect, and, most importantly, <strong>become better human beings.</strong></p>
@@ -145,6 +159,8 @@ function SponsorshipPage() {
           <p>With deepest gratitude, love, and respect,</p>
 
           <p><strong>Rajashree Choudhury</strong><br />President<br /><strong>International Yoga Sports Federation (IYSF)</strong></p>
+
+          </LetterRest>
 
           <div className="pt-5">
             <SponsorButtons />
