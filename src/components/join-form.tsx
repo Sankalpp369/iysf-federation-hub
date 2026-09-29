@@ -74,6 +74,7 @@ export function JoinForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [serverError, setServerError] = useState("");
+  const [more, setMore] = useState(false);
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -275,12 +276,12 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <details className="group col-span-2 sm:col-span-1 md:col-span-2">
-                  <summary className="flex min-h-[40px] cursor-pointer list-none items-center text-sm font-semibold" style={{ color: "#4298D3" }}>
-                    <span className="mr-2 transition-transform group-open:rotate-90" aria-hidden="true">›</span>
+                <div className="col-span-2 sm:contents">
+                  <button type="button" onClick={() => setMore((m) => !m)} aria-expanded={more} className="flex min-h-[40px] w-full items-center text-left text-sm font-semibold sm:hidden" style={{ color: "#4298D3" }}>
+                    <span className={`mr-2 transition-transform ${more ? "rotate-90" : ""}`} aria-hidden="true">›</span>
                     Add more details (optional)
-                  </summary>
-                  <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
+                  </button>
+                  <div className={`${more ? "grid" : "hidden"} mt-2 grid-cols-2 gap-2 sm:contents`}>
 <Field id="contact_role" label="Role (optional)" error={errors.contact_role} className="min-w-0">
                   <input
                     id="contact_role"
@@ -327,7 +328,7 @@ export function JoinForm() {
                   />
                 </Field>
                   </div>
-                </details>
+                </div>
 
                 {serverError ? (
                   <p role="alert" className="text-sm font-medium col-span-2 sm:col-span-1 md:col-span-2" style={{ color: "#DE007A" }}>
