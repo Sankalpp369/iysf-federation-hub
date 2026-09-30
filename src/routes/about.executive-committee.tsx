@@ -1,3 +1,4 @@
+import { MobileCollapse } from "../components/mobile-more";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHeader, Section, Prose, InfoCard, PhotoPlaceholder } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
@@ -87,7 +88,7 @@ function ExecutiveCommitteePage() {
           {OFFICERS.map((o) => (
             <li key={o.name}>
               <InfoCard title={o.name} meta={o.role} accent={o.accent} photo>
-                {o.bio}
+                <MobileCollapse label="Read bio" openLabel="Hide bio">{o.bio}</MobileCollapse>
               </InfoCard>
             </li>
           ))}
@@ -96,8 +97,18 @@ function ExecutiveCommitteePage() {
       </Section>
 
       <Section heading="Honorary members" tint>
+        <ul className="grid grid-cols-2 gap-2 sm:hidden">
+          {HONORARY.map(([name, country, role]) => (
+            <li key={name} className="rounded-[12px] border bg-white p-4" style={{ borderColor: IYSF.blueLine }}>
+              <PhotoPlaceholder name={name} size="sm" />
+              <h3 className="mt-2 font-semibold" style={{ color: IYSF.charcoal }}>{name}</h3>
+              <p className="text-[12px]" style={{ color: IYSF.magenta }}>{country}</p>
+              <p className="mt-1 text-[12px]" style={{ color: IYSF.charcoal }}>{role}</p>
+            </li>
+          ))}
+        </ul>
         <div
-          className="overflow-x-auto rounded-[12px] border bg-white"
+          className="overflow-x-auto rounded-[12px] border bg-white max-sm:hidden"
           style={{ borderColor: IYSF.blueLine }}
         >
           <table className="w-full min-w-[560px] text-left text-sm">
