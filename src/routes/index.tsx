@@ -1,3 +1,4 @@
+import { MobileCollapse } from "../components/mobile-more";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
@@ -193,13 +194,13 @@ function AboutPreview() {
           </div>
         </Reveal>
         <Reveal delay={100}>
-           <div className="grid grid-cols-2 gap-3 sm:gap-4">
+           <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-4">
             {[
               { src: aboutCompetition, alt: "Athlete mid-routine at an IYSF championship" },
               { src: aboutSport, alt: "Judges scoring a competition round" },
               { src: aboutChampions, alt: "Medal ceremony at a world championship" },
               { src: aboutGovernance, alt: "Federation officials in session" },
-            ].map((c) => (
+            ].map((c, i) => (
               <img
                 key={c.src}
                 src={c.src}
@@ -207,7 +208,7 @@ function AboutPreview() {
                 loading="lazy"
                 width={900}
                 height={700}
-                 className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
+                 className={`h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] ${i === 0 ? "col-span-3 aspect-[16/9]" : "aspect-square"}`}
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}
@@ -278,7 +279,7 @@ function WhyJoin() {
         <div className="mt-10 grid grid-cols-1 gap-6 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-3">
           {benefits.map(({ Icon, title, desc }, i) => (
             <Reveal key={title} delay={i * 90} className={i === 2 ? "max-sm:col-span-2" : undefined}>
-              <div className="h-full p-3 sm:p-7" style={CARD}>
+              <div className="h-full p-4 sm:p-7" style={CARD}>
                 <span
                   className="inline-flex h-9 w-9 items-center sm:h-12 sm:w-12 justify-center rounded-[12px]"
                   style={{ background: "rgba(66,152,211,0.12)" }}
@@ -286,22 +287,26 @@ function WhyJoin() {
                   <Icon size={22} color={IYSF.blue} aria-hidden="true" />
                 </span>
                 <h3
-                  className="mt-3 text-[15px] font-bold leading-tight sm:mt-5 sm:text-[19px]"
+                  className="mt-4 font-bold leading-tight sm:mt-5 sm:text-[19px]"
                   style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
                 >
                   {title}
                 </h3>
-                <p className="mt-1.5 text-[13px] leading-snug sm:mt-2 sm:text-sm sm:leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>
-                  {desc}
-                </p>
+                {i === 0 ? (
+                  <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>{desc}</p>
+                ) : (
+                  <MobileCollapse label="More">
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>{desc}</p>
+                  </MobileCollapse>
+                )}
               </div>
             </Reveal>
           ))}
         </div>
 
         <Reveal delay={120}>
-          <div className="mt-10 grid grid-cols-2 gap-3 max-sm:mt-5 sm:gap-4 md:grid-cols-4">
-            {strip.map((s) => (
+          <div className="mt-10 grid grid-cols-3 gap-2 max-sm:mt-6 sm:grid-cols-2 sm:gap-4 md:grid-cols-4">
+            {strip.map((s, i) => (
               <img
                 key={s.src}
                 src={s.src}
@@ -309,7 +314,7 @@ function WhyJoin() {
                 loading="lazy"
                 width={720}
                 height={512}
-                className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover md:aspect-auto md:h-36"
+                className={`h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] md:aspect-auto md:h-36 ${i === 0 ? "col-span-3 aspect-[16/9] sm:col-span-1" : "aspect-square"}`}
                 style={{ border: `1px solid ${IYSF.blueLine}` }}
               />
             ))}
