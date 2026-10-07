@@ -1,4 +1,5 @@
 import { Download, Mail } from "lucide-react";
+import { MobileCollapse } from "./mobile-more";
 import { Link } from "@tanstack/react-router";
 
 export function TrackIcon({ color }: { color: string }) {

@@ -199,44 +199,40 @@
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main textarea {
-    padding-top: 0.4rem !important;
-    padding-bottom: 0.4rem !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
     font-size: 14px !important;
   }
-  main { font-size: 13px; line-height: 1.4; }
-  main p, main li { font-size: max(11px, min(13px, 1em)); line-height: 1.4; }
-  main h1 { font-size: 27px !important; line-height: 1.2 !important; }
-  main h2 { font-size: 19px !important; line-height: 1.2 !important; margin-bottom: 0.4rem; }
-  main h3 { font-size: 14.5px !important; line-height: 1.2 !important; }
-  main h2 + p, main h3 + p { margin-top: 0.35rem !important; }
-  main label { font-size: 11px !important; }
-  main [class*="text-[10"], main [class*="text-[9"] { font-size: 11px !important; }
-  main [class*="max-w-[1"] > [class*="gap-"], main [class*="max-w-[1"] [class*="grid-cols-"] { gap: 0.5rem; }
-  main [class*="rounded-[1"][class*="p-5"],
-  main [class*="rounded-[1"][class*="p-6"],
-  main [class*="rounded-[1"][class*="p-4"] { padding: 0.7rem !important; }
-  main [class*="mt-8"], main [class*="mt-10"], main [class*="mt-12"] { margin-top: 1rem; }
-  main [class*="mb-8"], main [class*="mb-10"], main [class*="mb-12"] { margin-bottom: 1rem; }
+  main { font-size: 14px; line-height: 1.4; }
+  main p, main li, main td, main blockquote { font-size: 14px !important; line-height: 1.4 !important; }
+  main h1 { font-size: 26px !important; line-height: 1.2 !important; }
+  main h2 { font-size: 20px !important; line-height: 1.2 !important; margin-bottom: 8px; }
+  main h3 { font-size: 16px !important; line-height: 1.2 !important; }
+  main h2 + p, main h3 + p { margin-top: 8px !important; }
+  main label, main small, main figcaption, main caption,
+  main [class*="text-[9"], main [class*="text-[10"], main [class*="text-[11"],
+  main [class*="text-[12"], main .text-xs { font-size: 12px !important; }
+  main [class*="text-[13"], main [class*="text-[14"], main [class*="text-[15"], main .text-sm { font-size: 14px !important; }
+  main [class*="max-w-[1"] [class*="grid-cols-"], main [class*="max-w-[1"] ul[class*="grid"] { gap: 8px !important; }
+  main [class*="rounded-["][class*="p-3"],
+  main [class*="rounded-["][class*="p-4"],
+  main [class*="rounded-["][class*="p-5"],
+  main [class*="rounded-["][class*="p-6"],
+  main [class*="rounded-["][class*="p-7"],
+  main [class*="rounded-lg"][class*="p-5"] { padding: 16px !important; }
+  main [class*="mt-6"], main [class*="mt-8"], main [class*="mt-10"], main [class*="mt-12"] { margin-top: 16px; }
+  main [class*="mb-6"], main [class*="mb-8"], main [class*="mb-10"], main [class*="mb-12"] { margin-bottom: 16px; }
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main form textarea,
   main form button[type="submit"] {
     width: 100%;
   }
-  main form > * + * {
-    margin-top: 0.25rem;
-  }
-  main img,
-  main video {
-    max-width: 100%;
-  }
-  main [class*="max-w-[1"].px-5 { padding-left: 1rem; padding-right: 1rem; }
-  main [class*="max-w-[1"].py-24,
-  main [class*="max-w-[1"].py-20 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
-  main [class*="max-w-[1"].py-16,
-  main [class*="max-w-[1"].py-14 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
-  main [class*="max-w-[1"].py-12 { padding-top: 2rem; padding-bottom: 2rem; }
-  main [class*="max-w-[1"].pb-20 { padding-bottom: 2.25rem; }
-  main [class*="max-w-[1"].pt-16,
-  main [class*="max-w-[1"].pt-14 { padding-top: 2.25rem; }
+  main form > * + * { margin-top: 8px; }
+  main img, main video { max-width: 100%; }
+  main [class*="max-w-["][class*="px-5"],
+  main [class*="max-w-["][class*="px-6"] { padding-left: 16px !important; padding-right: 16px !important; }
+  main [class*="max-w-["][class*="py-"] { padding-top: 32px !important; padding-bottom: 32px !important; }
+  main [class*="max-w-["][class*="pb-"] { padding-bottom: 32px !important; }
+  main [class*="max-w-["][class*="pt-"] { padding-top: 32px !important; }
 }
