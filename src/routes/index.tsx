@@ -1,11 +1,12 @@
-import { MobileCollapse } from "../components/mobile-more";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { JoinForm } from "../components/join-form";
 import { Reveal } from "../components/history-motion";
-import heroVideo from "../assets/hero-video.mp4.asset.json";
+import hero768 from "../assets/hero-championship-768.jpg.asset.json";
+import hero1280 from "../assets/hero-championship-1280.jpg.asset.json";
+import { NEWS, formatNewsDate } from "../data/news";
 import aboutCompetition from "../assets/about-competition.jpg";
 import aboutSport from "../assets/about-sport.jpg";
 import aboutChampions from "../assets/about-champions.jpg";
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "IYSF is the global governing body for Yogasana sport: 64 member federations, world championships, judge certification, and the path toward Olympic recognition.",
+          "IYSF is the global governing body for Yogasana sport: 64 member federations, world championships, judge certification, working toward wider international recognition for Yogasana as a sport.",
       },
       { property: "og:title", content: "IYSF — International Yoga Sports Federation" },
       {
@@ -32,6 +33,9 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "preload", as: "image", href: hero1280.url, imageSrcSet: `${hero768.url} 768w, ${hero1280.url} 1280w`, imageSizes: "100vw" },
     ],
   }),
 });
@@ -53,69 +57,47 @@ const H2 = (extra?: React.CSSProperties): React.CSSProperties => ({
 
 function Hero() {
   return (
-    <section aria-label="IYSF championship film" className="relative isolate overflow-hidden bg-black">
-      <video
-        src={heroVideo.url}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        className="h-[40vh] min-h-[240px] max-h-[420px] w-full md:max-h-none object-cover object-center md:h-[78vh]"
+    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden" style={{ background: IYSF.charcoal }}>
+      <img
+        src={hero1280.url}
+        srcSet={`${hero768.url} 768w, ${hero1280.url} 1280w`}
+        sizes="100vw"
+        width={1280}
+        height={646}
+        fetchPriority="high"
+        decoding="async"
+        alt="17th World Yogasana Championship — Marina di Camerota, Italy, December 4–6, 2026"
+        className="block aspect-[1280/646] w-full bg-white object-cover object-left md:max-h-[72vh]"
       />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
-        style={{ background: "linear-gradient(to top, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
-      />
-    </section>
-  );
-}
-
-function Overview() {
-  return (
-    <section id="overview" className="bg-white">
-      <div className="mx-auto max-w-[1320px] px-5 py-20 md:px-8 md:py-24">
-        <Reveal>
-          <div className="mx-auto max-w-[860px] text-center md:mx-0 md:text-left">
-            <div
-              className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white"
-              style={{ background: IYSF.magenta }}
+      <div style={{ background: `linear-gradient(180deg, #2b2a2c 0%, ${IYSF.charcoal} 100%)` }}>
+        <div className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 md:py-14">
+          <h1
+            id="hero-title"
+            className="text-[30px] leading-[1.08] text-white md:text-[56px]"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 800, letterSpacing: "-0.025em" }}
+          >
+            A practice, judged as a sport.
+          </h1>
+          <p className="mt-3 max-w-[560px] text-base font-medium text-white/90 md:text-xl">
+            64 member federations. Is yours one of them?
+          </p>
+          <div className="mt-6 flex flex-row flex-wrap items-center gap-3">
+            <Link
+              to="/"
+              hash="join"
+              className="inline-flex min-h-11 items-center rounded-[12px] px-5 py-3 text-base font-bold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none"
+              style={{ background: IYSF.orange, color: "#3A2400" }}
             >
-              World Yogasana Championships
-            </div>
-            <h1
-              className="text-[38px] leading-[1.04] md:text-[64px]"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 800,
-                letterSpacing: "-0.025em",
-                color: IYSF.charcoal,
-              }}
+              Join a federation
+            </Link>
+            <Link
+              to="/results"
+              className="inline-flex min-h-11 items-center rounded-[12px] border-2 border-white px-5 py-[10px] text-base font-bold text-white transition-colors hover:bg-white/10"
             >
-              A practice, judged as a sport.
-            </h1>
-            <p className="mx-auto mt-5 max-w-[560px] text-lg font-medium md:mx-0 md:text-xl" style={{ color: "rgba(65,64,66,0.78)" }}>
-              64 member federations. Is yours one of them?
-            </p>
-            <div className="mt-8 flex flex-row items-center justify-center gap-2 sm:gap-3 md:justify-start">
-              <Link
-                to="/"
-                hash="join"
-                className="rounded-[12px] px-4 py-3 text-center text-sm font-bold text-white transition-transform hover:-translate-y-0.5 sm:px-7 sm:py-4 sm:text-base"
-                style={{ background: IYSF.orange, boxShadow: "0 16px 36px -16px rgba(250,175,64,0.95)" }}
-              >
-                Join a federation
-              </Link>
-              <Link
-                to="/events"
-                className="rounded-[12px] border-2 px-4 py-[10px] text-center text-sm font-bold sm:px-6 sm:py-[13px] sm:text-base transition-colors hover:bg-black/5"
-                style={{ borderColor: IYSF.charcoal, color: IYSF.charcoal }}
-              >
-                See results
-              </Link>
-            </div>
+              See results
+            </Link>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -181,8 +163,8 @@ function AboutPreview() {
               national qualifiers, continental rounds and a world final each season.
             </p>
             <p className="mt-4 text-base leading-relaxed md:text-[17px]" style={{ color: "rgba(65,64,66,0.78)" }}>
-              Everything the federation does points one way — recognition of Yogasana on the
-              Olympic pathway.
+              The federation is working toward wider international recognition for Yogasana
+              as a sport.
             </p>
             <Link
               to="/about/history"
@@ -194,23 +176,26 @@ function AboutPreview() {
           </div>
         </Reveal>
         <Reveal delay={100}>
-           <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-4">
+           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible">
             {[
               { src: aboutCompetition, alt: "Athlete mid-routine at an IYSF championship" },
               { src: aboutSport, alt: "Judges scoring a competition round" },
               { src: aboutChampions, alt: "Medal ceremony at a world championship" },
               { src: aboutGovernance, alt: "Federation officials in session" },
-            ].map((c, i) => (
-              <img
-                key={c.src}
-                src={c.src}
-                alt={c.alt}
-                loading="lazy"
-                width={900}
-                height={700}
-                 className={`h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] ${i === 0 ? "col-span-3 aspect-[16/9]" : "aspect-square"}`}
-                style={{ border: `1px solid ${IYSF.blueLine}` }}
-              />
+            ].map((c) => (
+              <figure key={c.src} className="w-[78%] shrink-0 snap-start sm:w-auto">
+                <img
+                  src={c.src}
+                  alt={c.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={900}
+                  height={675}
+                  className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
+                  style={{ border: `1px solid ${IYSF.blueLine}` }}
+                />
+                <figcaption className="mt-1.5 text-xs" style={{ color: IYSF.charcoal }}>{c.alt}</figcaption>
+              </figure>
             ))}
           </div>
         </Reveal>
@@ -233,8 +218,9 @@ function MembershipCta() {
           </p>
         </div>
         <Link
-          to="/join-us"
-          className="shrink-0 rounded-[12px] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+          to="/"
+          hash="join"
+          className="inline-flex min-h-11 shrink-0 items-center rounded-[12px] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
           style={{ background: "#414042" }}
         >
           Join us
@@ -249,7 +235,7 @@ function WhyJoin() {
     {
       Icon: Globe2,
       title: "Global recognition",
-      desc: "A path toward Olympic-linked status for your national federation.",
+      desc: "Your national federation joins the international body governing Yogasana as a sport.",
     },
     {
       Icon: Trophy,
@@ -292,35 +278,32 @@ function WhyJoin() {
                 >
                   {title}
                 </h3>
-                {i === 0 ? (
-                  <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>{desc}</p>
-                ) : (
-                  <MobileCollapse label="More">
-                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>{desc}</p>
-                  </MobileCollapse>
-                )}
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(65,64,66,0.72)" }}>{desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
 
         <Reveal delay={120}>
-          <div className="mt-10 grid grid-cols-3 gap-2 max-sm:mt-6 sm:grid-cols-2 sm:gap-4 md:grid-cols-4">
-            {strip.map((s, i) => (
-              <img
-                key={s.src}
-                src={s.src}
-                alt={s.alt}
-                loading="lazy"
-                width={720}
-                height={512}
-                className={`h-auto w-full rounded-[12px] object-cover sm:aspect-[4/3] md:aspect-auto md:h-36 ${i === 0 ? "col-span-3 aspect-[16/9] sm:col-span-1" : "aspect-square"}`}
-                style={{ border: `1px solid ${IYSF.blueLine}` }}
-              />
+          <div className="mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 max-sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible md:grid-cols-4">
+            {strip.map((s) => (
+              <figure key={s.src} className="w-[78%] shrink-0 snap-start sm:w-auto">
+                <img
+                  src={s.src}
+                  alt={s.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={720}
+                  height={540}
+                  className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
+                  style={{ border: `1px solid ${IYSF.blueLine}` }}
+                />
+                <figcaption className="mt-1.5 text-xs" style={{ color: IYSF.charcoal }}>{s.alt}</figcaption>
+              </figure>
             ))}
           </div>
           <p className="mt-4 text-center text-sm font-medium" style={{ color: "rgba(65,64,66,0.72)" }}>
-            Federations like yours are already competing under the IYSF banner.
+            Delegations from member federations at past IYSF championships.
           </p>
         </Reveal>
       </div>
@@ -329,13 +312,6 @@ function WhyJoin() {
 }
 
 function News() {
-  const items = [
-    { to: "/results", title: "World Championship delivers the largest field in IYSF history" },
-    { to: "/events", title: "International judges complete the 2026 recertification cycle" },
-    { to: "/events", title: "Junior division records fall at the continental qualifier" },
-    { to: "/events", title: "Two new national federations sign membership agreements" },
-    { to: "/events", title: "Host city shortlist announced for the next World Championship" },
-  ] as const;
   return (
     <section id="news" className="bg-white">
       <div className="mx-auto max-w-[1320px] px-5 pb-20 md:px-8 md:pb-24">
@@ -345,14 +321,20 @@ function News() {
           </h2>
         </Reveal>
         <ul className="mt-6 max-w-[860px]" style={{ borderTop: `1px solid ${IYSF.blueLine}` }}>
-          {items.map((n) => (
-            <li key={n.title} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+          {NEWS.map((n) => (
+            <li key={n.slug} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
               <Link
-                to={n.to}
-                className="flex items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
+                to="/news/$slug"
+                params={{ slug: n.slug }}
+                className="flex min-h-11 items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
                 style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
               >
-                <span className="min-w-0">{n.title}</span>
+                <span className="min-w-0">
+                  <time dateTime={n.date} className="block text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
+                    {formatNewsDate(n.date)}
+                  </time>
+                  {n.title}
+                </span>
                 <ArrowRight size={16} aria-hidden="true" className="shrink-0" style={{ color: IYSF.magenta }} />
               </Link>
             </li>
@@ -375,7 +357,6 @@ function Index() {
       <Nav />
       <main>
         <Hero />
-        <Overview />
         <MissionStrip />
         <StatStrip />
         <AboutPreview />

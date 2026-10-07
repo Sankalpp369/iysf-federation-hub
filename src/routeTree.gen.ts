@@ -40,6 +40,7 @@ import { Route as DirectorySlugRouteImport } from './routes/directory.$slug'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
 import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as ResultsIndexRouteImport } from './routes/results.index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -199,6 +200,11 @@ const EventsWorldChampionship2026Route =
     path: '/events/world-championship-2026',
     getParentRoute: () => rootRouteImport,
   } as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/news/$slug',
+  path: '/news/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResultsIndexRoute = ResultsIndexRouteImport.update({
   id: '/results/',
   path: '/results/',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
+  '/news/$slug': typeof NewsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
@@ -265,6 +272,7 @@ export interface FileRoutesByTo {
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
+  '/news/$slug': typeof NewsSlugRoute
   '/academy': typeof AcademyIndexRoute
   '/directory': typeof DirectoryIndexRoute
   '/events': typeof EventsIndexRoute
@@ -300,6 +308,7 @@ export interface FileRoutesById {
   '/directory/$slug': typeof DirectorySlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
+  '/news/$slug': typeof NewsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
+    | '/news/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
+    | '/news/$slug'
     | '/academy'
     | '/directory'
     | '/events'
@@ -401,6 +412,7 @@ export interface FileRouteTypes {
     | '/directory/$slug'
     | '/events/$slug'
     | '/events/world-championship-2026'
+    | '/news/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
@@ -432,6 +444,7 @@ export interface RootRouteChildren {
   DirectorySlugRoute: typeof DirectorySlugRoute
   EventsSlugRoute: typeof EventsSlugRoute
   EventsWorldChampionship2026Route: typeof EventsWorldChampionship2026Route
+  NewsSlugRoute: typeof NewsSlugRoute
   DirectoryIndexRoute: typeof DirectoryIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   ResultsIndexRoute: typeof ResultsIndexRoute
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsWorldChampionship2026RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/news/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/results/': {
       id: '/results/'
       path: '/results'
@@ -719,6 +739,7 @@ const rootRouteChildren: RootRouteChildren = {
   DirectorySlugRoute: DirectorySlugRoute,
   EventsSlugRoute: EventsSlugRoute,
   EventsWorldChampionship2026Route: EventsWorldChampionship2026Route,
+  NewsSlugRoute: NewsSlugRoute,
   DirectoryIndexRoute: DirectoryIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   ResultsIndexRoute: ResultsIndexRoute,
