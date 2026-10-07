@@ -9,82 +9,46 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SponsorshipRouteImport } from './routes/sponsorship'
-import { Route as RulesRouteImport } from './routes/rules'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as JoinUsRouteImport } from './routes/join-us'
-import { Route as GovernanceRouteImport } from './routes/governance'
-import { Route as DonateRouteImport } from './routes/donate'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AcademyRouteImport } from './routes/academy'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ResultsIndexRouteImport } from './routes/results.index'
-import { Route as EventsIndexRouteImport } from './routes/events.index'
-import { Route as DirectoryIndexRouteImport } from './routes/directory.index'
-import { Route as AcademyIndexRouteImport } from './routes/academy.index'
-import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
-import { Route as EventsSlugRouteImport } from './routes/events.$slug'
-import { Route as DirectorySlugRouteImport } from './routes/directory.$slug'
-import { Route as AcademyTrainingRouteImport } from './routes/academy.training'
-import { Route as AcademyJudgingRouteImport } from './routes/academy.judging'
-import { Route as AcademyCoachingRouteImport } from './routes/academy.coaching'
-import { Route as AboutYogaAsASportRouteImport } from './routes/about.yoga-as-a-sport'
-import { Route as AboutTechnicalCommitteeRouteImport } from './routes/about.technical-committee'
-import { Route as AboutInternationalJudgesRouteImport } from './routes/about.international-judges'
-import { Route as AboutInternationalCoachesRouteImport } from './routes/about.international-coaches'
-import { Route as AboutHistoryRouteImport } from './routes/about.history'
-import { Route as AboutGovernanceRouteImport } from './routes/about.governance'
-import { Route as AboutExecutiveCommitteeRouteImport } from './routes/about.executive-committee'
-import { Route as AboutChampionsRouteImport } from './routes/about.champions'
-import { Route as AboutAthletesCommissionRouteImport } from './routes/about.athletes-commission'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AcademyRouteImport } from './routes/academy'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DonateRouteImport } from './routes/donate'
+import { Route as GovernanceRouteImport } from './routes/governance'
+import { Route as JoinUsRouteImport } from './routes/join-us'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RulesRouteImport } from './routes/rules'
+import { Route as SponsorshipRouteImport } from './routes/sponsorship'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AboutAthletesCommissionRouteImport } from './routes/about.athletes-commission'
+import { Route as AboutChampionsRouteImport } from './routes/about.champions'
+import { Route as AboutExecutiveCommitteeRouteImport } from './routes/about.executive-committee'
+import { Route as AboutGovernanceRouteImport } from './routes/about.governance'
+import { Route as AboutHistoryRouteImport } from './routes/about.history'
+import { Route as AboutInternationalCoachesRouteImport } from './routes/about.international-coaches'
+import { Route as AboutInternationalJudgesRouteImport } from './routes/about.international-judges'
+import { Route as AboutTechnicalCommitteeRouteImport } from './routes/about.technical-committee'
+import { Route as AboutYogaAsASportRouteImport } from './routes/about.yoga-as-a-sport'
+import { Route as AcademyIndexRouteImport } from './routes/academy.index'
+import { Route as AcademyCoachingRouteImport } from './routes/academy.coaching'
+import { Route as AcademyJudgingRouteImport } from './routes/academy.judging'
+import { Route as AcademyTrainingRouteImport } from './routes/academy.training'
+import { Route as DirectoryIndexRouteImport } from './routes/directory.index'
+import { Route as DirectorySlugRouteImport } from './routes/directory.$slug'
+import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as EventsSlugRouteImport } from './routes/events.$slug'
+import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
+import { Route as ResultsIndexRouteImport } from './routes/results.index'
 
-const SponsorshipRoute = SponsorshipRouteImport.update({
-  id: '/sponsorship',
-  path: '/sponsorship',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RulesRoute = RulesRouteImport.update({
-  id: '/rules',
-  path: '/rules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JoinUsRoute = JoinUsRouteImport.update({
-  id: '/join-us',
-  path: '/join-us',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GovernanceRoute = GovernanceRouteImport.update({
-  id: '/governance',
-  path: '/governance',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DonateRoute = DonateRouteImport.update({
-  id: '/donate',
-  path: '/donate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AcademyRoute = AcademyRouteImport.update({
@@ -92,101 +56,59 @@ const AcademyRoute = AcademyRouteImport.update({
   path: '/academy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResultsIndexRoute = ResultsIndexRouteImport.update({
-  id: '/results/',
-  path: '/results/',
+const GovernanceRoute = GovernanceRouteImport.update({
+  id: '/governance',
+  path: '/governance',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventsIndexRoute = EventsIndexRouteImport.update({
-  id: '/events/',
-  path: '/events/',
+const JoinUsRoute = JoinUsRouteImport.update({
+  id: '/join-us',
+  path: '/join-us',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DirectoryIndexRoute = DirectoryIndexRouteImport.update({
-  id: '/directory/',
-  path: '/directory/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AcademyIndexRoute = AcademyIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AcademyRoute,
-} as any)
-const EventsWorldChampionship2026Route =
-  EventsWorldChampionship2026RouteImport.update({
-    id: '/events/world-championship-2026',
-    path: '/events/world-championship-2026',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const EventsSlugRoute = EventsSlugRouteImport.update({
-  id: '/events/$slug',
-  path: '/events/$slug',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DirectorySlugRoute = DirectorySlugRouteImport.update({
-  id: '/directory/$slug',
-  path: '/directory/$slug',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AcademyTrainingRoute = AcademyTrainingRouteImport.update({
-  id: '/training',
-  path: '/training',
-  getParentRoute: () => AcademyRoute,
-} as any)
-const AcademyJudgingRoute = AcademyJudgingRouteImport.update({
-  id: '/judging',
-  path: '/judging',
-  getParentRoute: () => AcademyRoute,
-} as any)
-const AcademyCoachingRoute = AcademyCoachingRouteImport.update({
-  id: '/coaching',
-  path: '/coaching',
-  getParentRoute: () => AcademyRoute,
-} as any)
-const AboutYogaAsASportRoute = AboutYogaAsASportRouteImport.update({
-  id: '/about/yoga-as-a-sport',
-  path: '/about/yoga-as-a-sport',
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutTechnicalCommitteeRoute = AboutTechnicalCommitteeRouteImport.update({
-  id: '/about/technical-committee',
-  path: '/about/technical-committee',
+const SponsorshipRoute = SponsorshipRouteImport.update({
+  id: '/sponsorship',
+  path: '/sponsorship',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutInternationalJudgesRoute =
-  AboutInternationalJudgesRouteImport.update({
-    id: '/about/international-judges',
-    path: '/about/international-judges',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AboutInternationalCoachesRoute =
-  AboutInternationalCoachesRouteImport.update({
-    id: '/about/international-coaches',
-    path: '/about/international-coaches',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AboutHistoryRoute = AboutHistoryRouteImport.update({
-  id: '/about/history',
-  path: '/about/history',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AboutGovernanceRoute = AboutGovernanceRouteImport.update({
-  id: '/about/governance',
-  path: '/about/governance',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutExecutiveCommitteeRoute = AboutExecutiveCommitteeRouteImport.update({
-  id: '/about/executive-committee',
-  path: '/about/executive-committee',
+const AboutAthletesCommissionRoute = AboutAthletesCommissionRouteImport.update({
+  id: '/about/athletes-commission',
+  path: '/about/athletes-commission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutChampionsRoute = AboutChampionsRouteImport.update({
@@ -194,15 +116,93 @@ const AboutChampionsRoute = AboutChampionsRouteImport.update({
   path: '/about/champions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutAthletesCommissionRoute = AboutAthletesCommissionRouteImport.update({
-  id: '/about/athletes-commission',
-  path: '/about/athletes-commission',
+const AboutExecutiveCommitteeRoute = AboutExecutiveCommitteeRouteImport.update({
+  id: '/about/executive-committee',
+  path: '/about/executive-committee',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const AboutGovernanceRoute = AboutGovernanceRouteImport.update({
+  id: '/about/governance',
+  path: '/about/governance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutHistoryRoute = AboutHistoryRouteImport.update({
+  id: '/about/history',
+  path: '/about/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutInternationalCoachesRoute =
+  AboutInternationalCoachesRouteImport.update({
+    id: '/about/international-coaches',
+    path: '/about/international-coaches',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AboutInternationalJudgesRoute =
+  AboutInternationalJudgesRouteImport.update({
+    id: '/about/international-judges',
+    path: '/about/international-judges',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AboutTechnicalCommitteeRoute = AboutTechnicalCommitteeRouteImport.update({
+  id: '/about/technical-committee',
+  path: '/about/technical-committee',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutYogaAsASportRoute = AboutYogaAsASportRouteImport.update({
+  id: '/about/yoga-as-a-sport',
+  path: '/about/yoga-as-a-sport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcademyIndexRoute = AcademyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AcademyRoute,
+} as any)
+const AcademyCoachingRoute = AcademyCoachingRouteImport.update({
+  id: '/coaching',
+  path: '/coaching',
+  getParentRoute: () => AcademyRoute,
+} as any)
+const AcademyJudgingRoute = AcademyJudgingRouteImport.update({
+  id: '/judging',
+  path: '/judging',
+  getParentRoute: () => AcademyRoute,
+} as any)
+const AcademyTrainingRoute = AcademyTrainingRouteImport.update({
+  id: '/training',
+  path: '/training',
+  getParentRoute: () => AcademyRoute,
+} as any)
+const DirectoryIndexRoute = DirectoryIndexRouteImport.update({
+  id: '/directory/',
+  path: '/directory/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectorySlugRoute = DirectorySlugRouteImport.update({
+  id: '/directory/$slug',
+  path: '/directory/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsSlugRoute = EventsSlugRouteImport.update({
+  id: '/events/$slug',
+  path: '/events/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsWorldChampionship2026Route =
+  EventsWorldChampionship2026RouteImport.update({
+    id: '/events/world-championship-2026',
+    path: '/events/world-championship-2026',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ResultsIndexRoute = ResultsIndexRouteImport.update({
+  id: '/results/',
+  path: '/results/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -439,74 +439,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sponsorship': {
-      id: '/sponsorship'
-      path: '/sponsorship'
-      fullPath: '/sponsorship'
-      preLoaderRoute: typeof SponsorshipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rules': {
-      id: '/rules'
-      path: '/rules'
-      fullPath: '/rules'
-      preLoaderRoute: typeof RulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/join-us': {
-      id: '/join-us'
-      path: '/join-us'
-      fullPath: '/join-us'
-      preLoaderRoute: typeof JoinUsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/governance': {
-      id: '/governance'
-      path: '/governance'
-      fullPath: '/governance'
-      preLoaderRoute: typeof GovernanceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/donate': {
-      id: '/donate'
-      path: '/donate'
-      fullPath: '/donate'
-      preLoaderRoute: typeof DonateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/academy': {
-      id: '/academy'
-      path: '/academy'
-      fullPath: '/academy'
-      preLoaderRoute: typeof AcademyRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -516,130 +453,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/academy': {
+      id: '/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AcademyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/results/': {
-      id: '/results/'
-      path: '/results'
-      fullPath: '/results/'
-      preLoaderRoute: typeof ResultsIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/events/': {
-      id: '/events/'
-      path: '/events'
-      fullPath: '/events/'
-      preLoaderRoute: typeof EventsIndexRouteImport
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/directory/': {
-      id: '/directory/'
-      path: '/directory'
-      fullPath: '/directory/'
-      preLoaderRoute: typeof DirectoryIndexRouteImport
+    '/governance': {
+      id: '/governance'
+      path: '/governance'
+      fullPath: '/governance'
+      preLoaderRoute: typeof GovernanceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/academy/': {
-      id: '/academy/'
-      path: '/'
-      fullPath: '/academy/'
-      preLoaderRoute: typeof AcademyIndexRouteImport
-      parentRoute: typeof AcademyRoute
-    }
-    '/events/world-championship-2026': {
-      id: '/events/world-championship-2026'
-      path: '/events/world-championship-2026'
-      fullPath: '/events/world-championship-2026'
-      preLoaderRoute: typeof EventsWorldChampionship2026RouteImport
+    '/join-us': {
+      id: '/join-us'
+      path: '/join-us'
+      fullPath: '/join-us'
+      preLoaderRoute: typeof JoinUsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/events/$slug': {
-      id: '/events/$slug'
-      path: '/events/$slug'
-      fullPath: '/events/$slug'
-      preLoaderRoute: typeof EventsSlugRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/directory/$slug': {
-      id: '/directory/$slug'
-      path: '/directory/$slug'
-      fullPath: '/directory/$slug'
-      preLoaderRoute: typeof DirectorySlugRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/academy/training': {
-      id: '/academy/training'
-      path: '/training'
-      fullPath: '/academy/training'
-      preLoaderRoute: typeof AcademyTrainingRouteImport
-      parentRoute: typeof AcademyRoute
-    }
-    '/academy/judging': {
-      id: '/academy/judging'
-      path: '/judging'
-      fullPath: '/academy/judging'
-      preLoaderRoute: typeof AcademyJudgingRouteImport
-      parentRoute: typeof AcademyRoute
-    }
-    '/academy/coaching': {
-      id: '/academy/coaching'
-      path: '/coaching'
-      fullPath: '/academy/coaching'
-      preLoaderRoute: typeof AcademyCoachingRouteImport
-      parentRoute: typeof AcademyRoute
-    }
-    '/about/yoga-as-a-sport': {
-      id: '/about/yoga-as-a-sport'
-      path: '/about/yoga-as-a-sport'
-      fullPath: '/about/yoga-as-a-sport'
-      preLoaderRoute: typeof AboutYogaAsASportRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/technical-committee': {
-      id: '/about/technical-committee'
-      path: '/about/technical-committee'
-      fullPath: '/about/technical-committee'
-      preLoaderRoute: typeof AboutTechnicalCommitteeRouteImport
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/international-judges': {
-      id: '/about/international-judges'
-      path: '/about/international-judges'
-      fullPath: '/about/international-judges'
-      preLoaderRoute: typeof AboutInternationalJudgesRouteImport
+    '/sponsorship': {
+      id: '/sponsorship'
+      path: '/sponsorship'
+      fullPath: '/sponsorship'
+      preLoaderRoute: typeof SponsorshipRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/international-coaches': {
-      id: '/about/international-coaches'
-      path: '/about/international-coaches'
-      fullPath: '/about/international-coaches'
-      preLoaderRoute: typeof AboutInternationalCoachesRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/about/history': {
-      id: '/about/history'
-      path: '/about/history'
-      fullPath: '/about/history'
-      preLoaderRoute: typeof AboutHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about/governance': {
-      id: '/about/governance'
-      path: '/about/governance'
-      fullPath: '/about/governance'
-      preLoaderRoute: typeof AboutGovernanceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about/executive-committee': {
-      id: '/about/executive-committee'
-      path: '/about/executive-committee'
-      fullPath: '/about/executive-committee'
-      preLoaderRoute: typeof AboutExecutiveCommitteeRouteImport
+    '/about/athletes-commission': {
+      id: '/about/athletes-commission'
+      path: '/about/athletes-commission'
+      fullPath: '/about/athletes-commission'
+      preLoaderRoute: typeof AboutAthletesCommissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/champions': {
@@ -649,19 +544,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutChampionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/athletes-commission': {
-      id: '/about/athletes-commission'
-      path: '/about/athletes-commission'
-      fullPath: '/about/athletes-commission'
-      preLoaderRoute: typeof AboutAthletesCommissionRouteImport
+    '/about/executive-committee': {
+      id: '/about/executive-committee'
+      path: '/about/executive-committee'
+      fullPath: '/about/executive-committee'
+      preLoaderRoute: typeof AboutExecutiveCommitteeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/about/governance': {
+      id: '/about/governance'
+      path: '/about/governance'
+      fullPath: '/about/governance'
+      preLoaderRoute: typeof AboutGovernanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/history': {
+      id: '/about/history'
+      path: '/about/history'
+      fullPath: '/about/history'
+      preLoaderRoute: typeof AboutHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/international-coaches': {
+      id: '/about/international-coaches'
+      path: '/about/international-coaches'
+      fullPath: '/about/international-coaches'
+      preLoaderRoute: typeof AboutInternationalCoachesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/international-judges': {
+      id: '/about/international-judges'
+      path: '/about/international-judges'
+      fullPath: '/about/international-judges'
+      preLoaderRoute: typeof AboutInternationalJudgesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/technical-committee': {
+      id: '/about/technical-committee'
+      path: '/about/technical-committee'
+      fullPath: '/about/technical-committee'
+      preLoaderRoute: typeof AboutTechnicalCommitteeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/yoga-as-a-sport': {
+      id: '/about/yoga-as-a-sport'
+      path: '/about/yoga-as-a-sport'
+      fullPath: '/about/yoga-as-a-sport'
+      preLoaderRoute: typeof AboutYogaAsASportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academy/': {
+      id: '/academy/'
+      path: '/'
+      fullPath: '/academy/'
+      preLoaderRoute: typeof AcademyIndexRouteImport
+      parentRoute: typeof AcademyRoute
+    }
+    '/academy/coaching': {
+      id: '/academy/coaching'
+      path: '/coaching'
+      fullPath: '/academy/coaching'
+      preLoaderRoute: typeof AcademyCoachingRouteImport
+      parentRoute: typeof AcademyRoute
+    }
+    '/academy/judging': {
+      id: '/academy/judging'
+      path: '/judging'
+      fullPath: '/academy/judging'
+      preLoaderRoute: typeof AcademyJudgingRouteImport
+      parentRoute: typeof AcademyRoute
+    }
+    '/academy/training': {
+      id: '/academy/training'
+      path: '/training'
+      fullPath: '/academy/training'
+      preLoaderRoute: typeof AcademyTrainingRouteImport
+      parentRoute: typeof AcademyRoute
+    }
+    '/directory/': {
+      id: '/directory/'
+      path: '/directory'
+      fullPath: '/directory/'
+      preLoaderRoute: typeof DirectoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/directory/$slug': {
+      id: '/directory/$slug'
+      path: '/directory/$slug'
+      fullPath: '/directory/$slug'
+      preLoaderRoute: typeof DirectorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$slug': {
+      id: '/events/$slug'
+      path: '/events/$slug'
+      fullPath: '/events/$slug'
+      preLoaderRoute: typeof EventsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/world-championship-2026': {
+      id: '/events/world-championship-2026'
+      path: '/events/world-championship-2026'
+      fullPath: '/events/world-championship-2026'
+      preLoaderRoute: typeof EventsWorldChampionship2026RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results/': {
+      id: '/results/'
+      path: '/results'
+      fullPath: '/results/'
+      preLoaderRoute: typeof ResultsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
