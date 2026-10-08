@@ -46,9 +46,11 @@ function Field({
   error,
   children,
   className = "",
+  required = false,
 }: {
   id: string;
   label: string;
+  required?: boolean;
   error?: string;
   children: React.ReactNode;
   className?: string;
@@ -57,10 +59,11 @@ function Field({
     <div className={className}>
       <label htmlFor={id} className={labelCls}>
         {label}
+        {required ? <span aria-hidden="true" style={{ color: "#DE007A" }}> *</span> : null}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-error`} className="mt-1.5 text-xs font-medium" style={{ color: "#DE007A" }}>
+        <p id={`${id}-error`} role="alert" className="mt-1.5 text-xs font-medium" style={{ color: "#DE007A" }}>
           {error}
         </p>
       ) : null}
@@ -79,6 +82,12 @@ export function JoinForm() {
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
     setErrors((prev) => (prev[k] ? { ...prev, [k]: "" } : prev));
+  };
+
+  const validateField = (k: string) => {
+    const r = schema.safeParse(values);
+    const issue = r.success ? undefined : r.error.issues.find((i) => String(i.path[0]) === k);
+    setErrors((prev) => ({ ...prev, [k]: issue ? issue.message : "" }));
   };
 
   async function onSubmit(e: React.FormEvent) {
@@ -143,31 +152,31 @@ export function JoinForm() {
               National bodies governing competitive Yogasana may apply for IYSF affiliation. Submit
               your details and the membership commission will respond with the next steps.
             </p>
-            <ul className="mt-3 grid grid-cols-2 gap-1.5 sm:mt-8 sm:block sm:space-y-4 sm:border-l sm:border-black/10 sm:pl-6">
+            <ol className="mt-4 space-y-3 border-l border-black/10 pl-4 sm:mt-8 sm:space-y-4 sm:pl-6">
               {[
                 "Application received and acknowledged",
                 "Eligibility and governance review",
                 "Provisional status granted",
                 "Full membership ratified at congress",
               ].map((s, i) => (
-                <li key={s} className="flex items-center gap-1.5 rounded-full border border-[rgba(66,152,211,0.28)] px-2 py-1 sm:items-start sm:gap-3 sm:rounded-none sm:border-0 sm:p-0">
+                <li key={s} className="flex items-start gap-3">
                   <span
-                    className="text-[11px] sm:mt-0.5 sm:text-[12px]"
+                    className="mt-0.5 shrink-0 text-[12px]"
                     style={{ fontFamily: "var(--font-mono)", color: "#4298D3" }}
                   >
                     0{i + 1}
                   </span>
-                  <span className="truncate text-[11px] leading-tight sm:whitespace-normal sm:text-sm sm:leading-snug" style={{ color: "#414042" }}>
+                  <span className="text-sm leading-snug" style={{ color: "#414042" }}>
                     {s}
                   </span>
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
 
           <div className="min-w-0 rounded-[14px] border border-[rgba(66,152,211,0.28)] bg-white p-5 shadow-[0_14px_34px_-18px_rgba(66,152,211,0.55)] sm:p-6 md:p-8">
             {status === "done" ? (
-              <div className="flex min-h-[320px] flex-col items-start justify-center">
+              <div role="status" aria-live="polite" className="flex min-h-[320px] flex-col items-start justify-center">
                 <div
                   className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full"
                   style={{ background: "#FAAF40", color: "#3A2400" }}
@@ -195,37 +204,52 @@ export function JoinForm() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={onSubmit} noValidate className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-5 md:grid-cols-2">
-                <Field id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
+              <form
+                onSubmit={onSubmit}
+                noValidate
+                onBlur={(e) => { const id = (e.target as HTMLElement).id; if (id && id in EMPTY && values[id]) validateField(id); }}
+                onFocus={(e) => { const el = e.target as HTMLElement; setTimeout(() => el.scrollIntoView({ block: "center", behavior: "smooth" }), 300); }}
+                className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5"
+              >
+                <p className="text-xs md:col-span-2" style={{ color: "#414042" }}><span aria-hidden="true" style={{ color: "#DE007A" }}>*</span> Required field</p>
+                <Field required id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 md:col-span-2">
                   <input
                     id="organisation_name"
                     name="organisation_name"
                     value={values.organisation_name}
                     onChange={set("organisation_name")}
+                    autoComplete="organization"
                     maxLength={120}
                     className={fieldCls}
                     aria-invalid={!!errors.organisation_name}
+                    aria-required="true"
+                    aria-describedby={errors.organisation_name ? "organisation_name-error" : undefined}
                   />
                 </Field>
 
-                <Field id="country" label="Country" error={errors.country} className="min-w-0">
+                <Field required id="country" label="Country" error={errors.country} className="min-w-0">
                   <input
                     id="country"
                     value={values.country}
                     onChange={set("country")}
+                    autoComplete="country-name"
                     maxLength={80}
                     className={fieldCls}
                     aria-invalid={!!errors.country}
+                    aria-required="true"
+                    aria-describedby={errors.country ? "country-error" : undefined}
                   />
                 </Field>
 
-                <Field id="region" label="Region" error={errors.region} className="min-w-0">
+                <Field required id="region" label="Region" error={errors.region} className="min-w-0">
                   <select
                     id="region"
                     value={values.region}
                     onChange={set("region")}
                     className={fieldCls}
                     aria-invalid={!!errors.region}
+                    aria-required="true"
+                    aria-describedby={errors.region ? "region-error" : undefined}
                   >
                     <option value="">Select a region</option>
                     {REGIONS.map((r) => (
@@ -236,36 +260,44 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <Field id="contact_name" label="Primary contact" error={errors.contact_name} className="min-w-0 col-span-2 sm:col-span-1">
+                <Field required id="contact_name" label="Primary contact" error={errors.contact_name} className="min-w-0">
                   <input
                     id="contact_name"
                     value={values.contact_name}
                     onChange={set("contact_name")}
+                    autoComplete="name"
                     maxLength={120}
                     className={fieldCls}
                     aria-invalid={!!errors.contact_name}
+                    aria-required="true"
+                    aria-describedby={errors.contact_name ? "contact_name-error" : undefined}
                   />
                 </Field>
 
-                <Field id="email" label="Email" error={errors.email} className="min-w-0">
+                <Field required id="email" label="Email" error={errors.email} className="min-w-0">
                   <input
                     id="email"
                     type="email"
                     value={values.email}
                     onChange={set("email")}
+                    autoComplete="email"
                     maxLength={255}
                     className={fieldCls}
                     aria-invalid={!!errors.email}
+                    aria-required="true"
+                    aria-describedby={errors.email ? "email-error" : undefined}
                   />
                 </Field>
 
-<Field id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 sm:col-span-1 md:col-span-1">
+<Field required id="membership_type" label="Membership sought" error={errors.membership_type} className="min-w-0 sm:col-span-1 md:col-span-1">
                   <select
                     id="membership_type"
                     value={values.membership_type}
                     onChange={set("membership_type")}
                     className={fieldCls}
                     aria-invalid={!!errors.membership_type}
+                    aria-required="true"
+                    aria-describedby={errors.membership_type ? "membership_type-error" : undefined}
                   >
                     <option value="">Select a membership type</option>
                     {MEMBERSHIP.map((m) => (
@@ -276,33 +308,37 @@ export function JoinForm() {
                   </select>
                 </Field>
 
-                <div className="col-span-2 sm:contents">
-                  <button type="button" onClick={() => setMore((m) => !m)} aria-expanded={more} className="flex min-h-[40px] w-full items-center text-left text-sm font-semibold sm:hidden" style={{ color: "#4298D3" }}>
+                <div className="md:contents">
+                  <button type="button" onClick={() => setMore((m) => !m)} aria-expanded={more} className="flex min-h-11 w-full items-center text-left text-sm font-semibold md:hidden" style={{ color: "#4298D3" }}>
                     <span className={`mr-2 transition-transform ${more ? "rotate-90" : ""}`} aria-hidden="true">›</span>
                     Add more details (optional)
                   </button>
-                  <div className={`${more ? "grid" : "hidden"} mt-2 grid-cols-2 gap-2 sm:contents`}>
+                  <div className={`${more ? "grid" : "hidden"} mt-2 grid-cols-1 gap-4 sm:grid md:contents`}>
 <Field id="contact_role" label="Role (optional)" error={errors.contact_role} className="min-w-0">
                   <input
                     id="contact_role"
                     value={values.contact_role}
                     onChange={set("contact_role")}
+                    autoComplete="organization-title"
                     maxLength={120}
                     className={fieldCls}
                   />
                 </Field>
 
 <Field id="phone" label="Phone (optional)" error={errors.phone} className="min-w-0">
-                  <input id="phone" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
+                  <input id="phone" type="tel" autoComplete="tel" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
                 </Field>
 
 <Field id="website" label="Website (optional)" error={errors.website} className="min-w-0">
                   <input
                     id="website"
+                    type="url"
+                    inputMode="url"
+                    autoComplete="url"
                     value={values.website}
                     onChange={set("website")}
                     maxLength={255}
-                    placeholder="example.org"
+                    placeholder="https://example.org"
                     className={fieldCls}
                   />
                 </Field>
@@ -310,6 +346,8 @@ export function JoinForm() {
 <Field id="athletes_estimate" label="Registered athletes (optional)" error={errors.athletes_estimate} className="min-w-0">
                   <input
                     id="athletes_estimate"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={values.athletes_estimate}
                     onChange={set("athletes_estimate")}
                     maxLength={40}
@@ -317,7 +355,7 @@ export function JoinForm() {
                   />
                 </Field>
 
-<Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 col-span-2 sm:col-span-1 md:col-span-2">
+<Field id="message" label="Notes (optional)" error={errors.message} className="min-w-0 md:col-span-2">
                   <textarea
                     id="message"
                     rows={4}
@@ -331,12 +369,12 @@ export function JoinForm() {
                 </div>
 
                 {serverError ? (
-                  <p role="alert" className="text-sm font-medium col-span-2 sm:col-span-1 md:col-span-2" style={{ color: "#DE007A" }}>
+                  <p role="alert" className="text-sm font-medium md:col-span-2" style={{ color: "#DE007A" }}>
                     {serverError}
                   </p>
                 ) : null}
 
-                <div className="flex flex-col items-stretch gap-3 col-span-2 sm:col-span-1 md:col-span-2 sm:flex-row sm:items-center sm:gap-4">
+                <div className="flex flex-col items-stretch gap-3 md:col-span-2 sm:flex-row sm:items-center sm:gap-4">
                   <button
                     type="submit"
                     disabled={status === "saving"}

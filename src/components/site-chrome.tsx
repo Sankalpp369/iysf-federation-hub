@@ -39,50 +39,58 @@ type Item = { label: string; to: string; hash?: string };
 const ABOUT_ITEMS: Item[] = [
   { label: "History", to: "/about/history" },
   { label: "Governance", to: "/about/governance" },
-  { label: "Yoga as a Sport", to: "/about/yoga-as-a-sport" },
-];
-
-const OFFICIALS_ITEMS: Item[] = [
   { label: "Executive Committee", to: "/about/executive-committee" },
-  { label: "Athletes' Commission", to: "/about/athletes-commission" },
-  { label: "Technical Committee", to: "/about/technical-committee" },
+  { label: "Champions", to: "/about/champions" },
+  { label: "Yoga as a Sport", to: "/about/yoga-as-a-sport" },
   { label: "International Judges", to: "/about/international-judges" },
   { label: "International Coaches", to: "/about/international-coaches" },
+  { label: "Athletes' Commission", to: "/about/athletes-commission" },
+  { label: "Technical Committee", to: "/about/technical-committee" },
+];
+
+const COMPETITION_ITEMS: Item[] = [
+  { label: "Rules", to: "/rules" },
+  { label: "Events", to: "/events" },
+  { label: "Results", to: "/results" },
 ];
 
 const ACADEMY_ITEMS: Item[] = [
+  { label: "Academy overview", to: "/academy" },
   { label: "Training", to: "/academy/training" },
   { label: "Judging", to: "/academy/judging" },
   { label: "Coaching", to: "/academy/coaching" },
 ];
 
-const RULES_EVENTS_LINKS: Item[] = [
-  { label: "Rules", to: "/rules" },
-  { label: "Events", to: "/events" },
-  { label: "Sponsorship", to: "/sponsorship" },
-  { label: "Championship Results", to: "/results" },
-];
-
 const TAIL_LINKS: Item[] = [
   { label: "Directory", to: "/directory" },
-  { label: "Champions", to: "/about/champions" },
+  { label: "Sponsorship", to: "/sponsorship" },
 ];
 
-export const EXPLORE_LINKS: Item[] = [
-  { label: "History", to: "/about/history" },
-  { label: "Governance", to: "/about/governance" },
-  { label: "Rules", to: "/rules" },
-  { label: "Events", to: "/events" },
-  { label: "Sponsorship", to: "/sponsorship" },
-  { label: "Results", to: "/results" },
-  { label: "Academy", to: "/academy" },
-  { label: "Directory", to: "/directory" },
-  { label: "Executive Committee", to: "/about/executive-committee" },
-  { label: "Contact", to: "/contact" },
-  { label: "Donate", to: "/donate" },
-  { label: "Privacy", to: "/privacy" },
-  { label: "Join us", to: "/join-us" },
+export const FOOTER_GROUPS: { title: string; links: Item[] }[] = [
+  { title: "About", links: [
+    { label: "History", to: "/about/history" },
+    { label: "Governance", to: "/about/governance" },
+    { label: "Executive Committee", to: "/about/executive-committee" },
+  ] },
+  { title: "Competition", links: [
+    { label: "Rules", to: "/rules" },
+    { label: "Events", to: "/events" },
+    { label: "Results", to: "/results" },
+  ] },
+  { title: "Get involved", links: [
+    { label: "Join us", to: "/join-us" },
+    { label: "Academy", to: "/academy" },
+    { label: "Directory", to: "/directory" },
+    { label: "Sponsorship", to: "/sponsorship" },
+    { label: "Donate", to: "/donate" },
+    { label: "Contact", to: "/contact" },
+  ] },
+  { title: "Legal", links: [{ label: "Privacy", to: "/privacy" }] },
 ];
+
+export const EXPLORE_LINKS: Item[] = FOOTER_GROUPS.flatMap((g) => g.links);
+
+const FOCUS = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4298D3]";
 
 function Dropdown({
   label,
@@ -95,13 +103,19 @@ function Dropdown({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false); }}
+    >
       <button
         type="button"
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}
-        className="group relative inline-flex items-center gap-1 text-[13px] font-semibold transition-colors"
+        className={`group relative inline-flex min-h-11 items-center gap-1 rounded text-[13px] font-semibold transition-colors ${FOCUS}`}
         style={{ color: IYSF.charcoal }}
       >
         {label}
@@ -124,7 +138,7 @@ function Dropdown({
                   to={it.to}
                   hash={it.hash}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-2 text-[13px] font-medium transition-colors hover:bg-[rgba(66,152,211,0.08)]"
+                  className={`flex min-h-11 items-center rounded-lg px-3 py-2 text-[13px] ${FOCUS}`} 
                   style={{ color: IYSF.charcoal }}
                 >
                   {it.label}
@@ -145,29 +159,27 @@ export function Nav() {
     <>
     <Link
       to="/events/world-championship-2026"
-      className="flex h-8 w-full items-center overflow-hidden text-[10.5px] font-bold uppercase leading-none tracking-[0.12em] text-white transition-opacity hover:opacity-90 sm:text-[12px] sm:tracking-[0.18em]"
+      className="flex min-h-8 w-full max-w-full items-center justify-center overflow-hidden px-4 text-center text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white transition-opacity hover:opacity-90 sm:text-[12px] sm:tracking-[0.18em]"
       style={{ background: IYSF.magenta, fontFamily: "var(--font-sans)" }}
       aria-label="Register now for the 17th World Yogasana Championship"
     >
-      <span className="iysf-marquee-track flex min-w-max items-center whitespace-nowrap motion-reduce:mx-auto">
-        <span className="px-5">Register Now — 17th World Yogasana Championship, Italy · Dec 4–6, 2026 →</span>
-        <span className="px-5" aria-hidden="true">Register Now — 17th World Yogasana Championship, Italy · Dec 4–6, 2026 →</span>
-      </span>
+      <span className="truncate sm:hidden">17th World Championship · Italy · Dec 4–6 →</span>
+      <span className="hidden truncate sm:inline">Register Now — 17th World Yogasana Championship, Italy · Dec 4–6, 2026 →</span>
     </Link>
 
     <header
       className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur"
       style={{ borderBottom: `1px solid ${IYSF.blueLine}`, fontFamily: "var(--font-sans)" }}
     >
-      <div className="mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 md:px-8 xl:grid-cols-[auto_minmax(0,1fr)_auto]">
+      <div className="mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 md:px-8 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
         <Link to="/" aria-label="IYSF home" className="min-w-0 justify-self-start">
           <IysfWordmark />
         </Link>
 
-        <nav className="hidden min-w-0 items-center justify-center gap-5 xl:flex">
+        <nav aria-label="Main" className="hidden min-w-0 items-center justify-center gap-5 lg:flex">
           <Link
             to="/"
-            className="group relative text-[13px] font-semibold transition-colors"
+            className={`group relative inline-flex min-h-11 items-center rounded text-[13px] font-semibold transition-colors ${FOCUS}`}
             style={{ color: IYSF.charcoal }}
           >
             Home
@@ -177,28 +189,14 @@ export function Nav() {
             />
           </Link>
           <Dropdown label="About" items={ABOUT_ITEMS} />
-          <Dropdown label="Officials" items={OFFICIALS_ITEMS} />
-          {RULES_EVENTS_LINKS.map((l) => (
-            <Link
-              key={l.label}
-              to={l.to}
-              className="group relative text-[13px] font-semibold transition-colors"
-              style={{ color: IYSF.charcoal }}
-            >
-              {l.label}
-              <span
-                className="absolute -bottom-1.5 left-0 h-[2px] w-0 transition-all duration-300 group-hover:w-full"
-                style={{ background: IYSF.magenta }}
-              />
-            </Link>
-          ))}
+          <Dropdown label="Competition" items={COMPETITION_ITEMS} />
           <Dropdown label="Academy" items={ACADEMY_ITEMS} />
           {TAIL_LINKS.map((l) => (
             <Link
               key={l.label}
               to={l.to}
               hash={l.hash}
-              className="group relative text-[13px] font-semibold transition-colors"
+              className={`group relative inline-flex min-h-11 items-center rounded text-[13px] font-semibold transition-colors ${FOCUS}`}
               style={{ color: IYSF.charcoal }}
             >
               {l.label}
@@ -213,29 +211,29 @@ export function Nav() {
         <div className="flex shrink-0 items-center gap-2">
           <Link
             to="/contact"
-            className="hidden text-[13px] font-semibold transition-colors hover:opacity-70 lg:inline-block"
+            className={`hidden min-h-11 items-center rounded text-[13px] font-semibold transition-colors hover:opacity-70 lg:inline-flex ${FOCUS}`}
             style={{ color: IYSF.charcoal }}
           >
             Contact
           </Link>
           <Link
             to={session ? "/dashboard" : "/login"}
-            className="hidden text-[13px] font-semibold transition-colors hover:opacity-70 lg:inline-block"
+            className={`hidden min-h-11 items-center rounded text-[13px] font-semibold transition-colors hover:opacity-70 lg:inline-flex ${FOCUS}`}
             style={{ color: IYSF.charcoal }}
           >
             {session ? "My account" : "Log in"}
           </Link>
           <Link
             to="/donate"
-            className="hidden rounded-[10px] border-2 px-3.5 py-1.5 text-[13px] font-bold transition-colors hover:bg-[rgba(66,152,211,0.08)] lg:inline-block"
-            style={{ borderColor: IYSF.blue, color: IYSF.blue }}
+            className={`hidden min-h-11 items-center rounded text-[13px] font-semibold underline-offset-4 hover:underline lg:inline-flex ${FOCUS}`}
+            style={{ color: IYSF.blue }}
           >
             Donate
           </Link>
           <Link
             to="/join-us"
-            className="hidden rounded-[10px] px-4 py-2 text-[13px] font-bold text-white transition-all hover:-translate-y-0.5 sm:inline-flex"
-            style={{ background: IYSF.orange, boxShadow: "0 10px 22px -12px rgba(250,175,64,0.9)" }}
+            className={`inline-flex min-h-11 items-center rounded-[10px] px-4 py-2 text-[13px] font-bold transition-all hover:-translate-y-0.5 motion-reduce:transform-none ${FOCUS}`}
+            style={{ background: IYSF.orange, color: "#3A2400", boxShadow: "0 10px 22px -12px rgba(250,175,64,0.9)" }}
           >
             Join us
           </Link>
@@ -243,7 +241,7 @@ export function Nav() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] hover:bg-[rgba(66,152,211,0.08)] xl:hidden"
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-[rgba(66,152,211,0.08)] lg:hidden ${FOCUS}`}
             style={{ color: IYSF.charcoal }}
           >
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -252,45 +250,31 @@ export function Nav() {
       </div>
 
       {open && (
-        <div
-          className="absolute inset-x-0 top-full overflow-y-auto overscroll-contain bg-white shadow-xl xl:hidden"
-          style={{ borderTop: `1px solid ${IYSF.blueLine}`, maxHeight: "calc(100dvh - 4rem)" }}
-        >
-          <nav className="mx-auto flex max-w-[1320px] flex-col gap-0.5 px-5 py-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
-            <MobileLink to="/" label="Home" onDone={() => setOpen(false)} />
-            <MobileGroup title="About" items={ABOUT_ITEMS} onDone={() => setOpen(false)} />
-            <MobileGroup title="Officials" items={OFFICIALS_ITEMS} onDone={() => setOpen(false)} />
-            {RULES_EVENTS_LINKS.map((l) => (
-              <MobileLink key={l.label} to={l.to} label={l.label} onDone={() => setOpen(false)} />
-            ))}
-            <MobileGroup title="Academy" items={ACADEMY_ITEMS} onDone={() => setOpen(false)} />
-            {TAIL_LINKS.map((l) => (
-              <MobileLink key={l.label} to={l.to} label={l.label} onDone={() => setOpen(false)} />
-            ))}
-            <div className="my-2 h-px" style={{ background: IYSF.blueLine }} />
-            <MobileLink to="/contact" label="Contact" onDone={() => setOpen(false)} />
-            <MobileLink
-              to={session ? "/dashboard" : "/login"}
-              label={session ? "My account" : "Log in"}
-              onDone={() => setOpen(false)}
-            />
-            <Link
-              to="/donate"
-              onClick={() => setOpen(false)}
-              className="mt-1 rounded-[10px] border-2 px-3 py-2.5 text-center text-sm font-bold"
-              style={{ borderColor: IYSF.blue, color: IYSF.blue }}
-            >
-              Donate
-            </Link>
-            <Link
-              to="/join-us"
-              onClick={() => setOpen(false)}
-              className="mt-1 rounded-[10px] px-3 py-2.5 text-center text-sm font-bold text-white"
-              style={{ background: IYSF.orange }}
-            >
-              Join us
-            </Link>
-          </nav>
+        <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Site menu" onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}>
+          <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
+          <div className="iysf-slide-in absolute inset-y-0 right-0 flex w-[min(88vw,380px)] flex-col overflow-y-auto overscroll-contain bg-white shadow-xl">
+            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+              <IysfWordmark />
+              <button type="button" autoFocus aria-label="Close menu" onClick={() => setOpen(false)} className={`inline-flex h-11 w-11 items-center justify-center rounded-[10px] ${FOCUS}`} style={{ color: IYSF.charcoal }}>
+                <X size={20} />
+              </button>
+            </div>
+            <nav aria-label="Mobile" className="flex flex-col gap-0.5 px-4 py-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
+              <MobileLink to="/" label="Home" onDone={() => setOpen(false)} />
+              <MobileGroup title="About" items={ABOUT_ITEMS} onDone={() => setOpen(false)} />
+              <MobileGroup title="Competition" items={COMPETITION_ITEMS} onDone={() => setOpen(false)} />
+              <MobileGroup title="Academy" items={ACADEMY_ITEMS} onDone={() => setOpen(false)} />
+              {TAIL_LINKS.map((l) => (
+                <MobileLink key={l.label} to={l.to} label={l.label} onDone={() => setOpen(false)} />
+              ))}
+              <div className="my-2 h-px" style={{ background: IYSF.blueLine }} />
+              <MobileLink to="/contact" label="Contact" onDone={() => setOpen(false)} />
+              <MobileLink to={session ? "/dashboard" : "/login"} label={session ? "My account" : "Log in"} onDone={() => setOpen(false)} />
+              <Link to="/donate" onClick={() => setOpen(false)} className={`mt-1 flex min-h-11 items-center justify-center rounded-[10px] border-2 px-3 text-center text-base font-bold ${FOCUS}`} style={{ borderColor: IYSF.blue, color: IYSF.blue }}>
+                Donate
+              </Link>
+            </nav>
+          </div>
         </div>
       )}
     </header>
@@ -303,7 +287,7 @@ function MobileLink({ to, label, onDone }: { to: string; label: string; onDone: 
     <Link
       to={to}
       onClick={onDone}
-      className="rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-[rgba(66,152,211,0.08)]"
+      className={`flex min-h-11 items-center rounded-lg px-3 text-base font-semibold hover:bg-[rgba(66,152,211,0.08)] ${FOCUS}`}
       style={{ color: IYSF.charcoal }}
     >
       {label}
@@ -329,7 +313,7 @@ function MobileGroup({
         aria-expanded={expanded}
         aria-controls={id}
         onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold hover:bg-[rgba(66,152,211,0.08)]"
+        className={`flex min-h-11 w-full items-center justify-between rounded-lg px-3 text-left text-base font-semibold hover:bg-[rgba(66,152,211,0.08)] ${FOCUS}`}
         style={{ color: IYSF.charcoal }}
       >
         {title}
@@ -342,7 +326,7 @@ function MobileGroup({
               key={l.to}
               to={l.to}
               onClick={onDone}
-              className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-[rgba(66,152,211,0.08)]"
+              className={`flex min-h-11 items-center rounded-lg px-3 text-base font-medium hover:bg-[rgba(66,152,211,0.08)] ${FOCUS}`}
               style={{ color: IYSF.charcoal }}
             >
               {l.label}
@@ -372,7 +356,7 @@ function SocialRow() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`IYSF on ${name}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/15 transition-colors hover:bg-white/10 sm:h-9 sm:w-9 sm:rounded-[10px]"
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-[10px] border border-white/15 transition-colors hover:bg-white/10 ${FOCUS}`}
         >
           <Icon size={14} color={IYSF.blue} aria-hidden="true" />
         </a>
@@ -382,8 +366,7 @@ function SocialRow() {
 }
 
 function FooterInner({ minimal = false }: { minimal?: boolean }) {
-  const links: Item[] = EXPLORE_LINKS;
-  return (
+    return (
     <footer style={{ background: IYSF.charcoal, color: "#fff", fontFamily: "var(--font-sans)" }}>
       {minimal ? (
         <div className="mx-auto flex max-w-[1320px] flex-col items-center gap-4 px-5 py-10 md:px-8">
@@ -404,20 +387,20 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
           </div>
         </div>
 
-        <div className="min-w-0">
-          <div className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em] sm:mb-4" style={{ color: IYSF.orange }}>
-            Explore
-          </div>
-          <ul className="grid grid-cols-3 gap-x-3 gap-y-0.5 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-2.5">
-            {links.map((l) => (
-              <li key={l.label} className="min-w-0">
-                <Link to={l.to} hash={l.hash} className="block truncate py-0.5 text-[11px] leading-tight text-white/80 hover:text-white sm:py-0 sm:text-sm">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <nav aria-label="Footer" className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-4">
+          {FOOTER_GROUPS.map((g) => (
+            <div key={g.title} className="min-w-0">
+              <div className="mb-1 text-[12px] font-bold uppercase tracking-[0.18em]" style={{ color: IYSF.orange }}>{g.title}</div>
+              <ul>
+                {g.links.map((l) => (
+                  <li key={l.label}>
+                    <Link to={l.to} className={`flex min-h-11 items-center text-sm text-white/85 hover:text-white sm:min-h-9 ${FOCUS}`}>{l.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
 
         <div className="min-w-0">
           <div className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em] sm:mb-4" style={{ color: IYSF.orange }}>
