@@ -194,17 +194,17 @@
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main form button {
-    min-height: 40px;
+    min-height: 44px;
   }
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main textarea {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
-    font-size: 14px !important;
+    font-size: 16px !important;
   }
-  main { font-size: 14px; line-height: 1.4; }
-  main p, main li, main td, main blockquote { font-size: 14px !important; line-height: 1.4 !important; }
+  main { font-size: 16px; line-height: 1.4; }
+  main p, main li, main td, main blockquote { font-size: 16px !important; line-height: 1.4 !important; }
   main h1 { font-size: 26px !important; line-height: 1.2 !important; }
   main h2 { font-size: 20px !important; line-height: 1.2 !important; margin-bottom: 8px; }
   main h3 { font-size: 16px !important; line-height: 1.2 !important; }
@@ -212,7 +212,7 @@
   main label, main small, main figcaption, main caption,
   main [class*="text-[9"], main [class*="text-[10"], main [class*="text-[11"],
   main [class*="text-[12"], main .text-xs { font-size: 12px !important; }
-  main [class*="text-[13"], main [class*="text-[14"], main [class*="text-[15"], main .text-sm { font-size: 14px !important; }
+  main [class*="text-[13"], main [class*="text-[14"], main [class*="text-[15"], main .text-sm { font-size: 16px !important; }
   main [class*="max-w-[1"] [class*="grid-cols-"], main [class*="max-w-[1"] ul[class*="grid"] { gap: 8px !important; }
   main [class*="rounded-["][class*="p-3"],
   main [class*="rounded-["][class*="p-4"],
@@ -235,4 +235,11 @@
   main [class*="max-w-["][class*="py-"] { padding-top: 32px !important; padding-bottom: 32px !important; }
   main [class*="max-w-["][class*="pb-"] { padding-bottom: 32px !important; }
   main [class*="max-w-["][class*="pt-"] { padding-top: 32px !important; }
+}
+
+html, body { overflow-x: clip; }
+@keyframes iysf-slide-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+.iysf-slide-in { animation: iysf-slide-in 220ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
