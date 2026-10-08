@@ -249,6 +249,7 @@ export function Nav() {
         </div>
       </div>
 
+    </header>
       {open && (
         <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Site menu" onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}>
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
@@ -277,7 +278,6 @@ export function Nav() {
           </div>
         </div>
       )}
-    </header>
     </>
   );
 }
