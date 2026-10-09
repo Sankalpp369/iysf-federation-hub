@@ -62,6 +62,7 @@ const ACADEMY_ITEMS: Item[] = [
 ];
 
 const TAIL_LINKS: Item[] = [
+  { label: "News", to: "/news" },
   { label: "Directory", to: "/directory" },
   { label: "Sponsorship", to: "/sponsorship" },
 ];
@@ -76,6 +77,7 @@ export const FOOTER_GROUPS: { title: string; links: Item[] }[] = [
     { label: "Rules", to: "/rules" },
     { label: "Events", to: "/events" },
     { label: "Results", to: "/results" },
+    { label: "News", to: "/news" },
   ] },
   { title: "Get involved", links: [
     { label: "Join us", to: "/join-us" },
