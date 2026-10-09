@@ -22,6 +22,13 @@
       "when": 1789540564465,
       "tag": "0002_create_donation_pledges_and_newsletter_signups",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791528598829,
+      "tag": "0003_cms_news_foundation",
+      "breakpoints": true
     }
   ]
 }
