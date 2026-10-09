@@ -62,6 +62,7 @@ const ACADEMY_ITEMS: Item[] = [
 ];
 
 const TAIL_LINKS: Item[] = [
+  { label: "News", to: "/news" },
   { label: "Directory", to: "/directory" },
   { label: "Sponsorship", to: "/sponsorship" },
 ];
