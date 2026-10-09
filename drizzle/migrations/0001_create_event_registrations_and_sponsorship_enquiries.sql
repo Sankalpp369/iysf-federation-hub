@@ -1,4 +1,4 @@
-CREATE TABLE public.event_registrations (
+CREATE TABLE IF NOT EXISTS public.event_registrations (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   event_slug text,
   event_name text NOT NULL,
@@ -14,12 +14,13 @@ GRANT ALL ON public.event_registrations TO service_role;
 
 ALTER TABLE public.event_registrations ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can submit an event registration" ON public.event_registrations;
 CREATE POLICY "Anyone can submit an event registration"
   ON public.event_registrations FOR INSERT
   TO anon, authenticated
   WITH CHECK (true);
 
-CREATE TABLE public.sponsorship_enquiries (
+CREATE TABLE IF NOT EXISTS public.sponsorship_enquiries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organisation_name text NOT NULL,
   contact_name text NOT NULL,
@@ -37,6 +38,7 @@ GRANT ALL ON public.sponsorship_enquiries TO service_role;
 
 ALTER TABLE public.sponsorship_enquiries ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can submit a sponsorship enquiry" ON public.sponsorship_enquiries;
 CREATE POLICY "Anyone can submit a sponsorship enquiry"
   ON public.sponsorship_enquiries FOR INSERT
   TO anon, authenticated
