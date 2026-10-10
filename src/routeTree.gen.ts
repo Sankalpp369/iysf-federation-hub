@@ -17,6 +17,7 @@ import { Route as DonateRouteImport } from './routes/donate'
 import { Route as GovernanceRouteImport } from './routes/governance'
 import { Route as JoinUsRouteImport } from './routes/join-us'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as NewsDotrssDotxmlRouteImport } from './routes/news[.]rss[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -42,6 +43,7 @@ import { Route as EventsSlugRouteImport } from './routes/events.$slug'
 import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as ResultsIndexRouteImport } from './routes/results.index'
+import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -80,6 +82,11 @@ const JoinUsRoute = JoinUsRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsDotrssDotxmlRoute = NewsDotrssDotxmlRouteImport.update({
+  id: '/news.rss.xml',
+  path: '/news.rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -210,6 +217,11 @@ const ResultsIndexRoute = ResultsIndexRouteImport.update({
   path: '/results/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
+  id: '/api/public/media/$',
+  path: '/api/public/media/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -219,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
@@ -244,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
   '/results/': typeof ResultsIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -252,6 +266,7 @@ export interface FileRoutesByTo {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
@@ -277,6 +292,7 @@ export interface FileRoutesByTo {
   '/directory': typeof DirectoryIndexRoute
   '/events': typeof EventsIndexRoute
   '/results': typeof ResultsIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -288,6 +304,7 @@ export interface FileRoutesById {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
@@ -313,6 +330,7 @@ export interface FileRoutesById {
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
   '/results/': typeof ResultsIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -324,6 +342,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
@@ -349,6 +368,7 @@ export interface FileRouteTypes {
     | '/directory/'
     | '/events/'
     | '/results/'
+    | '/api/public/media/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -357,6 +377,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
@@ -382,6 +403,7 @@ export interface FileRouteTypes {
     | '/directory'
     | '/events'
     | '/results'
+    | '/api/public/media/$'
   id:
     | '__root__'
     | '/'
@@ -392,6 +414,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
@@ -417,6 +440,7 @@ export interface FileRouteTypes {
     | '/directory/'
     | '/events/'
     | '/results/'
+    | '/api/public/media/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -428,6 +452,7 @@ export interface RootRouteChildren {
   GovernanceRoute: typeof GovernanceRoute
   JoinUsRoute: typeof JoinUsRoute
   LoginRoute: typeof LoginRoute
+  NewsDotrssDotxmlRoute: typeof NewsDotrssDotxmlRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RulesRoute: typeof RulesRoute
@@ -448,6 +473,7 @@ export interface RootRouteChildren {
   DirectoryIndexRoute: typeof DirectoryIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   ResultsIndexRoute: typeof ResultsIndexRoute
+  ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -506,6 +532,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news.rss.xml': {
+      id: '/news.rss.xml'
+      path: '/news.rss.xml'
+      fullPath: '/news.rss.xml'
+      preLoaderRoute: typeof NewsDotrssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -683,6 +716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/media/$': {
+      id: '/api/public/media/$'
+      path: '/api/public/media/$'
+      fullPath: '/api/public/media/$'
+      preLoaderRoute: typeof ApiPublicMediaSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -723,6 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   GovernanceRoute: GovernanceRoute,
   JoinUsRoute: JoinUsRoute,
   LoginRoute: LoginRoute,
+  NewsDotrssDotxmlRoute: NewsDotrssDotxmlRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RulesRoute: RulesRoute,
@@ -743,6 +784,7 @@ const rootRouteChildren: RootRouteChildren = {
   DirectoryIndexRoute: DirectoryIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   ResultsIndexRoute: ResultsIndexRoute,
+  ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
