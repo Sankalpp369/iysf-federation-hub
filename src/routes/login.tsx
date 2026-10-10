@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -24,21 +23,16 @@ export const Route = createFileRoute("/login")({
   }),
 });
 
-const ROLES = ["Federation official", "Judge", "Coach", "Athlete", "Supporter"] as const;
-
 const inputClass =
   "w-full rounded-md border border-black/15 bg-white px-3.5 py-2.5 text-sm text-[#414042] focus:border-[#4298D3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4298D3]/30";
 const labelClass = "mb-1.5 block text-sm font-semibold text-[#414042]";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const mode = "signin" as "signin" | "signup";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [country, setCountry] = useState("");
-  const [primaryRole, setPrimaryRole] = useState<string>("Athlete");
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,63 +45,32 @@ function LoginPage() {
   useEffect(() => {
     let active = true;
     supabase.auth.getSession().then(({ data }) => {
-      if (active && data.session) void navigate({ to: "/dashboard", replace: true });
+      if (active && data.session) void goNext();
     });
     return () => {
       active = false;
     };
   }, [navigate]);
 
+  async function goNext() {
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return;
+    const { data: staff } = await supabase.rpc("has_role", { _user_id: u.user.id, _role: "staff" });
+    void navigate({ to: staff ? "/admin" : "/dashboard", replace: true });
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
     setNotice(null);
-
-    if (mode === "signin") {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      setBusy(false);
-      if (signInError) {
-        setError(signInError.message);
-        return;
-      }
-      void navigate({ to: "/dashboard", replace: true });
-      return;
-    }
-
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { full_name: fullName, country, primary_role: primaryRole },
-      },
-    });
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (signUpError) {
-      setError(signUpError.message);
+    if (signInError) {
+      setError(signInError.message);
       return;
     }
-    if (data.session) {
-      void navigate({ to: "/dashboard", replace: true });
-      return;
-    }
-    setNotice("Check your email to confirm your address, then come back and log in.");
-  }
-
-  async function handleGoogle() {
-    setError(null);
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setBusy(false);
-      setError("Google sign-in didn't complete. Please try again.");
-      return;
-    }
-    if (result.redirected) return;
-    void navigate({ to: "/dashboard", replace: true });
+    await goNext();
   }
 
   async function handleResetSubmit(e: FormEvent) {
@@ -144,69 +107,7 @@ function LoginPage() {
             </p>
 
             <div className="mt-8 rounded-lg border border-black/[0.08] bg-white p-6">
-              <button
-                type="button"
-                onClick={handleGoogle}
-                disabled={busy}
-                className="w-full rounded-[10px] border-2 px-4 py-2.5 text-sm font-bold transition-colors hover:bg-[rgba(66,152,211,0.08)] disabled:opacity-60"
-                style={{ borderColor: IYSF.blue, color: IYSF.blue }}
-              >
-                Continue with Google
-              </button>
-
-              <div className="my-5 flex items-center gap-3">
-                <span className="h-px flex-1 bg-black/10" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a8a8c]">or</span>
-                <span className="h-px flex-1 bg-black/10" />
-              </div>
-
               <form onSubmit={handleSubmit} className="space-y-4">
-                {mode === "signup" && (
-                  <>
-                    <div>
-                      <label htmlFor="signup-name" className={labelClass}>
-                        Full name
-                      </label>
-                      <input
-                        id="signup-name"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="signup-country" className={labelClass}>
-                        Country
-                      </label>
-                      <input
-                        id="signup-country"
-                        required
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="signup-role" className={labelClass}>
-                        I am a
-                      </label>
-                      <select
-                        id="signup-role"
-                        value={primaryRole}
-                        onChange={(e) => setPrimaryRole(e.target.value)}
-                        className={inputClass}
-                      >
-                        {ROLES.map((r) => (
-                          <option key={r} value={r}>
-                            {r}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </>
-                )}
-
                 <div>
                   <label htmlFor="login-email" className={labelClass}>
                     Email
@@ -259,19 +160,7 @@ function LoginPage() {
               </form>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode((m) => (m === "signin" ? "signup" : "signin"));
-                    setError(null);
-                    setNotice(null);
-                  }}
-                  className="text-sm font-semibold hover:underline"
-                  style={{ color: IYSF.magenta }}
-                >
-                  {mode === "signin" ? "Create an account" : "I already have an account"}
-                </button>
-
+                <span className="text-sm text-[#414042]">Staff accounts are by invitation only.</span>
                 {mode === "signin" && (
                   <button
                     type="button"
