@@ -6,7 +6,8 @@ import { JoinForm } from "../components/join-form";
 import { Reveal } from "../components/history-motion";
 import hero768 from "../assets/hero-championship-768.jpg.asset.json";
 import hero1280 from "../assets/hero-championship-1280.jpg.asset.json";
-import { NEWS, formatNewsDate } from "../data/news";
+import { listPublishedPosts } from "@/lib/cms.functions";
+import { fmtDate } from "../components/news-article";
 import aboutCompetition from "../assets/about-competition.jpg";
 import aboutSport from "../assets/about-sport.jpg";
 import aboutChampions from "../assets/about-champions.jpg";
@@ -18,6 +19,9 @@ import event1 from "../assets/event-1.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  loader: async () => {
+    try { return { news: (await listPublishedPosts({ data: { limit: 5, offset: 0 } })).posts }; } catch { return { news: [] }; }
+  },
   head: () => ({
     meta: [
       { title: "IYSF — International Yoga Sports Federation" },
@@ -312,6 +316,7 @@ function WhyJoin() {
 }
 
 function News() {
+  const { news } = Route.useLoaderData();
   return (
     <section id="news" className="bg-white">
       <div className="mx-auto max-w-[1320px] px-5 pb-20 md:px-8 md:pb-24">
@@ -321,8 +326,9 @@ function News() {
           </h2>
         </Reveal>
         <ul className="mt-6 max-w-[860px]" style={{ borderTop: `1px solid ${IYSF.blueLine}` }}>
-          {NEWS.map((n) => (
-            <li key={n.slug} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+          {news.length === 0 && <li className="py-4 text-sm">No news published yet.</li>}
+          {news.map((n) => (
+            <li key={n.id} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
               <Link
                 to="/news/$slug"
                 params={{ slug: n.slug }}
@@ -330,8 +336,8 @@ function News() {
                 style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
               >
                 <span className="min-w-0">
-                  <time dateTime={n.date} className="block text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
-                    {formatNewsDate(n.date)}
+                  <time dateTime={n.published_at ?? undefined} className="block text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
+                    {fmtDate(n.published_at)}
                   </time>
                   {n.title}
                 </span>
@@ -340,6 +346,9 @@ function News() {
             </li>
           ))}
         </ul>
+        <Link to="/news" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-bold hover:underline" style={{ color: IYSF.magenta }}>
+          View all news <ArrowRight size={16} aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );
