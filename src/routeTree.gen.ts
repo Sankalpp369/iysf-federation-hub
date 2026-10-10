@@ -17,10 +17,13 @@ import { Route as DonateRouteImport } from './routes/donate'
 import { Route as GovernanceRouteImport } from './routes/governance'
 import { Route as JoinUsRouteImport } from './routes/join-us'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as NewsDotrssDotxmlRouteImport } from './routes/news[.]rss[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RulesRouteImport } from './routes/rules'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SponsorshipRouteImport } from './routes/sponsorship'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AboutAthletesCommissionRouteImport } from './routes/about.athletes-commission'
 import { Route as AboutChampionsRouteImport } from './routes/about.champions'
@@ -40,8 +43,14 @@ import { Route as DirectorySlugRouteImport } from './routes/directory.$slug'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
 import { Route as EventsWorldChampionship2026RouteImport } from './routes/events.world-championship-2026'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as ResultsIndexRouteImport } from './routes/results.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminStaffRouteImport } from './routes/_authenticated/admin.staff'
+import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +91,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsDotrssDotxmlRoute = NewsDotrssDotxmlRouteImport.update({
+  id: '/news.rss.xml',
+  path: '/news.rss.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -97,10 +111,20 @@ const RulesRoute = RulesRouteImport.update({
   path: '/rules',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SponsorshipRoute = SponsorshipRouteImport.update({
   id: '/sponsorship',
   path: '/sponsorship',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
@@ -200,6 +224,11 @@ const EventsWorldChampionship2026Route =
     path: '/events/world-championship-2026',
     getParentRoute: () => rootRouteImport,
   } as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
@@ -208,6 +237,32 @@ const NewsSlugRoute = NewsSlugRouteImport.update({
 const ResultsIndexRoute = ResultsIndexRouteImport.update({
   id: '/results/',
   path: '/results/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminSectionRoute =
+  AuthenticatedAdminSectionRouteImport.update({
+    id: '/$section',
+    path: '/$section',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminStaffRoute = AuthenticatedAdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
+  id: '/api/public/media/$',
+  path: '/api/public/media/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -219,10 +274,13 @@ export interface FileRoutesByFullPath {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsorship': typeof SponsorshipRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/about/athletes-commission': typeof AboutAthletesCommissionRoute
   '/about/champions': typeof AboutChampionsRoute
@@ -243,7 +301,13 @@ export interface FileRoutesByFullPath {
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/results/': typeof ResultsIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/staff': typeof AuthenticatedAdminStaffRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -252,9 +316,11 @@ export interface FileRoutesByTo {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsorship': typeof SponsorshipRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/about/athletes-commission': typeof AboutAthletesCommissionRoute
@@ -276,7 +342,13 @@ export interface FileRoutesByTo {
   '/academy': typeof AcademyIndexRoute
   '/directory': typeof DirectoryIndexRoute
   '/events': typeof EventsIndexRoute
+  '/news': typeof NewsIndexRoute
   '/results': typeof ResultsIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/staff': typeof AuthenticatedAdminStaffRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -288,10 +360,13 @@ export interface FileRoutesById {
   '/governance': typeof GovernanceRoute
   '/join-us': typeof JoinUsRoute
   '/login': typeof LoginRoute
+  '/news.rss.xml': typeof NewsDotrssDotxmlRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rules': typeof RulesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsorship': typeof SponsorshipRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/about/athletes-commission': typeof AboutAthletesCommissionRoute
   '/about/champions': typeof AboutChampionsRoute
@@ -312,7 +387,13 @@ export interface FileRoutesById {
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/results/': typeof ResultsIndexRoute
+  '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/_authenticated/admin/staff': typeof AuthenticatedAdminStaffRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -324,10 +405,13 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsorship'
+    | '/admin'
     | '/dashboard'
     | '/about/athletes-commission'
     | '/about/champions'
@@ -348,7 +432,13 @@ export interface FileRouteTypes {
     | '/academy/'
     | '/directory/'
     | '/events/'
+    | '/news/'
     | '/results/'
+    | '/admin/$section'
+    | '/admin/media'
+    | '/admin/staff'
+    | '/admin/'
+    | '/api/public/media/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -357,9 +447,11 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsorship'
     | '/dashboard'
     | '/about/athletes-commission'
@@ -381,7 +473,13 @@ export interface FileRouteTypes {
     | '/academy'
     | '/directory'
     | '/events'
+    | '/news'
     | '/results'
+    | '/admin/$section'
+    | '/admin/media'
+    | '/admin/staff'
+    | '/admin'
+    | '/api/public/media/$'
   id:
     | '__root__'
     | '/'
@@ -392,10 +490,13 @@ export interface FileRouteTypes {
     | '/governance'
     | '/join-us'
     | '/login'
+    | '/news.rss.xml'
     | '/privacy'
     | '/reset-password'
     | '/rules'
+    | '/sitemap.xml'
     | '/sponsorship'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/about/athletes-commission'
     | '/about/champions'
@@ -416,7 +517,13 @@ export interface FileRouteTypes {
     | '/academy/'
     | '/directory/'
     | '/events/'
+    | '/news/'
     | '/results/'
+    | '/_authenticated/admin/$section'
+    | '/_authenticated/admin/media'
+    | '/_authenticated/admin/staff'
+    | '/_authenticated/admin/'
+    | '/api/public/media/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -428,9 +535,11 @@ export interface RootRouteChildren {
   GovernanceRoute: typeof GovernanceRoute
   JoinUsRoute: typeof JoinUsRoute
   LoginRoute: typeof LoginRoute
+  NewsDotrssDotxmlRoute: typeof NewsDotrssDotxmlRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RulesRoute: typeof RulesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SponsorshipRoute: typeof SponsorshipRoute
   AboutAthletesCommissionRoute: typeof AboutAthletesCommissionRoute
   AboutChampionsRoute: typeof AboutChampionsRoute
@@ -447,7 +556,9 @@ export interface RootRouteChildren {
   NewsSlugRoute: typeof NewsSlugRoute
   DirectoryIndexRoute: typeof DirectoryIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
+  NewsIndexRoute: typeof NewsIndexRoute
   ResultsIndexRoute: typeof ResultsIndexRoute
+  ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -508,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news.rss.xml': {
+      id: '/news.rss.xml'
+      path: '/news.rss.xml'
+      fullPath: '/news.rss.xml'
+      preLoaderRoute: typeof NewsDotrssDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -529,12 +647,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RulesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sponsorship': {
       id: '/sponsorship'
       path: '/sponsorship'
       fullPath: '/sponsorship'
       preLoaderRoute: typeof SponsorshipRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -669,6 +801,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsWorldChampionship2026RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/news/$slug': {
       id: '/news/$slug'
       path: '/news/$slug'
@@ -683,14 +822,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/$section': {
+      id: '/_authenticated/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/media': {
+      id: '/_authenticated/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/staff': {
+      id: '/_authenticated/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AuthenticatedAdminStaffRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/api/public/media/$': {
+      id: '/api/public/media/$'
+      path: '/api/public/media/$'
+      fullPath: '/api/public/media/$'
+      preLoaderRoute: typeof ApiPublicMediaSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminStaffRoute: typeof AuthenticatedAdminStaffRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminStaffRoute: AuthenticatedAdminStaffRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
@@ -723,9 +916,11 @@ const rootRouteChildren: RootRouteChildren = {
   GovernanceRoute: GovernanceRoute,
   JoinUsRoute: JoinUsRoute,
   LoginRoute: LoginRoute,
+  NewsDotrssDotxmlRoute: NewsDotrssDotxmlRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RulesRoute: RulesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SponsorshipRoute: SponsorshipRoute,
   AboutAthletesCommissionRoute: AboutAthletesCommissionRoute,
   AboutChampionsRoute: AboutChampionsRoute,
@@ -742,7 +937,9 @@ const rootRouteChildren: RootRouteChildren = {
   NewsSlugRoute: NewsSlugRoute,
   DirectoryIndexRoute: DirectoryIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
+  NewsIndexRoute: NewsIndexRoute,
   ResultsIndexRoute: ResultsIndexRoute,
+  ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
