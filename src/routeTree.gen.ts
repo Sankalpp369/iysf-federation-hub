@@ -51,6 +51,9 @@ import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminStaffRouteImport } from './routes/_authenticated/admin.staff'
 import { Route as AuthenticatedAdminNewsIndexRouteImport } from './routes/_authenticated/admin.news.index'
+import { Route as AuthenticatedAdminNewsIdRouteImport } from './routes/_authenticated/admin.news.$id'
+import { Route as AuthenticatedAdminNewsNewRouteImport } from './routes/_authenticated/admin.news.new'
+import { Route as AuthenticatedAdminPreviewIdRouteImport } from './routes/_authenticated/admin.preview.$id'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -267,6 +270,24 @@ const AuthenticatedAdminNewsIndexRoute =
     path: '/news/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminNewsIdRoute =
+  AuthenticatedAdminNewsIdRouteImport.update({
+    id: '/news/$id',
+    path: '/news/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminNewsNewRoute =
+  AuthenticatedAdminNewsNewRouteImport.update({
+    id: '/news/new',
+    path: '/news/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPreviewIdRoute =
+  AuthenticatedAdminPreviewIdRouteImport.update({
+    id: '/preview/$id',
+    path: '/preview/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -314,6 +335,9 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/news/$id': typeof AuthenticatedAdminNewsIdRoute
+  '/admin/news/new': typeof AuthenticatedAdminNewsNewRoute
+  '/admin/preview/$id': typeof AuthenticatedAdminPreviewIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/news/': typeof AuthenticatedAdminNewsIndexRoute
 }
@@ -356,6 +380,9 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/news/$id': typeof AuthenticatedAdminNewsIdRoute
+  '/admin/news/new': typeof AuthenticatedAdminNewsNewRoute
+  '/admin/preview/$id': typeof AuthenticatedAdminPreviewIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/news': typeof AuthenticatedAdminNewsIndexRoute
 }
@@ -402,6 +429,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/news/$id': typeof AuthenticatedAdminNewsIdRoute
+  '/_authenticated/admin/news/new': typeof AuthenticatedAdminNewsNewRoute
+  '/_authenticated/admin/preview/$id': typeof AuthenticatedAdminPreviewIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/news/': typeof AuthenticatedAdminNewsIndexRoute
 }
@@ -448,6 +478,9 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/staff'
     | '/admin/'
+    | '/admin/news/$id'
+    | '/admin/news/new'
+    | '/admin/preview/$id'
     | '/api/public/media/$'
     | '/admin/news/'
   fileRoutesByTo: FileRoutesByTo
@@ -490,6 +523,9 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/staff'
     | '/admin'
+    | '/admin/news/$id'
+    | '/admin/news/new'
+    | '/admin/preview/$id'
     | '/api/public/media/$'
     | '/admin/news'
   id:
@@ -535,6 +571,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/staff'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/news/$id'
+    | '/_authenticated/admin/news/new'
+    | '/_authenticated/admin/preview/$id'
     | '/api/public/media/$'
     | '/_authenticated/admin/news/'
   fileRoutesById: FileRoutesById
@@ -870,6 +909,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminNewsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/news/$id': {
+      id: '/_authenticated/admin/news/$id'
+      path: '/news/$id'
+      fullPath: '/admin/news/$id'
+      preLoaderRoute: typeof AuthenticatedAdminNewsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/news/new': {
+      id: '/_authenticated/admin/news/new'
+      path: '/news/new'
+      fullPath: '/admin/news/new'
+      preLoaderRoute: typeof AuthenticatedAdminNewsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/preview/$id': {
+      id: '/_authenticated/admin/preview/$id'
+      path: '/preview/$id'
+      fullPath: '/admin/preview/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPreviewIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -885,6 +945,9 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminStaffRoute: typeof AuthenticatedAdminStaffRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminNewsIdRoute: typeof AuthenticatedAdminNewsIdRoute
+  AuthenticatedAdminNewsNewRoute: typeof AuthenticatedAdminNewsNewRoute
+  AuthenticatedAdminPreviewIdRoute: typeof AuthenticatedAdminPreviewIdRoute
   AuthenticatedAdminNewsIndexRoute: typeof AuthenticatedAdminNewsIndexRoute
 }
 
@@ -893,6 +956,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminStaffRoute: AuthenticatedAdminStaffRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminNewsIdRoute: AuthenticatedAdminNewsIdRoute,
+  AuthenticatedAdminNewsNewRoute: AuthenticatedAdminNewsNewRoute,
+  AuthenticatedAdminPreviewIdRoute: AuthenticatedAdminPreviewIdRoute,
   AuthenticatedAdminNewsIndexRoute: AuthenticatedAdminNewsIndexRoute,
 }
 
