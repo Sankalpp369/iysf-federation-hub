@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/blocks";
 
 const esc = (s: string) => s.replace(/[<>&'"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c]!);
 
-export const Route = createFileRoute("/news.rss.xml")({
+export const Route = createFileRoute("/news/rss.xml")({
   server: {
     handlers: {
       GET: async () => {
