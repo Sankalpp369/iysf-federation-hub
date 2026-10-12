@@ -34,7 +34,9 @@ function NavList({ onDone }: { onDone?: () => void }) {
       {ADMIN_NAV.map((n) => (
         <li key={n.to}>
           <Link
-            to={n.to}
+            {...(("live" in n)
+              ? { to: n.to as "/admin" }
+              : { to: "/admin/$section" as const, params: { section: n.to.replace("/admin/", "") } })}
             onClick={onDone}
             activeOptions={{ exact: n.to === "/admin" }}
             className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-semibold hover:bg-black/5"
