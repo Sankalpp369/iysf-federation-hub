@@ -4,8 +4,7 @@ import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { JoinForm } from "../components/join-form";
 import { Reveal } from "../components/history-motion";
-import hero768 from "../assets/hero-championship-768.jpg.asset.json";
-import hero1280 from "../assets/hero-championship-1280.jpg.asset.json";
+import heroChampionship from "../assets/hero-championship.jpg";
 import { listPublishedPosts } from "@/lib/cms.functions";
 import { fmtDate } from "../components/news-article";
 import aboutCompetition from "../assets/about-competition.jpg";
@@ -20,7 +19,15 @@ import event1 from "../assets/event-1.jpg";
 export const Route = createFileRoute("/")({
   component: Index,
   loader: async () => {
-    try { return { news: (await listPublishedPosts({ data: { limit: 5, offset: 0 } })).posts }; } catch { return { news: [] }; }
+    try {
+      const res = (await Promise.race([
+        listPublishedPosts({ data: { limit: 5, offset: 0 } }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 2000)),
+      ])) as { posts?: any[] };
+      return { news: res?.posts ?? [] };
+    } catch {
+      return { news: [] };
+    }
   },
   head: () => ({
     meta: [
@@ -39,7 +46,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "preload", as: "image", href: hero1280.url, imageSrcSet: `${hero768.url} 768w, ${hero1280.url} 1280w`, imageSizes: "100vw" },
+      { rel: "preload", as: "image", href: heroChampionship },
     ],
   }),
 });
@@ -62,41 +69,43 @@ const H2 = (extra?: React.CSSProperties): React.CSSProperties => ({
 function Hero() {
   return (
     <section aria-labelledby="hero-title" className="relative isolate overflow-hidden" style={{ background: IYSF.charcoal }}>
+      {/* Responsive hero image: object-cover, top-center positioning so athletes remain visible across mobile/landscape */}
       <img
-        src={hero1280.url}
-        srcSet={`${hero768.url} 768w, ${hero1280.url} 1280w`}
-        sizes="100vw"
+        src={heroChampionship}
         width={1280}
         height={646}
         fetchPriority="high"
         decoding="async"
         alt="17th World Yogasana Championship — Marina di Camerota, Italy, December 4–6, 2026"
-        className="block aspect-[1280/646] w-full bg-white object-cover object-left md:max-h-[72vh]"
+        className="block aspect-[1280/646] w-full bg-white object-cover object-top max-h-[50svh] sm:max-h-[60svh] md:max-h-[72svh] md:object-center"
       />
+      {/* Gradient overlay for text contrast */}
+      <div style={{ background: `linear-gradient(180deg, rgba(43,42,44,0) 0%, ${IYSF.charcoal} 100%)`, position: "absolute", inset: 0, pointerEvents: "none" }} aria-hidden="true" />
       <div style={{ background: `linear-gradient(180deg, #2b2a2c 0%, ${IYSF.charcoal} 100%)` }}>
-        <div className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 md:py-14">
+        <div className="mx-auto max-w-[1320px] px-4 py-8 sm:px-5 sm:py-10 md:px-8 md:py-14">
           <h1
             id="hero-title"
-            className="text-[30px] leading-[1.08] text-white md:text-[56px]"
-            style={{ fontFamily: "var(--font-display)", fontWeight: 800, letterSpacing: "-0.025em" }}
+            className="text-3xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-7xl"
+            style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.025em" }}
           >
             A practice, judged as a sport.
           </h1>
           <p className="mt-3 max-w-[560px] text-base font-medium text-white/90 md:text-xl">
             64 member federations. Is yours one of them?
           </p>
-          <div className="mt-6 flex flex-row flex-wrap items-center gap-3">
+          {/* CTAs: stacked full-width on mobile, inline from sm up */}
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               to="/"
               hash="join"
-              className="inline-flex min-h-11 items-center rounded-[12px] px-5 py-3 text-base font-bold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none"
+              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] px-5 py-3 text-base font-bold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto sm:justify-start"
               style={{ background: IYSF.orange, color: "#3A2400" }}
             >
               Join a federation
             </Link>
             <Link
               to="/results"
-              className="inline-flex min-h-11 items-center rounded-[12px] border-2 border-white px-5 py-[10px] text-base font-bold text-white transition-colors hover:bg-white/10"
+              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] border-2 border-white px-5 py-[10px] text-base font-bold text-white transition-colors hover:bg-white/10 sm:w-auto"
             >
               See results
             </Link>
@@ -110,9 +119,9 @@ function Hero() {
 function MissionStrip() {
   return (
     <section className="bg-white" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
-      <div className="mx-auto max-w-[1100px] px-5 py-10 text-center md:px-8 md:py-12">
+      <div className="mx-auto max-w-[1100px] px-4 py-10 text-center sm:px-5 md:px-8 md:py-12">
         <p
-          className="text-[19px] leading-snug md:text-[26px]"
+          className="text-[18px] leading-snug sm:text-[22px] md:text-[26px]"
           style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: IYSF.charcoal }}
         >
           IYSF exists to govern Yogasana as a measured sport — one rulebook, one scoring
@@ -132,16 +141,18 @@ function StatStrip() {
   ];
   return (
     <section style={{ background: IYSF.blue }}>
-      <div className="mx-auto grid max-w-[1320px] grid-cols-2 px-5 md:grid-cols-4 md:px-8">
+      <div className="mx-auto grid max-w-[1320px] grid-cols-2 px-4 sm:px-5 md:grid-cols-4 md:px-8">
         {stats.map((s, i) => (
           <Reveal
             key={s}
             delay={i * 90}
-            className="flex min-h-14 min-w-0 items-center justify-center px-2 py-3 text-center text-[10.5px] font-bold uppercase leading-snug tracking-[0.06em] sm:min-h-20 sm:py-5 text-white sm:px-3 sm:text-[12px] sm:tracking-[0.12em] md:py-6 md:text-[14px] md:tracking-[0.14em]"
-            style={{
-              borderLeft: i % 2 === 1 ? "1px solid rgba(255,255,255,0.25)" : undefined,
-              borderTop: i > 1 ? "1px solid rgba(255,255,255,0.2)" : undefined,
-            }}
+            className={`flex min-h-16 min-w-0 items-center justify-center px-3 py-4 text-center text-[11px] font-bold uppercase leading-snug tracking-[0.06em] text-white sm:min-h-20 sm:py-5 sm:text-xs sm:tracking-[0.12em] md:min-h-[unset] md:py-6 md:text-sm md:tracking-[0.14em] ${
+              i % 2 === 1 ? "border-l border-white/25" : ""
+            } ${
+              i >= 2 ? "border-t border-white/20 md:border-t-0" : ""
+            } ${
+              i > 0 ? "md:border-l md:border-white/25" : "md:border-l-0"
+            }`}
           >
             <span className="block">{s}</span>
           </Reveal>
@@ -154,13 +165,13 @@ function StatStrip() {
 function AboutPreview() {
   return (
     <section id="about" className="bg-white">
-      <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-5 py-20 md:grid-cols-2 md:px-8 md:py-24">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-8 px-4 py-12 sm:px-5 sm:py-16 md:grid-cols-2 md:px-8 md:py-24 lg:gap-16">
         <Reveal>
           <div>
-            <h2 className="text-[30px] md:text-[44px]" style={H2()}>
+            <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
               About the federation
             </h2>
-            <p className="mt-5 text-base leading-relaxed md:text-[17px]" style={{ color: "rgba(65,64,66,0.78)" }}>
+            <p className="mt-4 text-base leading-relaxed md:text-[17px]" style={{ color: "rgba(65,64,66,0.78)" }}>
               IYSF was founded in 2013 to give competitive Yogasana the same footing as any other
               judged sport: written rules, certified officials, and results that hold up to
               scrutiny. From a single international championship, the federation now oversees
@@ -172,7 +183,7 @@ function AboutPreview() {
             </p>
             <Link
               to="/about/history"
-              className="mt-7 inline-flex items-center gap-1.5 text-sm font-bold"
+              className="mt-6 inline-flex min-h-11 items-center gap-1.5 text-sm font-bold"
               style={{ color: IYSF.magenta }}
             >
               Learn more <ArrowRight size={15} aria-hidden="true" />
@@ -180,14 +191,15 @@ function AboutPreview() {
           </div>
         </Reveal>
         <Reveal delay={100}>
-           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible">
+          {/* 2-column image grid with consistent aspect ratio, lazy loading, and explicit dimensions */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {[
               { src: aboutCompetition, alt: "Athlete mid-routine at an IYSF championship" },
               { src: aboutSport, alt: "Judges scoring a competition round" },
               { src: aboutChampions, alt: "Medal ceremony at a world championship" },
               { src: aboutGovernance, alt: "Federation officials in session" },
             ].map((c) => (
-              <figure key={c.src} className="w-[78%] shrink-0 snap-start sm:w-auto">
+              <figure key={c.src} className="min-w-0">
                 <img
                   src={c.src}
                   alt={c.alt}
@@ -198,7 +210,7 @@ function AboutPreview() {
                   className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
                   style={{ border: `1px solid ${IYSF.blueLine}` }}
                 />
-                <figcaption className="mt-1.5 text-xs" style={{ color: IYSF.charcoal }}>{c.alt}</figcaption>
+                <figcaption className="mt-1.5 text-xs leading-snug" style={{ color: IYSF.charcoal }}>{c.alt}</figcaption>
               </figure>
             ))}
           </div>
@@ -211,9 +223,9 @@ function AboutPreview() {
 function MembershipCta() {
   return (
     <section style={{ background: IYSF.orange }}>
-      <div className="mx-auto flex max-w-[1320px] flex-col items-start justify-between gap-6 px-5 py-14 md:flex-row md:items-center md:px-8 md:py-16">
+      <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-6 px-4 py-12 text-center sm:px-5 md:flex-row md:items-center md:px-8 md:py-16 md:text-left">
         <div>
-          <h2 className="max-w-[720px] text-[26px] leading-tight md:text-[36px]" style={H2({ color: "#3A2400" })}>
+          <h2 className="max-w-[720px] text-[24px] leading-tight sm:text-[30px] md:text-[36px]" style={H2({ color: "#3A2400" })}>
             Bring Your Federation Into IYSF
           </h2>
           <p className="mt-3 max-w-[560px] text-sm md:text-base" style={{ color: "#3A2400" }}>
@@ -224,7 +236,7 @@ function MembershipCta() {
         <Link
           to="/"
           hash="join"
-          className="inline-flex min-h-11 shrink-0 items-center rounded-[12px] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+          className="inline-flex min-h-[48px] w-full shrink-0 items-center justify-center rounded-[12px] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto"
           style={{ background: "#414042" }}
         >
           Join us
@@ -260,24 +272,25 @@ function WhyJoin() {
   ];
   return (
     <section style={{ background: IYSF.blueWash }}>
-      <div className="mx-auto max-w-[1320px] px-5 py-20 md:px-8 md:py-24">
+      <div className="mx-auto max-w-[1320px] px-4 py-12 sm:px-5 sm:py-16 md:px-8 md:py-24">
         <Reveal>
-          <h2 className="text-[30px] md:text-[44px]" style={H2()}>
+          <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
             Why join IYSF
           </h2>
         </Reveal>
-        <div className="mt-10 grid grid-cols-1 gap-6 max-sm:mt-6 max-sm:grid-cols-2 max-sm:gap-3 md:grid-cols-3">
+        {/* Single column on mobile, 3 cols from md */}
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 md:grid-cols-3 md:gap-6">
           {benefits.map(({ Icon, title, desc }, i) => (
-            <Reveal key={title} delay={i * 90} className={i === 2 ? "max-sm:col-span-2" : undefined}>
-              <div className="h-full p-4 sm:p-7" style={CARD}>
+            <Reveal key={title} delay={i * 90}>
+              <div className="h-full p-5 sm:p-7" style={CARD}>
                 <span
-                  className="inline-flex h-9 w-9 items-center sm:h-12 sm:w-12 justify-center rounded-[12px]"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-[12px] sm:h-12 sm:w-12"
                   style={{ background: "rgba(66,152,211,0.12)" }}
                 >
                   <Icon size={22} color={IYSF.blue} aria-hidden="true" />
                 </span>
                 <h3
-                  className="mt-4 font-bold leading-tight sm:mt-5 sm:text-[19px]"
+                  className="mt-4 text-base font-bold leading-tight sm:mt-5 sm:text-[19px]"
                   style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
                 >
                   {title}
@@ -289,9 +302,10 @@ function WhyJoin() {
         </div>
 
         <Reveal delay={120}>
-          <div className="mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 max-sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible md:grid-cols-4">
+          {/* Horizontal snap-scroll on mobile; 2-col grid on sm; 4-col on md */}
+          <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:mt-8 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible md:grid-cols-4">
             {strip.map((s) => (
-              <figure key={s.src} className="w-[78%] shrink-0 snap-start sm:w-auto">
+              <figure key={s.src} className="w-[78vw] max-w-[280px] shrink-0 snap-start sm:w-auto">
                 <img
                   src={s.src}
                   alt={s.alt}
@@ -302,7 +316,7 @@ function WhyJoin() {
                   className="aspect-[4/3] h-auto w-full rounded-[12px] object-cover"
                   style={{ border: `1px solid ${IYSF.blueLine}` }}
                 />
-                <figcaption className="mt-1.5 text-xs" style={{ color: IYSF.charcoal }}>{s.alt}</figcaption>
+                <figcaption className="mt-1.5 text-xs leading-snug" style={{ color: IYSF.charcoal }}>{s.alt}</figcaption>
               </figure>
             ))}
           </div>
@@ -319,9 +333,9 @@ function News() {
   const { news } = Route.useLoaderData();
   return (
     <section id="news" className="bg-white">
-      <div className="mx-auto max-w-[1320px] px-5 pb-20 md:px-8 md:pb-24">
+      <div className="mx-auto max-w-[1320px] px-4 pb-12 pt-12 sm:px-5 sm:pb-16 sm:pt-12 md:px-8 md:pb-24">
         <Reveal>
-          <h2 className="text-[30px] md:text-[44px]" style={H2()}>
+          <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
             News
           </h2>
         </Reveal>
@@ -332,10 +346,10 @@ function News() {
               <Link
                 to="/news/$slug"
                 params={{ slug: n.slug }}
-                className="flex min-h-11 items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
+                className="flex min-h-[52px] items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
                 style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
               >
-                <span className="min-w-0">
+                <span className="min-w-0 break-words">
                   <time dateTime={n.published_at ?? undefined} className="block text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
                     {fmtDate(n.published_at)}
                   </time>

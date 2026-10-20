@@ -191,55 +191,46 @@
 }
 
 @media (max-width: 639px) {
+  /* Prevent iOS Safari 16px zoom and ensure minimum 44px touch targets on form controls */
+  main input:not([type="checkbox"]):not([type="radio"]),
+  main select,
+  main textarea {
+    font-size: 16px !important;
+  }
   main input:not([type="checkbox"]):not([type="radio"]),
   main select,
   main form button {
     min-height: 44px;
   }
-  main input:not([type="checkbox"]):not([type="radio"]),
-  main select,
-  main textarea {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
-    font-size: 16px !important;
+  main img, main video {
+    max-width: 100%;
+    height: auto;
   }
-  main { font-size: 16px; line-height: 1.4; }
-  main p, main li, main td, main blockquote { font-size: 16px !important; line-height: 1.4 !important; }
-  main h1 { font-size: 26px !important; line-height: 1.2 !important; }
-  main h2 { font-size: 20px !important; line-height: 1.2 !important; margin-bottom: 8px; }
-  main h3 { font-size: 16px !important; line-height: 1.2 !important; }
-  main h2 + p, main h3 + p { margin-top: 8px !important; }
-  main label, main small, main figcaption, main caption,
-  main [class*="text-[9"], main [class*="text-[10"], main [class*="text-[11"],
-  main [class*="text-[12"], main .text-xs { font-size: 12px !important; }
-  main [class*="text-[13"], main [class*="text-[14"], main [class*="text-[15"], main .text-sm { font-size: 16px !important; }
-  main [class*="max-w-[1"] [class*="grid-cols-"], main [class*="max-w-[1"] ul[class*="grid"] { gap: 8px !important; }
-  main [class*="rounded-["][class*="p-3"],
-  main [class*="rounded-["][class*="p-4"],
-  main [class*="rounded-["][class*="p-5"],
-  main [class*="rounded-["][class*="p-6"],
-  main [class*="rounded-["][class*="p-7"],
-  main [class*="rounded-lg"][class*="p-5"] { padding: 16px !important; }
-  main [class*="mt-6"], main [class*="mt-8"], main [class*="mt-10"], main [class*="mt-12"] { margin-top: 16px; }
-  main [class*="mb-6"], main [class*="mb-8"], main [class*="mb-10"], main [class*="mb-12"] { margin-bottom: 16px; }
-  main input:not([type="checkbox"]):not([type="radio"]),
-  main select,
-  main form textarea,
-  main form button[type="submit"] {
-    width: 100%;
-  }
-  main form > * + * { margin-top: 8px; }
-  main img, main video { max-width: 100%; }
-  main [class*="max-w-["][class*="px-5"],
-  main [class*="max-w-["][class*="px-6"] { padding-left: 16px !important; padding-right: 16px !important; }
-  main [class*="max-w-["][class*="py-"] { padding-top: 32px !important; padding-bottom: 32px !important; }
-  main [class*="max-w-["][class*="pb-"] { padding-bottom: 32px !important; }
-  main [class*="max-w-["][class*="pt-"] { padding-top: 32px !important; }
 }
 
 html, body { overflow-x: clip; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Anchor offset for sticky header (banner ~32px + header ~56px + breathing room) */
+#join, #about, #news {
+  scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+}
+
+/* Safe-area padding for sticky header wrapper */
+.iysf-safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Slide-in animation for mobile drawer */
 @keyframes iysf-slide-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
 .iysf-slide-in { animation: iysf-slide-in 220ms ease-out; }
+
+/* Body scroll-lock when mobile nav is open */
+body.nav-open { overflow: hidden; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }

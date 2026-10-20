@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logoSrc from "../assets/iysf-logo.png";
@@ -157,23 +157,39 @@ function Dropdown({
 export function Nav() {
   const [open, setOpen] = useState(false);
   const { session } = useSession();
+
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("nav-open");
+    } else {
+      document.body.classList.remove("nav-open");
+    }
+    return () => {
+      document.body.classList.remove("nav-open");
+    };
+  }, [open]);
+
   return (
     <>
+    {/* Announcement banner — single tappable row, safe-area aware */}
     <Link
       to="/events/world-championship-2026"
-      className="flex min-h-8 w-full max-w-full items-center justify-center overflow-hidden px-4 text-center text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white transition-opacity hover:opacity-90 sm:text-[12px] sm:tracking-[0.18em]"
+      className="iysf-safe-top flex min-h-8 w-full max-w-full items-center justify-center overflow-hidden px-4 text-center text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white transition-opacity hover:opacity-90 sm:text-[12px] sm:tracking-[0.18em]"
       style={{ background: IYSF.magenta, fontFamily: "var(--font-sans)" }}
       aria-label="Register now for the 17th World Yogasana Championship"
     >
+      {/* Short label on small phones so it never wraps */}
       <span className="truncate sm:hidden">17th World Championship · Italy · Dec 4–6 →</span>
-      <span className="hidden truncate sm:inline">Register Now — 17th World Yogasana Championship, Italy · Dec 4–6, 2026 →</span>
+      {/* Full label from sm breakpoint up */}
+      <span className="hidden truncate sm:inline">Register Now — 17th World Yogasana Championship · Italy · Dec 4–6, 2026 →</span>
     </Link>
 
     <header
       className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur"
       style={{ borderBottom: `1px solid ${IYSF.blueLine}`, fontFamily: "var(--font-sans)" }}
     >
-      <div className="mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 md:px-8 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+      <div className="mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-5 md:px-8 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
         <Link to="/" aria-label="IYSF home" className="min-w-0 justify-self-start">
           <IysfWordmark />
         </Link>
@@ -253,16 +269,38 @@ export function Nav() {
 
     </header>
       {open && (
-        <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Site menu" onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}>
+        <div
+          className="fixed inset-0 z-[60] lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+          onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+        >
+          {/* Backdrop */}
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
-          <div className="iysf-slide-in absolute inset-y-0 right-0 flex w-[min(88vw,380px)] flex-col overflow-y-auto overscroll-contain bg-white shadow-xl">
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+          {/* Drawer panel */}
+          <div
+            className="iysf-slide-in absolute inset-y-0 right-0 flex w-[min(88vw,380px)] flex-col overflow-y-auto overscroll-contain bg-white shadow-xl"
+            style={{ paddingBottom: "env(safe-area-inset-bottom, 1rem)" }}
+          >
+            <div className="flex shrink-0 items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
               <IysfWordmark />
               <button type="button" autoFocus aria-label="Close menu" onClick={() => setOpen(false)} className={`inline-flex h-11 w-11 items-center justify-center rounded-[10px] ${FOCUS}`} style={{ color: IYSF.charcoal }}>
                 <X size={20} />
               </button>
             </div>
-            <nav aria-label="Mobile" className="flex flex-col gap-0.5 px-4 py-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            {/* Primary CTA at top of drawer — always visible */}
+            <div className="shrink-0 px-4 pt-4">
+              <Link
+                to="/join-us"
+                onClick={() => setOpen(false)}
+                className={`flex min-h-12 w-full items-center justify-center rounded-[10px] text-center text-base font-bold ${FOCUS}`}
+                style={{ background: IYSF.orange, color: "#3A2400" }}
+              >
+                Join us
+              </Link>
+            </div>
+            <nav aria-label="Mobile" className="flex flex-1 flex-col gap-0.5 px-4 py-3">
               <MobileLink to="/" label="Home" onDone={() => setOpen(false)} />
               <MobileGroup title="About" items={ABOUT_ITEMS} onDone={() => setOpen(false)} />
               <MobileGroup title="Competition" items={COMPETITION_ITEMS} onDone={() => setOpen(false)} />
@@ -319,7 +357,7 @@ function MobileGroup({
         style={{ color: IYSF.charcoal }}
       >
         {title}
-        <ChevronDown size={18} aria-hidden="true" className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+        <ChevronDown size={18} aria-hidden="true" className={`transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} />
       </button>
       {expanded && (
         <div id={id} className="ml-3 border-l-2 pl-2" style={{ borderColor: IYSF.blueLine }}>
@@ -346,7 +384,7 @@ export function Footer({ minimal = false }: { minimal?: boolean }) {
 
 function SocialRow() {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center gap-3">
       {([
         [Facebook, "Facebook", "https://www.facebook.com/YogaSports/"],
         [Instagram, "Instagram", "https://www.instagram.com/iysf_official"],
@@ -376,23 +414,23 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
           <SocialRow />
         </div>
       ) : (
-      <div className="iysf-footer mx-auto grid max-w-[1320px] grid-cols-1 gap-3 px-4 py-4 sm:gap-10 sm:px-5 sm:py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-8">
+      <div className="iysf-footer mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-4 py-10 sm:px-5 sm:py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-8">
+        {/* Brand column */}
         <div className="min-w-0">
-          <div className="flex items-center gap-3 sm:block">
-            <div className="shrink-0 origin-left scale-75 sm:scale-100"><IysfWordmark light /></div>
-            <p className="min-w-0 text-[11px] leading-snug text-white/70 sm:mt-4 sm:max-w-[320px] sm:text-sm sm:leading-relaxed">
-              International Yoga Sports Federation — the global governing body for Yogasana sport.
-            </p>
-          </div>
-          <div className="mt-2 sm:mt-5">
+          <IysfWordmark light />
+          <p className="mt-3 min-w-0 max-w-[320px] break-words text-sm leading-relaxed text-white/70">
+            International Yoga Sports Federation — the global governing body for Yogasana sport.
+          </p>
+          <div className="mt-4">
             <SocialRow />
           </div>
         </div>
 
-        <nav aria-label="Footer" className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-4">
+        {/* Link groups — 2-col grid on all sizes */}
+        <nav aria-label="Footer" className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6">
           {FOOTER_GROUPS.map((g) => (
             <div key={g.title} className="min-w-0">
-              <div className="mb-1 text-[12px] font-bold uppercase tracking-[0.18em]" style={{ color: IYSF.orange }}>{g.title}</div>
+              <div className="mb-2 text-[12px] font-bold uppercase tracking-[0.18em]" style={{ color: IYSF.orange }}>{g.title}</div>
               <ul>
                 {g.links.map((l) => (
                   <li key={l.label}>
@@ -404,21 +442,19 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
           ))}
         </nav>
 
+        {/* Headquarters */}
         <div className="min-w-0">
-          <div className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em] sm:mb-4" style={{ color: IYSF.orange }}>
+          <div className="mb-3 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: IYSF.orange }}>
             Headquarters
           </div>
-          <address className="text-[11px] not-italic leading-snug text-white/80 sm:text-sm sm:leading-relaxed">
-            Maison du Sport International
-            <span className="sm:hidden">, </span>
-            <br className="hidden sm:block" />
-            Av de Rhodanie 54
-            <br />
+          <address className="break-words text-sm not-italic leading-relaxed text-white/80">
+            Maison du Sport International<br />
+            Av de Rhodanie 54<br />
             Lausanne, Switzerland
           </address>
           <Link
             to="/contact"
-            className="mt-1.5 inline-block text-[11px] font-semibold text-white/85 hover:text-white sm:mt-4 sm:text-sm"
+            className={`mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-white/85 hover:text-white ${FOCUS}`}
           >
             Contact IYSF →
           </Link>
@@ -426,7 +462,7 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
       </div>
       )}
       <div className="border-t border-white/10">
-        <div className="mx-auto max-w-[1320px] px-4 py-2 text-center text-[11px] text-white/60 sm:px-5 sm:py-5 sm:text-xs md:px-8">
+        <div className="mx-auto max-w-[1320px] px-4 py-3 text-center text-[11px] text-white/60 sm:px-5 sm:py-5 sm:text-xs md:px-8">
           © 2026 IYSF
         </div>
       </div>

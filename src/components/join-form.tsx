@@ -133,7 +133,7 @@ export function JoinForm() {
 
   return (
     <section id="join" className="bg-white">
-      <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-24">
+      <div className="mx-auto max-w-[1240px] px-4 py-12 sm:px-5 sm:py-16 md:px-8 md:py-24">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div>
             <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: "#DE007A" }}>
@@ -145,10 +145,7 @@ export function JoinForm() {
             >
               Join a federation
             </h2>
-            <p className="mt-2 text-[13px] sm:hidden" style={{ color: "#414042" }}>
-              National Yogasana bodies can apply for IYSF affiliation.
-            </p>
-            <p className="mt-5 hidden max-w-[420px] text-base leading-relaxed sm:block" style={{ color: "#414042" }}>
+            <p className="mt-3 text-base leading-relaxed" style={{ color: "#414042" }}>
               National bodies governing competitive Yogasana may apply for IYSF affiliation. Submit
               your details and the membership commission will respond with the next steps.
             </p>
@@ -209,7 +206,7 @@ export function JoinForm() {
                 noValidate
                 onBlur={(e) => { const id = (e.target as HTMLElement).id; if (id && id in EMPTY && values[id]) validateField(id); }}
                 onFocus={(e) => { const el = e.target as HTMLElement; setTimeout(() => el.scrollIntoView({ block: "center", behavior: "smooth" }), 300); }}
-                className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5"
+                className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2"
               >
                 <p className="text-xs md:col-span-2" style={{ color: "#414042" }}><span aria-hidden="true" style={{ color: "#DE007A" }}>*</span> Required field</p>
                 <Field required id="organisation_name" label="Organisation name" error={errors.organisation_name} className="min-w-0 md:col-span-2">
@@ -326,7 +323,7 @@ export function JoinForm() {
                 </Field>
 
 <Field id="phone" label="Phone (optional)" error={errors.phone} className="min-w-0">
-                  <input id="phone" type="tel" autoComplete="tel" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
+                  <input id="phone" type="tel" inputMode="tel" autoComplete="tel" value={values.phone} onChange={set("phone")} maxLength={40} className={fieldCls} />
                 </Field>
 
 <Field id="website" label="Website (optional)" error={errors.website} className="min-w-0">
@@ -378,7 +375,7 @@ export function JoinForm() {
                   <button
                     type="submit"
                     disabled={status === "saving"}
-                    className="w-full rounded-md px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                    className="min-h-[48px] w-full rounded-md px-5 py-3 text-base font-semibold transition-all hover:-translate-y-0.5 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto motion-reduce:transform-none"
                     style={{ background: "#FAAF40", color: "#3A2400" }}
                   >
                     {status === "saving" ? "Submitting…" : "Submit application"}
