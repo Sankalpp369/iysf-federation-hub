@@ -8,6 +8,9 @@ export const Route = createFileRoute("/api/public/media/$")({
         if (!/^[A-Za-z0-9/_.-]{1,300}$/.test(path) || path.includes("..")) {
           return new Response("Not found", { status: 404 });
         }
+        if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          return new Response("Media serving is unavailable: server-side storage access is not configured.", { status: 503 });
+        }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin.storage.from("media").download(path);
         if (error || !data) return new Response("Not found", { status: 404 });

@@ -49,7 +49,7 @@ function StaffPage() {
         <input id="invite-email" type="email" required placeholder="name@example.org" value={email} onChange={(e) => setEmail(e.target.value)} className="min-h-11 flex-1 rounded-md border px-3 text-sm" style={{ borderColor: IYSF.blueLine }} />
         <button type="submit" disabled={busy} className="min-h-11 rounded-[10px] px-4 text-sm font-bold text-white disabled:opacity-60" style={{ background: IYSF.magenta }}>{busy ? "Sending…" : "Invite staff"}</button>
       </form>
-      {error && <p className="mt-4 text-sm" style={{ color: IYSF.magenta }}>Couldn't load staff.</p>}
+      {error && <p role="alert" className="mt-4 text-sm" style={{ color: IYSF.magenta }}>Couldn't load staff: {error instanceof Error ? error.message : "check your access and server configuration."}</p>}
       <ul className="mt-5 space-y-2">
         {isLoading && Array.from({ length: 2 }).map((_, i) => <li key={i} className="h-16 animate-pulse rounded-xl bg-black/5" />)}
         {data?.staff.map((s) => {

@@ -20,9 +20,12 @@ function publicClient(url: string, key: string) {
 }
 
 function getClient() {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) throw new Error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY");
   return publicClient(
-    process.env["SUPABASE_URL"]!,
-    process.env["SUPABASE_PUBLISHABLE_KEY"]!,
+    url,
+    key,
   );
 }
 
@@ -44,11 +47,38 @@ const federationSchema = z.object({
 });
 
 export const submitFederationApplication = createServerFn({ method: "POST" })
-  .inputValidator((input) => federationSchema.parse(input))
+  .validator((input) => federationSchema.parse(input))
   .handler(async ({ data }) => {
     const { error } = await getClient().from("federation_applications").insert(data);
     if (error) throw new Error("Submission could not be saved");
-    return { saved: true };
+    let emailed = false;
+    const resendKey = process.env["RESEND_API_KEY"];
+    const from = process.env["RESEND_FROM_EMAIL"];
+    if (resendKey && from) {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id").eq("role", "staff");
+        const users = await Promise.all((roles ?? []).map(async (role) => (await supabaseAdmin.auth.admin.getUserById(role.user_id)).data.user?.email));
+        const recipients = [...new Set(users.filter((email): email is string => !!email))];
+        if (recipients.length) {
+          const response = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              from,
+              to: recipients,
+              subject: `New federation membership application: ${data.organisation_name}`,
+              text: `A new federation membership application has been submitted.\n\nOrganisation: ${data.organisation_name}\nCountry: ${data.country}\nContact: ${data.contact_name}\nEmail: ${data.email}\nMembership: ${data.membership_type}\n\nReview it in the IYSF admin applications section.`,
+            }),
+          });
+          emailed = response.ok;
+          if (!response.ok) console.error("Membership application notification failed", response.status);
+        }
+      } catch (e) {
+        console.error("Membership application notification failed", e);
+      }
+    }
+    return { saved: true, emailed };
   });
 
 const eventSchema = z.object({
@@ -60,7 +90,7 @@ const eventSchema = z.object({
 });
 
 export const submitEventRegistration = createServerFn({ method: "POST" })
-  .inputValidator((input) => eventSchema.parse(input))
+  .validator((input) => eventSchema.parse(input))
   .handler(async ({ data }) => {
     const { error } = await getClient().from("event_registrations").insert(data);
     if (error) throw new Error("Registration could not be saved");
@@ -73,7 +103,7 @@ const newsletterSchema = z.object({
 });
 
 export const submitNewsletterSignup = createServerFn({ method: "POST" })
-  .inputValidator((input) => newsletterSchema.parse(input))
+  .validator((input) => newsletterSchema.parse(input))
   .handler(async ({ data }) => {
     const { error } = await getClient().from("newsletter_signups").insert(data);
     if (error) throw new Error("Subscription could not be saved");
@@ -88,7 +118,7 @@ const donationSchema = z.object({
 });
 
 export const submitDonationPledge = createServerFn({ method: "POST" })
-  .inputValidator((input) => donationSchema.parse(input))
+  .validator((input) => donationSchema.parse(input))
   .handler(async ({ data }) => {
     const { error } = await getClient().from("donation_pledges").insert(data);
     if (error) throw new Error("Pledge could not be saved");
@@ -106,7 +136,7 @@ const inquirySchema = z.object({
 });
 
 export const submitInquiry = createServerFn({ method: "POST" })
-  .inputValidator((input) => inquirySchema.parse(input))
+  .validator((input) => inquirySchema.parse(input))
   .handler(async ({ data }) => {
     const { error } = await getClient().from("sponsorship_enquiries").insert(data);
     if (error) throw new Error("Inquiry could not be saved");

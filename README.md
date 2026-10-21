@@ -238,3 +238,15 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+# IYSF Federation Hub
+
+## Environment variables
+
+The application requires these public variables for Supabase authentication and public data access:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+Set them in your local environment (for example, `.env.local`, which is ignored by Git) and in the deployment environment. Never put secrets in a `VITE_` variable.
+
+Server-side staff administration (listing, inviting, and removing staff) requires the server-only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Keep the service-role key out of browser code and source control. Staff administration shows a clear error when it is not configured. Private media delivery also requires the server-only service-role key; the media endpoint returns an explicit configuration error when absent.
