@@ -224,9 +224,11 @@ html { scroll-behavior: smooth; }
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* Slide-in animation for mobile drawer */
+/* Animate the mobile drawer only when the visitor allows motion. */
 @keyframes iysf-slide-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
-.iysf-slide-in { animation: iysf-slide-in 220ms ease-out; }
+@media (prefers-reduced-motion: no-preference) {
+  .iysf-slide-in { animation: iysf-slide-in 220ms ease-out; }
+}
 
 /* Body scroll-lock when mobile nav is open */
 body.nav-open { overflow: hidden; }

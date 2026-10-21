@@ -7,6 +7,9 @@ import { Reveal } from "../components/history-motion";
 import heroChampionship from "../assets/hero-championship.jpg";
 import { listPublishedPosts } from "@/lib/cms.functions";
 import { fmtDate } from "../components/news-article";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { safeHref, safeImageSrc } from "@/lib/blocks";
 import aboutCompetition from "../assets/about-competition.jpg";
 import aboutSport from "../assets/about-sport.jpg";
 import aboutChampions from "../assets/about-champions.jpg";
@@ -66,12 +69,14 @@ const H2 = (extra?: React.CSSProperties): React.CSSProperties => ({
   ...extra,
 });
 
-function Hero() {
+function Hero({ settings }: { settings?: any }) {
+  const heroImage = safeImageSrc(settings?.hero_image_url ?? "") ?? heroChampionship;
+  const buttonUrl = safeHref(settings?.button_url ?? "") ?? "/join-us";
   return (
-    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden" style={{ background: IYSF.charcoal }}>
+    <section aria-labelledby="hero-title" className="relative isolate flex min-h-svh flex-col overflow-hidden lg:min-h-0" style={{ background: IYSF.charcoal }}>
       {/* Responsive hero image: object-cover, top-center positioning so athletes remain visible across mobile/landscape */}
       <img
-        src={heroChampionship}
+        src={heroImage}
         width={1280}
         height={646}
         fetchPriority="high"
@@ -81,31 +86,30 @@ function Hero() {
       />
       {/* Gradient overlay for text contrast */}
       <div style={{ background: `linear-gradient(180deg, rgba(43,42,44,0) 0%, ${IYSF.charcoal} 100%)`, position: "absolute", inset: 0, pointerEvents: "none" }} aria-hidden="true" />
-      <div style={{ background: `linear-gradient(180deg, #2b2a2c 0%, ${IYSF.charcoal} 100%)` }}>
-        <div className="mx-auto max-w-[1320px] px-4 py-8 sm:px-5 sm:py-10 md:px-8 md:py-14">
+      <div className="flex flex-1 flex-col lg:flex-none" style={{ background: `linear-gradient(180deg, #2b2a2c 0%, ${IYSF.charcoal} 100%)` }}>
+        <div className="mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-4 py-8 sm:px-5 sm:py-10 md:px-8 md:py-14 lg:flex-none lg:justify-start">
           <h1
             id="hero-title"
-            className="text-3xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-7xl"
+            className="text-[clamp(2rem,9vw,3rem)] font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-7xl"
             style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.025em" }}
           >
-            A practice, judged as a sport.
+            {settings?.headline || "A practice, judged as a sport."}
           </h1>
           <p className="mt-3 max-w-[560px] text-base font-medium text-white/90 md:text-xl">
             64 member federations. Is yours one of them?
           </p>
           {/* CTAs: stacked full-width on mobile, inline from sm up */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <Link
-              to="/"
-              hash="join"
-              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] px-5 py-3 text-base font-bold transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto sm:justify-start"
+            <a
+              href={buttonUrl}
+              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] px-5 py-3 text-base font-bold motion-safe:transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto sm:justify-start"
               style={{ background: IYSF.orange, color: "#3A2400" }}
             >
-              Join a federation
-            </Link>
+              {settings?.button_text || "Join a federation"}
+            </a>
             <Link
               to="/results"
-              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] border-2 border-white px-5 py-[10px] text-base font-bold text-white transition-colors hover:bg-white/10 sm:w-auto"
+              className="inline-flex min-h-[48px] w-full items-center justify-center rounded-[12px] border-2 border-white px-5 py-[10px] text-base font-bold text-white motion-safe:transition-colors hover:bg-white/10 sm:w-auto"
             >
               See results
             </Link>
@@ -116,7 +120,7 @@ function Hero() {
   );
 }
 
-function MissionStrip() {
+function MissionStrip({ text }: { text?: string }) {
   return (
     <section className="bg-white" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
       <div className="mx-auto max-w-[1100px] px-4 py-10 text-center sm:px-5 md:px-8 md:py-12">
@@ -124,8 +128,7 @@ function MissionStrip() {
           className="text-[18px] leading-snug sm:text-[22px] md:text-[26px]"
           style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: IYSF.charcoal }}
         >
-          IYSF exists to govern Yogasana as a measured sport — one rulebook, one scoring
-          standard, and one competitive pathway for every national federation.
+          {text || "IYSF exists to govern Yogasana as a measured sport — one rulebook, one scoring standard, and one competitive pathway for every national federation."}
         </p>
       </div>
     </section>
@@ -236,7 +239,7 @@ function MembershipCta() {
         <Link
           to="/"
           hash="join"
-          className="inline-flex min-h-[48px] w-full shrink-0 items-center justify-center rounded-[12px] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto"
+          className="inline-flex min-h-[48px] w-full shrink-0 items-center justify-center rounded-[12px] px-7 py-4 text-base font-bold text-white motion-safe:transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto"
           style={{ background: "#414042" }}
         >
           Join us
@@ -369,24 +372,34 @@ function News() {
 }
 
 function Index() {
+  const { data: homeSettings } = useQuery({ queryKey: ["homepage-settings"], queryFn: async () => {
+    const { data, error } = await (supabase as any).from("cms_homepage").select("*").eq("id", true).maybeSingle();
+    if (error) throw error; return data;
+  } });
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
     return () => {
       document.documentElement.style.scrollBehavior = "";
     };
   }, []);
+  const sectionMap: Record<string, React.ReactNode> = {
+    mission: <MissionStrip text={homeSettings?.intro_text} />,
+    stats: <StatStrip />,
+    about: <AboutPreview />,
+    why: <WhyJoin />,
+    news: <News />,
+    join: <JoinForm />,
+    membership: <MembershipCta />,
+  };
+  const sectionOrder = Array.isArray(homeSettings?.sections) && homeSettings.sections.length
+    ? homeSettings.sections.filter((name: unknown): name is string => typeof name === "string" && name in sectionMap)
+    : ["mission", "stats", "about", "why", "news", "join", "membership"];
   return (
     <div style={{ fontFamily: "var(--font-sans)", color: IYSF.charcoal, background: "#fff" }}>
       <Nav />
       <main>
-        <Hero />
-        <MissionStrip />
-        <StatStrip />
-        <AboutPreview />
-        <WhyJoin />
-        <News />
-        <JoinForm />
-        <MembershipCta />
+        <Hero settings={homeSettings} />
+        {sectionOrder.map((name: string, index: number) => <div key={`${name}-${index}`}>{sectionMap[name]}</div>)}
       </main>
       <Footer />
     </div>

@@ -187,7 +187,7 @@ export function Nav() {
 
     <header
       className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur"
-      style={{ borderBottom: `1px solid ${IYSF.blueLine}`, fontFamily: "var(--font-sans)" }}
+      style={{ borderBottom: `1px solid ${IYSF.blueLine}`, fontFamily: "var(--font-sans)", top: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-5 md:px-8 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
         <Link to="/" aria-label="IYSF home" className="min-w-0 justify-self-start">
@@ -280,8 +280,8 @@ export function Nav() {
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
           {/* Drawer panel */}
           <div
-            className="iysf-slide-in absolute inset-y-0 right-0 flex w-[min(88vw,380px)] flex-col overflow-y-auto overscroll-contain bg-white shadow-xl"
-            style={{ paddingBottom: "env(safe-area-inset-bottom, 1rem)" }}
+            className="iysf-slide-in absolute inset-y-0 right-0 flex min-h-svh w-[min(88vw,380px)] flex-col overflow-y-auto overscroll-contain bg-white shadow-xl"
+            style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 1rem)" }}
           >
             <div className="flex shrink-0 items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
               <IysfWordmark />
