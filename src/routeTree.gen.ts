@@ -45,7 +45,9 @@ import { Route as EventsWorldChampionship2026RouteImport } from './routes/events
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as NewsRssDotxmlRouteImport } from './routes/news.rss[.]xml'
+import { Route as OfficialsIndexRouteImport } from './routes/officials.index'
 import { Route as ResultsIndexRouteImport } from './routes/results.index'
+import { Route as ResultsSlugRouteImport } from './routes/results.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
@@ -238,9 +240,19 @@ const NewsRssDotxmlRoute = NewsRssDotxmlRouteImport.update({
   path: '/news/rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficialsIndexRoute = OfficialsIndexRouteImport.update({
+  id: '/officials/',
+  path: '/officials/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResultsIndexRoute = ResultsIndexRouteImport.update({
   id: '/results/',
   path: '/results/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsSlugRoute = ResultsSlugRouteImport.update({
+  id: '/results/$slug',
+  path: '/results/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
@@ -326,10 +338,12 @@ export interface FileRoutesByFullPath {
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
   '/news/$slug': typeof NewsSlugRoute
   '/news/rss.xml': typeof NewsRssDotxmlRoute
+  '/results/$slug': typeof ResultsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/officials/': typeof OfficialsIndexRoute
   '/results/': typeof ResultsIndexRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -371,10 +385,12 @@ export interface FileRoutesByTo {
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
   '/news/$slug': typeof NewsSlugRoute
   '/news/rss.xml': typeof NewsRssDotxmlRoute
+  '/results/$slug': typeof ResultsSlugRoute
   '/academy': typeof AcademyIndexRoute
   '/directory': typeof DirectoryIndexRoute
   '/events': typeof EventsIndexRoute
   '/news': typeof NewsIndexRoute
+  '/officials': typeof OfficialsIndexRoute
   '/results': typeof ResultsIndexRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -420,10 +436,12 @@ export interface FileRoutesById {
   '/events/world-championship-2026': typeof EventsWorldChampionship2026Route
   '/news/$slug': typeof NewsSlugRoute
   '/news/rss.xml': typeof NewsRssDotxmlRoute
+  '/results/$slug': typeof ResultsSlugRoute
   '/academy/': typeof AcademyIndexRoute
   '/directory/': typeof DirectoryIndexRoute
   '/events/': typeof EventsIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/officials/': typeof OfficialsIndexRoute
   '/results/': typeof ResultsIndexRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -469,10 +487,12 @@ export interface FileRouteTypes {
     | '/events/world-championship-2026'
     | '/news/$slug'
     | '/news/rss.xml'
+    | '/results/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
     | '/news/'
+    | '/officials/'
     | '/results/'
     | '/admin/$section'
     | '/admin/media'
@@ -514,10 +534,12 @@ export interface FileRouteTypes {
     | '/events/world-championship-2026'
     | '/news/$slug'
     | '/news/rss.xml'
+    | '/results/$slug'
     | '/academy'
     | '/directory'
     | '/events'
     | '/news'
+    | '/officials'
     | '/results'
     | '/admin/$section'
     | '/admin/media'
@@ -562,10 +584,12 @@ export interface FileRouteTypes {
     | '/events/world-championship-2026'
     | '/news/$slug'
     | '/news/rss.xml'
+    | '/results/$slug'
     | '/academy/'
     | '/directory/'
     | '/events/'
     | '/news/'
+    | '/officials/'
     | '/results/'
     | '/_authenticated/admin/$section'
     | '/_authenticated/admin/media'
@@ -606,9 +630,11 @@ export interface RootRouteChildren {
   EventsWorldChampionship2026Route: typeof EventsWorldChampionship2026Route
   NewsSlugRoute: typeof NewsSlugRoute
   NewsRssDotxmlRoute: typeof NewsRssDotxmlRoute
+  ResultsSlugRoute: typeof ResultsSlugRoute
   DirectoryIndexRoute: typeof DirectoryIndexRoute
   EventsIndexRoute: typeof EventsIndexRoute
   NewsIndexRoute: typeof NewsIndexRoute
+  OfficialsIndexRoute: typeof OfficialsIndexRoute
   ResultsIndexRoute: typeof ResultsIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
@@ -867,11 +893,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsRssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/officials/': {
+      id: '/officials/'
+      path: '/officials'
+      fullPath: '/officials/'
+      preLoaderRoute: typeof OfficialsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/results/': {
       id: '/results/'
       path: '/results'
       fullPath: '/results/'
       preLoaderRoute: typeof ResultsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results/$slug': {
+      id: '/results/$slug'
+      path: '/results/$slug'
+      fullPath: '/results/$slug'
+      preLoaderRoute: typeof ResultsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
@@ -1023,9 +1063,11 @@ const rootRouteChildren: RootRouteChildren = {
   EventsWorldChampionship2026Route: EventsWorldChampionship2026Route,
   NewsSlugRoute: NewsSlugRoute,
   NewsRssDotxmlRoute: NewsRssDotxmlRoute,
+  ResultsSlugRoute: ResultsSlugRoute,
   DirectoryIndexRoute: DirectoryIndexRoute,
   EventsIndexRoute: EventsIndexRoute,
   NewsIndexRoute: NewsIndexRoute,
+  OfficialsIndexRoute: OfficialsIndexRoute,
   ResultsIndexRoute: ResultsIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { listFeedPosts } from "@/lib/cms.functions";
+import { listFeedPosts, listPublicCmsUrls } from "@/lib/cms.functions";
 import { SITE_URL } from "@/lib/blocks";
 
 const STATIC = [
@@ -14,9 +14,12 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const posts = await listFeedPosts();
+        const cms = await listPublicCmsUrls();
         const urls = [
           ...STATIC.map((p) => `<url><loc>${SITE_URL}${p}</loc></url>`),
           ...posts.map((p) => `<url><loc>${SITE_URL}/news/${p.slug}</loc><lastmod>${new Date(p.updated_at).toISOString()}</lastmod></url>`),
+          ...cms.events.map((e: { slug: string; updated_at: string }) => `<url><loc>${SITE_URL}/events/${encodeURIComponent(e.slug)}</loc><lastmod>${new Date(e.updated_at).toISOString()}</lastmod></url>`),
+          ...cms.results.map((r: { slug: string; updated_at: string }) => `<url><loc>${SITE_URL}/results/${encodeURIComponent(r.slug)}</loc><lastmod>${new Date(r.updated_at).toISOString()}</lastmod></url>`),
         ].join("");
         return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`, {
           headers: { "content-type": "application/xml; charset=utf-8", "cache-control": "public, max-age=3600" },

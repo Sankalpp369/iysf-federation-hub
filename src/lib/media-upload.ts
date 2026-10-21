@@ -26,15 +26,8 @@ export async function uploadMedia(file: File, alt = "") {
   const ext = type.split("/")[1].replace("jpeg", "jpg");
   const base = file.name.replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40) || "image";
   const path = `${new Date().toISOString().slice(0, 7)}/${crypto.randomUUID().slice(0, 8)}-${base}.${ext}`;
+  const url = `/api/public/media/${path}`;
   const { error } = await supabase.storage.from("media").upload(path, blob, { contentType: type, upsert: false });
   if (error) throw new Error(error.message);
-  const url = `/api/public/media/${path}`;
-  const { data: u } = await supabase.auth.getUser();
-  const { data, error: dbErr } = await supabase
-    .from("media")
-    .insert({ path, url, alt, width, height, size_bytes: blob.size, mime_type: type, uploaded_by: u.user?.id })
-    .select()
-    .single();
-  if (dbErr) throw new Error(dbErr.message);
-  return data;
+  return { path, url, alt, width: width || null, height: height || null, size_bytes: blob.size, mime_type: type };
 }

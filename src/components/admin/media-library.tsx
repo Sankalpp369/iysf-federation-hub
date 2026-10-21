@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { uploadMedia, ACCEPTED } from "@/lib/media-upload";
 import { IYSF } from "../site-chrome";
+import { createMediaRecord, deleteMedia as deleteMediaAction } from "@/lib/cms.functions";
 
 export type MediaRow = { id: string; path: string; url: string; alt: string | null; created_at: string };
 
@@ -21,6 +23,8 @@ export function useMedia() {
 
 export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
   const qc = useQueryClient();
+  const createMedia = useServerFn(createMediaRecord);
+  const deleteMedia = useServerFn(deleteMediaAction);
   const { data, isLoading, error } = useMedia();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -30,7 +34,14 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
     setBusy(true);
     for (const f of Array.from(files)) {
       try {
-        const m = await uploadMedia(f);
+        const uploaded = await uploadMedia(f);
+        let m: MediaRow;
+        try {
+          m = await createMedia({ data: uploaded }) as MediaRow;
+        } catch (error) {
+          await supabase.storage.from("media").remove([uploaded.path]);
+          throw error;
+        }
         toast.success(`Uploaded ${f.name}`);
         if (onPick && files.length === 1) onPick(m as MediaRow);
       } catch (e) {
@@ -44,10 +55,8 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
 
   async function remove(m: MediaRow) {
     if (!confirm("Delete this image? Posts using it will show no image.")) return;
-    const { error: sErr } = await supabase.storage.from("media").remove([m.path]);
-    const { error: dErr } = await supabase.from("media").delete().eq("id", m.id);
-    if (sErr || dErr) toast.error("Couldn't delete image");
-    else toast.success("Image deleted");
+    try { await deleteMedia({ data: { id: m.id } }); toast.success("Image deleted"); }
+    catch (error) { toast.error(error instanceof Error ? error.message : "Couldn't delete image"); }
     void qc.invalidateQueries({ queryKey: ["media"] });
   }
 

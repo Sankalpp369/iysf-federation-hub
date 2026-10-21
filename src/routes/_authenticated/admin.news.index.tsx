@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { IYSF } from "../../components/site-chrome";
 import { fmtDate } from "../../components/news-article";
+import { deletePost as deletePostAction, savePost as savePostAction } from "@/lib/cms.functions";
+import { parseContent } from "@/lib/blocks";
 
 export const Route = createFileRoute("/_authenticated/admin/news/")({ component: NewsAdmin });
 
@@ -12,6 +15,8 @@ const STATUS_COLOR: Record<string, string> = { published: "#1F8A4C", draft: "#8a
 
 function NewsAdmin() {
   const qc = useQueryClient();
+  const savePost = useServerFn(savePostAction);
+  const deletePost = useServerFn(deletePostAction);
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-posts"],
     queryFn: async () => {
@@ -36,19 +41,21 @@ function NewsAdmin() {
   async function duplicate(id: string) {
     const p = data?.find((x) => x.id === id);
     if (!p) return;
-    const { data: u } = await supabase.auth.getUser();
-    const { error } = await supabase.from("posts").insert({
-      title: `${p.title} (copy)`, slug: `${p.slug}-copy-${Math.random().toString(36).slice(2, 6)}`, excerpt: p.excerpt,
-      cover_image_url: p.cover_image_url, cover_alt: p.cover_alt, content: p.content, status: "draft", tags: p.tags,
-      seo_title: p.seo_title, seo_description: p.seo_description, author_name: p.author_name, created_by: u.user?.id, updated_by: u.user?.id,
-    });
-    if (error) toast.error(error.message); else toast.success("Post duplicated as draft");
+    try {
+      await savePost({ data: {
+        title: `${p.title} (copy)`, slug: `${p.slug}-copy-${Math.random().toString(36).slice(2, 6)}`,
+        excerpt: p.excerpt, cover_image_url: p.cover_image_url, cover_alt: p.cover_alt,
+        content: parseContent(p.content), status: "draft", published_at: null, tags: p.tags,
+        seo_title: p.seo_title, seo_description: p.seo_description, author_name: p.author_name ?? "IYSF Communications",
+      } });
+      toast.success("Post duplicated as draft");
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Couldn't duplicate post"); }
     void qc.invalidateQueries({ queryKey: ["admin-posts"] });
   }
   async function del(id: string, title: string) {
     if (!confirm(`Delete “${title}”? This cannot be undone.`)) return;
-    const { error } = await supabase.from("posts").delete().eq("id", id);
-    if (error) toast.error(error.message); else toast.success("Post deleted");
+    try { await deletePost({ data: { id } }); toast.success("Post deleted"); }
+    catch (error) { toast.error(error instanceof Error ? error.message : "Couldn't delete post"); }
     void qc.invalidateQueries({ queryKey: ["admin-posts"] });
   }
 

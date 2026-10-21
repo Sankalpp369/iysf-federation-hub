@@ -1,102 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Trophy } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 
 export const Route = createFileRoute("/results/")({
-  head: () => ({
-    meta: [
-      { title: "Championship Results — Coming Soon | IYSF" },
-      {
-        name: "description",
-        content:
-          "Full standings and medal results from IYSF championships are being prepared for publication.",
-      },
-      { property: "og:title", content: "Championship Results — IYSF" },
-      {
-        property: "og:description",
-        content: "Standings and medal results from IYSF championships are coming soon.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: ResultsComingSoon,
+  head: () => ({ meta: [{ title: "Championship Results | IYSF" }, { name: "description", content: "Standings and results from IYSF championships." }] }),
+  component: ResultsPage,
 });
 
-const EDITIONS = [
-  ["2025", "Cyberjaya"],
-  ["2022", "Bengaluru"],
-  ["2021", "Online"],
-  ["2018", "Beijing"],
-  ["2016", "Pordenone"],
-  ["2014", "London"],
-  ["2003–2013", "Ghosh Cup"],
-];
-
-function ResultsComingSoon() {
-  return (
-    <div style={{ fontFamily: "var(--font-sans)", color: IYSF.charcoal, background: "#fff" }}>
-      <Nav />
-      <main>
-        <section style={{ background: IYSF.blueWash }}>
-          <div className="mx-auto max-w-[1100px] px-5 py-20 md:px-8 md:py-28">
-            <div
-              className="rounded-[20px] border-2 bg-white p-8 md:p-12"
-              style={{ borderColor: IYSF.blue, boxShadow: "0 24px 60px -32px rgba(66,152,211,0.55)" }}
-            >
-              <span
-                className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white"
-                style={{ background: IYSF.magenta }}
-              >
-                <Trophy size={13} aria-hidden="true" /> Coming soon
-              </span>
-              <h1
-                className="mt-5 text-[38px] leading-[1.03] tracking-[-0.02em] md:text-[60px]"
-                style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: IYSF.charcoal }}
-              >
-                Championship Results
-              </h1>
-              <p className="mt-5 max-w-[640px] text-base leading-relaxed md:text-[17px]">
-                Full standings and medal results from IYSF championships are being prepared for
-                publication here. In the meantime, browse past championship editions on the calendar.
-              </p>
-              <Link
-                to="/events"
-                className="mt-8 inline-flex items-center gap-2 rounded-[12px] px-6 py-3 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
-                style={{ background: IYSF.blue }}
-              >
-                Browse the calendar <ArrowRight size={16} aria-hidden="true" />
-              </Link>
-            </div>
-
-            <div className="mt-12">
-              <h2
-                className="text-[11px] font-semibold uppercase tracking-[0.22em]"
-                style={{ color: IYSF.blue }}
-              >
-                Past championship editions
-              </h2>
-              <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {EDITIONS.map(([year, place]) => (
-                  <li
-                    key={year}
-                    className="rounded-[12px] border bg-white px-4 py-3"
-                    style={{ borderColor: IYSF.blueLine }}
-                  >
-                    <div className="text-sm" style={{ fontFamily: "var(--font-mono)", color: IYSF.magenta }}>
-                      {year}
-                    </div>
-                    <div className="mt-0.5 font-bold" style={{ fontFamily: "var(--font-display)" }}>
-                      {place}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
-  );
+function ResultsPage() {
+  const [query, setQuery] = useState("");
+  const [year, setYear] = useState("all");
+  const { data = [], isLoading, error } = useQuery({ queryKey: ["public-cms-results"], queryFn: async () => {
+    const { data, error } = await (supabase as any).from("cms_results").select("id,competition_name,slug,competition_date,location,category").eq("status", "published").order("competition_date", { ascending: false });
+    if (error) throw error; return (data ?? []) as Array<{ id: string; competition_name: string; slug: string; competition_date: string; location: string; category: string | null }>;
+  } });
+  const years = [...new Set(data.map((r: any) => String(r.competition_date).slice(0, 4)))];
+  const rows = useMemo(() => data.filter((r: any) => `${r.competition_name} ${r.location} ${r.category}`.toLowerCase().includes(query.toLowerCase()) && (year === "all" || String(r.competition_date).startsWith(year))), [data, query, year]);
+  return <div className="min-h-screen bg-white" style={{ color: IYSF.charcoal }}><Nav /><main>
+    <header style={{ background: IYSF.blueWash }}><div className="mx-auto max-w-[1100px] px-5 py-14 md:px-8 md:py-20"><p className="text-xs font-bold uppercase tracking-[.2em]" style={{ color: IYSF.blue }}>Competition archive</p><h1 className="mt-3 text-4xl font-extrabold md:text-6xl" style={{ fontFamily: "var(--font-display)" }}>Championship Results</h1><p className="mt-4 max-w-2xl">Browse published competition results by event, category and year.</p></div></header>
+    <section className="mx-auto max-w-[1100px] px-5 py-10 md:px-8"><div className="grid gap-2 sm:grid-cols-[1fr_auto]"><input aria-label="Search results" placeholder="Search competitions, locations, categories" value={query} onChange={(e) => setQuery(e.target.value)} className="min-h-11 rounded-md border px-3" /><select aria-label="Year" className="min-h-11 rounded-md border bg-white px-3" value={year} onChange={(e) => setYear(e.target.value)}><option value="all">All years</option>{years.map((y) => <option key={y}>{y}</option>)}</select></div>
+      {isLoading && <p className="mt-6">Loading results…</p>}{error && <p className="mt-6">Results are temporarily unavailable.</p>}
+      {!isLoading && rows.length === 0 && <p className="mt-6 text-sm opacity-70">No published results match your search.</p>}
+      <ul className="mt-5 grid gap-3 sm:grid-cols-2">{rows.map((r: any) => <li key={r.id} className="rounded-xl border bg-white p-5" style={{ borderColor: IYSF.blueLine }}><time className="text-xs font-bold uppercase" style={{ color: IYSF.magenta }}>{new Date(`${r.competition_date}T00:00:00`).toLocaleDateString()}</time><h2 className="mt-2 text-xl font-bold">{r.competition_name}</h2><p className="mt-1 text-sm">{r.location}{r.category ? ` · ${r.category}` : ""}</p><Link to="/results/$slug" params={{ slug: r.slug }} className="mt-3 inline-block text-sm font-bold" style={{ color: IYSF.blue }}>View results →</Link></li>)}</ul>
+    </section>
+  </main><Footer /></div>;
 }

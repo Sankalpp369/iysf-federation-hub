@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBlocker, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { savePost as savePostAction } from "@/lib/cms.functions";
 import type { Database } from "@/integrations/supabase/types";
 import { BlockEditor, useHistory } from "./block-editor";
 import { MediaLibrary } from "./media-library";
@@ -32,6 +33,7 @@ const toLocal = (iso: string | null) => {
 export function PostEditor({ post }: { post?: Post }) {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const savePost = useServerFn(savePostAction);
   const [id, setId] = useState(post?.id);
   const [m, setM] = useState({
     title: post?.title ?? "", slug: post?.slug ?? "", excerpt: post?.excerpt ?? "", status: (post?.status ?? "draft") as "draft" | "scheduled" | "published",
@@ -60,32 +62,39 @@ export function PostEditor({ post }: { post?: Post }) {
     if (status === "published" && !published_at) published_at = new Date().toISOString();
     if (status === "scheduled" && !published_at) { if (!opts.silent) toast.error("Pick a publish date and time for scheduled posts"); return null; }
     if (status === "published" && published_at && new Date(published_at) > new Date()) status = "scheduled";
-    const { data: u } = await supabase.auth.getUser();
-    const row = {
-      ...meta.data, status, published_at, content: content.data,
-      excerpt: meta.data.excerpt || null, seo_title: meta.data.seo_title || null, seo_description: meta.data.seo_description || null,
-      cover_image_url: m.cover_image_url || null, cover_alt: meta.data.cover_alt || null,
-      tags: m.tags.split(",").map((t) => t.trim()).filter(Boolean).slice(0, 20), updated_by: u.user?.id,
-    };
     setSaving(true);
-    const res = id
-      ? await supabase.from("posts").update(row).eq("id", id).select("id").single()
-      : await supabase.from("posts").insert({ ...row, created_by: u.user?.id }).select("id").single();
-    setSaving(false);
-    if (res.error) {
-      toast.error(res.error.code === "23505" ? "That slug is already used by another post" : res.error.message);
+    let savedId: string;
+    try {
+      const res = await savePost({ data: {
+        ...(id ? { id } : {}),
+        ...meta.data,
+        status,
+        published_at,
+        content: content.data,
+        excerpt: meta.data.excerpt || null,
+        seo_title: meta.data.seo_title || null,
+        seo_description: meta.data.seo_description || null,
+        cover_image_url: m.cover_image_url || null,
+        cover_alt: meta.data.cover_alt || null,
+        tags: m.tags.split(",").map((t) => t.trim()).filter(Boolean).slice(0, 20),
+      } });
+      savedId = res.id;
+    } catch (error) {
+      setSaving(false);
+      toast.error(error instanceof Error ? error.message : "Couldn't save post");
       return null;
     }
+    setSaving(false);
     setDirty(false);
     setSavedAt(new Date());
     if (status !== m.status) setM((s) => ({ ...s, status }));
     void qc.invalidateQueries({ queryKey: ["admin-posts"] });
     if (!opts.silent) toast.success("Saved");
     if (!id) {
-      setId(res.data.id);
-      void navigate({ to: "/admin/news/$id", params: { id: res.data.id }, replace: true });
+      setId(savedId);
+      void navigate({ to: "/admin/news/$id", params: { id: savedId }, replace: true });
     }
-    return res.data.id;
+    return savedId;
   }, [m, h.blocks, id, navigate, qc]);
 
   useEffect(() => {
