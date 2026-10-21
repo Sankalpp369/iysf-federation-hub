@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
 import { NewsArticle } from "../components/news-article";
 import { getPublishedPost } from "@/lib/cms.functions";
-import { absoluteUrl, SITE_URL } from "@/lib/blocks";
+import { safeImageSrc, SITE_URL } from "@/lib/blocks";
 
 export const Route = createFileRoute("/news/$slug")({
   loader: async ({ params }) => {
@@ -15,7 +15,8 @@ export const Route = createFileRoute("/news/$slug")({
     const p = loaderData.post;
     const title = `${p.seo_title || p.title} — IYSF`;
     const desc = p.seo_description || p.excerpt || "IYSF news";
-    const img = p.cover_image_url ? absoluteUrl(p.cover_image_url) : null;
+    const cover = p.cover_image_url ? safeImageSrc(p.cover_image_url) : null;
+    const img = cover ? new URL(cover, SITE_URL).toString() : null;
     return {
       meta: [
         { title },

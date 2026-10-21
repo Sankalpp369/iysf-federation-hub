@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { parseContent, safeImageSrc } from "@/lib/blocks";
+import { BlockRenderer } from "../components/block-renderer";
 import { useServerFn } from "@tanstack/react-start";
 import { submitEventRegistration } from "@/lib/submissions.functions";
 import { Nav, Footer, Breadcrumb } from "../components/site-chrome";
@@ -43,8 +47,14 @@ export const Route = createFileRoute("/events/$slug")({
 function EventDetailPage() {
   const { slug } = Route.useParams();
   const event = getEvent(slug);
+  const managed = useQuery({ queryKey: ["public-cms-event", slug], enabled: !event, queryFn: async () => {
+    const { data, error } = await (supabase as any).from("cms_events").select("*").eq("slug", slug).eq("status", "published").maybeSingle();
+    if (error) throw error; return data;
+  } });
 
   if (!event) {
+    if (managed.isLoading) return <div className="p-10 text-center">Loading event…</div>;
+    if (managed.data) return <div className="min-h-screen bg-white" style={{ color: "#414042" }}><Nav /><main className="mx-auto max-w-[1100px] px-5 py-12 md:px-8 md:py-16"><Link to="/events" className="font-bold" style={{ color: "#4298D3" }}>← All events</Link>{safeImageSrc(managed.data.cover_image_url ?? "") && <img src={safeImageSrc(managed.data.cover_image_url ?? "")!} alt={managed.data.cover_alt ?? ""} width={1200} height={525} loading="lazy" decoding="async" className="mt-6 aspect-[16/7] w-full rounded-xl object-cover" /> }<p className="mt-6 text-sm font-bold" style={{ color: "#DE007A" }}>{new Date(managed.data.starts_at).toLocaleString()}{managed.data.ends_at ? ` – ${new Date(managed.data.ends_at).toLocaleString()}` : ""}</p><h1 className="mt-2 text-3xl font-extrabold md:text-5xl" style={{ fontFamily: "var(--font-display)" }}>{managed.data.title}</h1><p className="mt-3">{managed.data.location}</p><div className="mt-8"><BlockRenderer blocks={parseContent(managed.data.description)} /></div>{managed.data.registration_url && <a href={managed.data.registration_url} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-lg px-5 py-3 font-bold text-white" style={{ background: "#4298D3" }}>Register</a>}</main><Footer /></div>;
     return (
       <div style={{ fontFamily: "var(--font-sans)", color: "#414042" }}>
         <Nav />

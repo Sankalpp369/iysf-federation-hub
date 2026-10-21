@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Quote } from "lucide-react";
-import sponsorshipPosterAsset from "../assets/2026-sponsorship-poster.webp.asset.json";
 import { PageHeader, PageShell, Prose, Section } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
 import { InquiryForm } from "../components/inquiry-form";
@@ -67,9 +66,13 @@ function SponsorshipPage() {
       <Section>
         <div className="max-w-[820px]">
           <img
-            src={sponsorshipPosterAsset.url}
+            src="/images/2026-sponsorship-opportunities.svg"
             alt="2026 IYSF World Yogasana Championship sponsorship opportunities: Studio Sponsor and Silver Sponsor"
             className="w-full rounded-[12px] border"
+            width={1200}
+            height={675}
+            loading="lazy"
+            decoding="async"
             style={{ borderColor: IYSF.blueLine, boxShadow: IYSF.blueShadow }}
           />
           <div className="mt-6">

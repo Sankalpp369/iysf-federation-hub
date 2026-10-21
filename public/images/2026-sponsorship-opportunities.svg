@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">IYSF World Yogasana Championships sponsorship opportunities</title>
+  <desc id="desc">Studio Sponsor and Silver Sponsor opportunities for the 2026 IYSF World Yogasana Championships.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#173d57"/>
+      <stop offset="1" stop-color="#252426"/>
+    </linearGradient>
+    <pattern id="lines" width="56" height="56" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <path d="M0 0v56" stroke="#ffffff" stroke-opacity=".045" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="675" rx="24" fill="url(#lines)"/>
+  <path d="M80 112h110" stroke="#FAAF40" stroke-width="8" stroke-linecap="round"/>
+  <text x="80" y="174" fill="#fff" font-family="Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="5">INTERNATIONAL YOGA SPORTS FEDERATION</text>
+  <text x="80" y="270" fill="#fff" font-family="Arial,sans-serif" font-size="66" font-weight="800">2026 WORLD</text>
+  <text x="80" y="345" fill="#fff" font-family="Arial,sans-serif" font-size="66" font-weight="800">YOGASANA CHAMPIONSHIPS</text>
+  <text x="82" y="397" fill="#d9eaf4" font-family="Arial,sans-serif" font-size="25">Sponsorship opportunities</text>
+  <rect x="80" y="470" width="455" height="112" rx="14" fill="#FAAF40"/>
+  <text x="112" y="519" fill="#3A2400" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2">OPPORTUNITY</text>
+  <text x="112" y="557" fill="#3A2400" font-family="Arial,sans-serif" font-size="33" font-weight="800">Studio Sponsor</text>
+  <rect x="565" y="470" width="455" height="112" rx="14" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".45" stroke-width="2"/>
+  <text x="597" y="519" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2">OPPORTUNITY</text>
+  <text x="597" y="557" fill="#fff" font-family="Arial,sans-serif" font-size="33" font-weight="800">Silver Sponsor</text>
+  <text x="80" y="630" fill="#d9eaf4" font-family="Arial,sans-serif" font-size="17">Support athletes and the global Yogasana sports community.</text>
+</svg>

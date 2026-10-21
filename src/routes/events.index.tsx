@@ -5,6 +5,9 @@ import { Search, MapPin, X } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
 import { useServerFn } from "@tanstack/react-start";
 import { submitEventRegistration } from "@/lib/submissions.functions";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { safeImageSrc } from "@/lib/blocks";
 import {
   upcomingEvents,
   pastEvents,
@@ -51,6 +54,11 @@ function useHydrated() {
 }
 
 function EventsPage() {
+  const [managedTab, setManagedTab] = useState<"upcoming" | "past">("upcoming");
+  const managedQuery = useQuery({ queryKey: ["public-cms-events"], queryFn: async () => {
+    const { data, error } = await (supabase as any).from("cms_events").select("id,title,slug,starts_at,ends_at,location,cover_image_url,cover_alt,registration_url").eq("status", "published").order("starts_at", { ascending: true });
+    if (error) throw error; return data ?? [];
+  } });
   const upMore = useMobileMore();
   const arMore = useMobileMore();
   const [query, setQuery] = useState("");
@@ -83,6 +91,20 @@ function EventsPage() {
     <div style={{ fontFamily: "var(--font-sans)", color: "#414042" }}>
       <Nav />
       <main>
+        <section className="bg-[#f4f9fc]">
+          <div className="mx-auto max-w-[1240px] px-5 py-10 md:px-8">
+            <h2 className="text-2xl font-extrabold" style={{ fontFamily: "var(--font-display)" }}>IYSF events</h2>
+            <p className="mt-1 text-sm opacity-75">Upcoming events appear first; past events remain available in the archive.</p>
+            {managedQuery.isLoading && <p className="mt-4 text-sm">Loading events…</p>}
+            {managedQuery.error && <p className="mt-4 text-sm">Events are temporarily unavailable.</p>}
+            <div className="mt-4 flex gap-2"><button onClick={() => setManagedTab("upcoming")} aria-pressed={managedTab === "upcoming"} className="rounded-md px-3 py-2 text-sm font-bold" style={{ background: managedTab === "upcoming" ? "#4298D3" : "white", color: managedTab === "upcoming" ? "white" : "#414042" }}>Upcoming</button><button onClick={() => setManagedTab("past")} aria-pressed={managedTab === "past"} className="rounded-md px-3 py-2 text-sm font-bold" style={{ background: managedTab === "past" ? "#4298D3" : "white", color: managedTab === "past" ? "white" : "#414042" }}>Past events</button></div>
+            <ul className="mt-5 grid gap-4 md:grid-cols-2">{(managedQuery.data ?? []).filter((e: any) => managedTab === "upcoming" ? new Date(e.starts_at).getTime() >= Date.now() : new Date(e.starts_at).getTime() < Date.now()).map((e: any) => <li key={e.id} className="overflow-hidden rounded-xl border bg-white" style={{ borderColor: "#D8EAF5" }}>
+              {safeImageSrc(e.cover_image_url ?? "") && <img src={safeImageSrc(e.cover_image_url ?? "")!} alt={e.cover_alt ?? ""} width={1200} height={525} className="aspect-[16/7] w-full object-cover" loading="lazy" decoding="async" />}
+              <div className="p-4"><p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#4298D3" }}>{new Date(e.starts_at).toLocaleString()}{e.ends_at ? ` – ${new Date(e.ends_at).toLocaleString()}` : ""}</p><h3 className="mt-2 text-lg font-bold">{e.title}</h3><p className="mt-1 text-sm">{e.location}</p><Link to="/events/$slug" params={{ slug: e.slug }} className="mt-3 inline-flex font-semibold" style={{ color: "#DE007A" }}>Event details →</Link>{e.registration_url && <a href={e.registration_url} target="_blank" rel="noreferrer" className="ml-4 mt-3 inline-flex font-semibold" style={{ color: "#4298D3" }}>Register</a>}</div>
+            </li>)}</ul>
+            {!managedQuery.isLoading && !managedQuery.data?.length && <p className="mt-4 text-sm opacity-70">No published IYSF events yet.</p>}
+          </div>
+        </section>
         <section className="bg-white">
           <div className="mx-auto max-w-[1240px] px-5 pt-14 pb-6 md:px-8 md:pt-20 md:pb-8">
             <div
