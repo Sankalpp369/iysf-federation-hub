@@ -284,6 +284,17 @@ export const createMediaRecord = createServerFn({ method: "POST" })
     return row;
   });
 
+// Update media alt text after checking the authenticated staff role.
+export const updateMediaAlt = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((data: unknown) => z.object({ id: z.string().uuid(), alt: z.string().trim().max(500).nullable() }).strict().parse(data))
+  .handler(async ({ data, context }) => {
+    await assertStaff(context.supabase, context.userId);
+    const { error } = await (context.supabase as any).from("media").update({ alt: data.alt }).eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 // Remove the stored object and its metadata after checking the authenticated staff role.
 export const deleteMedia = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

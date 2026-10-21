@@ -6,7 +6,7 @@ import { Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { uploadMedia, ACCEPTED } from "@/lib/media-upload";
 import { IYSF } from "../site-chrome";
-import { createMediaRecord, deleteMedia as deleteMediaAction } from "@/lib/cms.functions";
+import { createMediaRecord, deleteMedia as deleteMediaAction, updateMediaAlt } from "@/lib/cms.functions";
 
 export type MediaRow = { id: string; path: string; url: string; alt: string | null; created_at: string };
 
@@ -25,9 +25,11 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
   const qc = useQueryClient();
   const createMedia = useServerFn(createMediaRecord);
   const deleteMedia = useServerFn(deleteMediaAction);
+  const saveMediaAlt = useServerFn(updateMediaAlt);
   const { data, isLoading, error } = useMedia();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [editingAlt, setEditingAlt] = useState<{ id: string; alt: string } | null>(null);
 
   async function onFiles(files: FileList | null) {
     if (!files?.length) return;
@@ -60,6 +62,18 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
     void qc.invalidateQueries({ queryKey: ["media"] });
   }
 
+  async function saveAlt() {
+    if (!editingAlt) return;
+    try {
+      await saveMediaAlt({ data: { id: editingAlt.id, alt: editingAlt.alt.trim() || null } });
+      toast.success("Alt text saved");
+      setEditingAlt(null);
+      await qc.invalidateQueries({ queryKey: ["media"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Couldn't update alt text");
+    }
+  }
+
   return (
     <div>
       <input ref={input} type="file" accept={ACCEPTED.join(",")} multiple className="hidden" onChange={(e) => onFiles(e.target.files)} />
@@ -67,7 +81,7 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
         <Upload size={16} aria-hidden="true" /> {busy ? "Uploading…" : "Upload images"}
       </button>
       <p className="mt-2 text-xs opacity-70">JPG, PNG, WebP or AVIF, up to 5 MB. Large images are resized to 2000px wide.</p>
-      {error && <p className="mt-4 text-sm" style={{ color: IYSF.magenta }}>Couldn't load media.</p>}
+      {error && <p role="alert" className="mt-4 text-sm" style={{ color: IYSF.magenta }}>Couldn't load media: {error instanceof Error ? error.message : "unknown error"}</p>}
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {isLoading && Array.from({ length: 6 }).map((_, i) => <div key={i} className="aspect-square animate-pulse rounded-lg bg-black/5" />)}
         {data?.map((m) => (
@@ -80,9 +94,15 @@ export function MediaLibrary({ onPick }: { onPick?: (m: MediaRow) => void }) {
               <img src={m.url} alt={m.alt ?? ""} loading="lazy" className="aspect-square w-full object-cover" />
             )}
             {!onPick && (
-              <button type="button" onClick={() => remove(m)} aria-label="Delete image" className="absolute right-1.5 top-1.5 rounded-md bg-white/90 p-1.5" style={{ color: IYSF.magenta }}>
-                <Trash2 size={16} />
-              </button>
+              <div className="space-y-2 p-2">
+                {editingAlt?.id === m.id ? <div className="space-y-2">
+                  <label className="block text-xs font-semibold">Alt text<input autoFocus value={editingAlt.alt} onChange={(e) => setEditingAlt({ ...editingAlt, alt: e.target.value })} className="mt-1 min-h-10 w-full rounded border px-2 text-sm font-normal" maxLength={500} /></label>
+                  <div className="flex gap-2"><button type="button" onClick={() => void saveAlt()} className="min-h-9 rounded px-2 text-xs font-bold text-white" style={{ background: IYSF.blue }}>Save</button><button type="button" onClick={() => setEditingAlt(null)} className="min-h-9 rounded border px-2 text-xs">Cancel</button></div>
+                </div> : <button type="button" onClick={() => setEditingAlt({ id: m.id, alt: m.alt ?? "" })} className="min-h-9 text-xs font-semibold" style={{ color: IYSF.blue }}>Edit alt text</button>}
+                <button type="button" onClick={() => void remove(m)} aria-label="Delete image" className="absolute right-1.5 top-1.5 rounded-md bg-white/90 p-1.5" style={{ color: IYSF.magenta }}>
+                  <Trash2 size={16} />
+                </button>
+              </div>
             )}
           </div>
         ))}
