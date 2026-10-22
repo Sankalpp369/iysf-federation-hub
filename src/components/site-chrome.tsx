@@ -14,18 +14,18 @@ export const IYSF = {
   blueShadow: "0 14px 34px -18px rgba(66,152,211,0.55)",
 } as const;
 
-export function IysfWordmark({ light = false }: { light?: boolean }) {
+export function IysfWordmark({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
       <img
         src={logoSrc}
         alt="IYSF — International Yoga Sports Federation"
-        width={40}
-        height={40}
-        className="h-9 w-auto"
+        width={compact ? 32 : 40}
+        height={compact ? 32 : 40}
+        className={compact ? "h-7 w-auto" : "h-9 w-auto"}
       />
       <span
-        className="hidden text-[15px] font-extrabold leading-tight tracking-[0.12em] sm:block"
+        className={`hidden font-extrabold leading-tight tracking-[0.12em] sm:block ${compact ? "text-[13px]" : "text-[15px]"}`}
         style={{ color: light ? "#FFFFFF" : IYSF.charcoal, fontFamily: "var(--font-display)" }}
       >
         IYSF
@@ -406,35 +406,31 @@ function SocialRow() {
 }
 
 function FooterInner({ minimal = false }: { minimal?: boolean }) {
-    return (
+  return (
     <footer style={{ background: IYSF.charcoal, color: "#fff", fontFamily: "var(--font-sans)" }}>
       {minimal ? (
-        <div className="mx-auto flex max-w-[1320px] flex-col items-center gap-4 px-5 py-10 md:px-8">
-          <IysfWordmark light />
-          <SocialRow />
+        <div className="mx-auto flex max-w-[1320px] flex-col items-center gap-3 px-5 py-6 md:px-8">
+          <IysfWordmark light compact />
         </div>
       ) : (
-      <div className="iysf-footer mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-4 py-10 sm:px-5 sm:py-14 md:grid-cols-[1.3fr_1fr_1fr] md:px-8">
+      <div className="iysf-footer mx-auto grid max-w-[1320px] grid-cols-1 gap-5 px-4 py-6 sm:px-5 sm:py-8 md:grid-cols-[1.1fr_2fr_0.9fr] md:items-center md:gap-6 md:px-8">
         {/* Brand column */}
         <div className="min-w-0">
-          <IysfWordmark light />
-          <p className="mt-3 min-w-0 max-w-[320px] break-words text-sm leading-relaxed text-white/70">
+          <IysfWordmark light compact />
+          <p className="mt-2 min-w-0 max-w-[320px] break-words text-xs leading-relaxed text-white/75">
             International Yoga Sports Federation — the global governing body for Yogasana sport.
           </p>
-          <div className="mt-4">
-            <SocialRow />
-          </div>
         </div>
 
-        {/* Link groups — 2-col grid on all sizes */}
-        <nav aria-label="Footer" className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6">
-          {FOOTER_GROUPS.map((g) => (
+        {/* Link groups — two columns on mobile, three on desktop */}
+        <nav aria-label="Footer" className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-5">
+          {FOOTER_GROUPS.filter((g) => g.title !== "Legal").map((g) => (
             <div key={g.title} className="min-w-0">
-              <div className="mb-2 text-[12px] font-bold uppercase tracking-[0.18em]" style={{ color: IYSF.orange }}>{g.title}</div>
+              <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: IYSF.orange }}>{g.title}</div>
               <ul>
                 {g.links.map((l) => (
                   <li key={l.label}>
-                    <Link to={l.to} className={`flex min-h-11 items-center text-sm text-white/85 hover:text-white sm:min-h-9 ${FOCUS}`}>{l.label}</Link>
+                    <Link to={l.to} className={`flex min-h-11 items-center text-xs text-white/90 hover:text-white md:min-h-7 ${FOCUS}`}>{l.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -444,26 +440,28 @@ function FooterInner({ minimal = false }: { minimal?: boolean }) {
 
         {/* Headquarters */}
         <div className="min-w-0">
-          <div className="mb-3 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: IYSF.orange }}>
+          <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: IYSF.orange }}>
             Headquarters
           </div>
-          <address className="break-words text-sm not-italic leading-relaxed text-white/80">
+          <address className="break-words text-xs not-italic leading-relaxed text-white/85">
             Maison du Sport International<br />
             Av de Rhodanie 54<br />
             Lausanne, Switzerland
           </address>
           <Link
             to="/contact"
-            className={`mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-white/85 hover:text-white ${FOCUS}`}
+            className={`mt-1 inline-flex min-h-11 items-center text-xs font-semibold text-white hover:text-white/85 md:min-h-8 ${FOCUS}`}
           >
             Contact IYSF →
           </Link>
         </div>
       </div>
       )}
-      <div className="border-t border-white/10">
-        <div className="mx-auto max-w-[1320px] px-4 py-3 text-center text-[11px] text-white/60 sm:px-5 sm:py-5 sm:text-xs md:px-8">
+      <div className="border-t border-white/15">
+        <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-2 px-4 py-2 sm:px-5 md:flex-row md:px-8">
           © 2026 IYSF
+          <SocialRow />
+          <Link to="/privacy" className={`inline-flex min-h-11 items-center text-xs text-white underline-offset-2 hover:underline md:min-h-8 ${FOCUS}`}>Privacy</Link>
         </div>
       </div>
     </footer>
