@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight, Globe2, Trophy, GraduationCap } from "lucide-react";
 import { Nav, Footer, IYSF } from "../components/site-chrome";
-import { JoinForm } from "../components/join-form";
 import { Reveal } from "../components/history-motion";
 import heroChampionship from "../assets/hero-championship.jpg";
 import { listPublishedPosts } from "@/lib/cms.functions";
@@ -237,8 +236,7 @@ function MembershipCta() {
           </p>
         </div>
         <Link
-          to="/"
-          hash="join"
+          to="/join-us"
           className="inline-flex min-h-[48px] w-full shrink-0 items-center justify-center rounded-[12px] px-7 py-4 text-base font-bold text-white motion-safe:transition-transform hover:-translate-y-0.5 motion-reduce:transform-none sm:w-auto"
           style={{ background: "#414042" }}
         >
@@ -388,12 +386,11 @@ function Index() {
     about: <AboutPreview />,
     why: <WhyJoin />,
     news: <News />,
-    join: <JoinForm />,
     membership: <MembershipCta />,
   };
   const sectionOrder = Array.isArray(homeSettings?.sections) && homeSettings.sections.length
     ? homeSettings.sections.filter((name: unknown): name is string => typeof name === "string" && name in sectionMap)
-    : ["mission", "stats", "about", "why", "news", "join", "membership"];
+    : ["mission", "stats", "about", "why", "news", "membership"];
   return (
     <div style={{ fontFamily: "var(--font-sans)", color: IYSF.charcoal, background: "#fff" }}>
       <Nav />

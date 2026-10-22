@@ -215,7 +215,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* Anchor offset for sticky header (banner ~32px + header ~56px + breathing room) */
-#join, #about, #news {
+#about, #news {
   scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
 }
 

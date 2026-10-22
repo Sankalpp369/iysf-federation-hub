@@ -346,8 +346,7 @@ function GovernancePage() {
                 Browse the federation directory <ArrowRight size={15} aria-hidden="true" />
               </Link>
               <Link
-                to="/"
-                hash="join"
+                to="/join-us"
                 className="inline-block rounded-md px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-0.5"
                 style={{ background: ORANGE, color: "#3A2400" }}
               >

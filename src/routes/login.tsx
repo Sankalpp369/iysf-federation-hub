@@ -211,7 +211,7 @@ function LoginPage() {
 
             <p className="mt-6 text-center text-sm text-[#414042]">
               Representing a federation?{" "}
-              <Link to="/" hash="join" className="font-semibold hover:underline" style={{ color: IYSF.magenta }}>
+              <Link to="/join-us" className="font-semibold hover:underline" style={{ color: IYSF.magenta }}>
                 Apply to join IYSF
               </Link>
             </p>

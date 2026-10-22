@@ -132,7 +132,7 @@ export function JoinForm() {
   }
 
   return (
-    <section id="join" className="scroll-mt-[calc(88px+env(safe-area-inset-top))] bg-white">
+    <section className="bg-white">
       <div className="mx-auto max-w-[1240px] px-4 py-12 sm:px-5 sm:py-16 md:px-8 md:py-24">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div>

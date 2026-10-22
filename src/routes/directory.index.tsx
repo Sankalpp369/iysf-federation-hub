@@ -325,8 +325,7 @@ function DirectoryPage() {
 
             <div className="mt-10">
               <Link
-                to="/"
-                hash="join"
+                to="/join-us"
                 className="inline-block rounded-md px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4298D3]"
                 style={{ background: "#FAAF40", color: "#3A2400" }}
               >

@@ -722,7 +722,7 @@ function JoinMovement() {
     { title: "Compete at our next World Championship", to: "/events" as const, hash: undefined, color: "#4298D3" },
     { title: "Start or grow your national federation", to: "/directory" as const, hash: undefined, color: "#FAAF40" },
     { title: "Become a certified judge or coach", to: "/academy" as const, hash: undefined, color: "#DE007A" },
-    { title: "Support the journey to Olympic recognition", to: "/" as const, hash: "join", color: "#414042" },
+    { title: "Support the journey to Olympic recognition", to: "/join-us" as const, color: "#414042" },
   ];
   return (
     <section className="bg-white">
