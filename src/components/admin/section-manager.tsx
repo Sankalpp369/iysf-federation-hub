@@ -7,11 +7,14 @@ import { deleteApplication, deleteCmsSection, reorderOfficials, saveCmsSection, 
 import { IYSF } from "../site-chrome";
 import { MediaLibrary } from "./media-library";
 
-type Section = "events" | "results" | "officials" | "homepage" | "applications";
+type Section = "events" | "rules" | "results" | "officials" | "homepage" | "applications";
 type Field = { key: string; label: string; type?: "textarea" | "date" | "datetime-local" | "url" | "checkbox" | "number" };
 const CONFIG: Record<Exclude<Section, "applications">, { table: string; title: string; fields: Field[]; search: string }> = {
   events: { table: "cms_events", title: "Events", search: "title", fields: [
     { key: "title", label: "Title" }, { key: "slug", label: "Slug" }, { key: "starts_at", label: "Start date and time", type: "datetime-local" }, { key: "ends_at", label: "End date and time", type: "datetime-local" }, { key: "location", label: "Location" }, { key: "description", label: "Description (block JSON)", type: "textarea" }, { key: "cover_image_url", label: "Cover image URL", type: "url" }, { key: "cover_alt", label: "Cover image alt text" }, { key: "registration_url", label: "Registration link", type: "url" }, { key: "status", label: "Status" },
+  ] },
+  rules: { table: "cms_rules", title: "Rules & rule documents", search: "title", fields: [
+    { key: "kind", label: "Element type (document or download)" }, { key: "title", label: "Title" }, { key: "slug", label: "Slug" }, { key: "content", label: "Rule content (documents)", type: "textarea" }, { key: "accent", label: "Accent color (hex)" }, { key: "availability", label: "Availability label (downloads)" }, { key: "tone", label: "Label tone (success, warning, neutral)" }, { key: "description", label: "Description", type: "textarea" }, { key: "download_url", label: "PDF download URL", type: "url" }, { key: "display_order", label: "Display order", type: "number" }, { key: "visible", label: "Visible", type: "checkbox" },
   ] },
   results: { table: "cms_results", title: "Results", search: "competition_name", fields: [
     { key: "competition_name", label: "Competition name" }, { key: "slug", label: "Slug" }, { key: "competition_date", label: "Date", type: "date" }, { key: "location", label: "Location" }, { key: "category", label: "Category / age group" }, { key: "rows", label: "Results rows (JSON or spreadsheet-pasted rows)", type: "textarea" }, { key: "official_sheet_url", label: "Official score sheet URL", type: "url" }, { key: "status", label: "Status" },
@@ -50,6 +53,7 @@ export function SectionManager({ section }: { section: Section }) {
       let q = TABLES.from(table).select("*");
       if (isApplications) q = q.order("created_at", { ascending: false });
       else if (section === "events") q = q.order("starts_at", { ascending: true });
+      else if (section === "rules") q = q.order("display_order", { ascending: true });
       else if (section === "results") q = q.order("competition_date", { ascending: false });
       else if (section === "officials") q = q.order("display_order", { ascending: true });
       const { data: rows, error: e } = await q;
@@ -71,6 +75,7 @@ export function SectionManager({ section }: { section: Section }) {
     for (const field of fields) {
       let v = editing[field.key];
       if (field.type === "datetime-local") v = v ? new Date(v).toISOString() : null;
+      if (field.type === "number") v = Number(v ?? 0);
       if (["sections", "rows", "description"].includes(field.key) && typeof v === "string") {
         try { v = JSON.parse(v); } catch {
           if (field.key !== "rows") { if (!silent) toast.error(`${field.label} must be valid JSON`); return; }
@@ -87,7 +92,7 @@ export function SectionManager({ section }: { section: Section }) {
     setSaving(true);
     try {
       const result = await saveSection({ data: {
-        section: section as "events" | "results" | "officials" | "homepage",
+        section: section as "events" | "rules" | "results" | "officials" | "homepage",
         ...(section !== "homepage" && typeof editing.id === "string" ? { id: editing.id } : {}),
         values,
       } as any });
@@ -117,7 +122,7 @@ export function SectionManager({ section }: { section: Section }) {
     if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
     try {
       if (isApplications) await deleteApplicationFn({ data: { id: row.id } });
-      else await deleteSection({ data: { section: section as "events" | "results" | "officials" | "homepage", id: row.id } as any });
+      else await deleteSection({ data: { section: section as "events" | "rules" | "results" | "officials" | "homepage", id: row.id } as any });
       toast.success("Deleted");
       void qc.invalidateQueries({ queryKey: ["cms-section", section] });
     } catch (e) { toast.error(e instanceof Error ? e.message : "Couldn't delete this item"); }
@@ -149,16 +154,16 @@ export function SectionManager({ section }: { section: Section }) {
   }
 
   const title = isApplications ? "Membership applications" : cfg!.title;
-  const empty = () => section === "homepage" ? { id: true } : { status: "draft", visible: false, description: "[]", rows: "[]", sections: "[]" };
+  const empty = () => section === "homepage" ? { id: true } : section === "rules" ? { kind: "document", visible: true, accent: "#4298D3", tone: "neutral", display_order: 0, content: "", availability: "", description: "", download_url: "" } : { status: "draft", visible: false, description: "[]", rows: "[]", sections: "[]" };
   const loadError = error as { code?: string; message?: string } | null;
   const missingSchema = !!loadError && (["42P01", "PGRST204", "PGRST205"].includes(loadError.code ?? "") || /schema cache|does not exist/i.test(loadError.message ?? ""));
   return <div>
     <div className="flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-extrabold md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>{title}</h1>
       {isApplications ? <button onClick={exportCsv} className="min-h-10 rounded-md px-4 text-sm font-bold text-white" style={{ background: IYSF.blue }}>Export CSV</button> : (section !== "homepage" || data.length === 0) && <button onClick={() => setEditing(empty())} className="min-h-10 rounded-md px-4 text-sm font-bold text-white" style={{ background: IYSF.magenta }}>{section === "homepage" ? "Create homepage settings" : `New ${section === "officials" ? "official" : section.slice(0, -1)}`}</button>}
     </div>
-    <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]"><input className="min-h-10 rounded-md border px-3 text-sm" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
-      <select aria-label="Status filter" className="min-h-10 rounded-md border bg-white px-3 text-sm" value={filter} onChange={(e) => setFilter(e.target.value)}><option value="all">All statuses</option>{(isApplications ? ["new", "reviewed", "approved", "rejected"] : ["draft", "published"]).map((s) => <option key={s}>{s}</option>)}</select></div>
-    {error && <p role="alert" className="mt-4 text-sm text-pink-700">{missingSchema ? `Couldn't load ${title.toLowerCase()}. Apply database migration 0004 first.` : `Couldn't load ${title.toLowerCase()}: ${loadError?.message ?? "unknown error"}`}</p>}
+    <div className={`mt-4 grid gap-2 ${isApplications || section === "events" || section === "results" ? "sm:grid-cols-[1fr_auto]" : ""}`}><input className="min-h-10 rounded-md border px-3 text-sm" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
+      {(isApplications || section === "events" || section === "results") && <select aria-label="Status filter" className="min-h-10 rounded-md border bg-white px-3 text-sm" value={filter} onChange={(e) => setFilter(e.target.value)}><option value="all">All statuses</option>{(isApplications ? ["new", "reviewed", "approved", "rejected"] : ["draft", "published"]).map((s) => <option key={s}>{s}</option>)}</select>}</div>
+    {error && <p role="alert" className="mt-4 text-sm text-pink-700">{missingSchema ? `Couldn't load ${title.toLowerCase()}. Apply database migration ${section === "rules" ? "0006" : "0004"} first.` : `Couldn't load ${title.toLowerCase()}: ${loadError?.message ?? "unknown error"}`}</p>}
     {isLoading ? <p className="mt-5 text-sm">Loading…</p> : <ul className="mt-4 space-y-2">{visibleRows.map((r: any) => <li key={r.id} draggable={section === "officials"} onDragStart={() => setDraggingId(r.id)} onDragOver={(e) => { if (section === "officials") e.preventDefault(); }} onDrop={() => section === "officials" && void reorderOfficial(r.id)} className={`rounded-xl border bg-white p-4 ${section === "officials" ? "cursor-move" : ""}`} style={{ borderColor: IYSF.blueLine }}>
       <div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><h2 className="font-bold">{isApplications ? r.organisation_name ?? r.email ?? "Application" : r.title ?? r.competition_name ?? r.name ?? "Homepage settings"}</h2><p className="mt-1 text-xs capitalize opacity-70">{r.status ?? (r.visible ? "visible" : "hidden")} {r.country ? `· ${r.country}` : ""} {r.created_at ? `· ${new Date(r.created_at).toLocaleString()}` : ""}</p></div>
         <div className="flex gap-3 text-sm font-semibold"><button onClick={() => setEditing({ ...r, ...(cfg ? Object.fromEntries(cfg.fields.filter((f) => f.type === "textarea" || ["sections", "rows", "description"].includes(f.key)).map((f) => [f.key, typeof r[f.key] === "string" ? r[f.key] : JSON.stringify(r[f.key] ?? [], null, 2)])) : {}) })} style={{ color: IYSF.blue }}>Edit</button><button onClick={() => void remove(r)} style={{ color: IYSF.magenta }}>Delete</button></div></div>

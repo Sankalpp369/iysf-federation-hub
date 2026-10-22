@@ -70,6 +70,15 @@ export const listPublicCmsUrls = createServerFn({ method: "GET" }).handler(async
   return { events: events.data ?? [], results: results.data ?? [] };
 });
 
+// Publicly list visible rules documents and download cards.
+export const listPublicRules = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await (publicClient() as any).from("cms_rules")
+    .select("id,kind,slug,title,content,accent,availability,tone,description,download_url,display_order,visible")
+    .eq("visible", true).order("display_order", { ascending: true });
+  if (error) throw new Error("Could not load rules");
+  return data ?? [];
+});
+
 async function assertStaff(supabase: any, userId: string) {
   const { data } = await supabase.rpc("has_role", { _user_id: userId, _role: "staff" });
   if (!data) throw new Error("Forbidden: staff only");
@@ -130,8 +139,23 @@ const homepageValuesSchema = z.object({
   sections: z.array(z.string().max(50)).max(30),
 }).strict();
 
+const ruleValuesSchema = z.object({
+  kind: z.enum(["document", "download"]),
+  title: z.string().trim().min(1).max(200),
+  slug: slugSchema,
+  content: textValue(12000),
+  accent: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  availability: textValue(200),
+  tone: z.enum(["success", "warning", "neutral"]),
+  description: textValue(5000),
+  download_url: z.string().max(2000).refine((value) => !value || /^https:\/\//i.test(value), "Use an HTTPS download URL."),
+  display_order: z.number().int().min(0).max(10000),
+  visible: z.boolean(),
+}).strict();
+
 const saveSectionSchema = z.discriminatedUnion("section", [
   z.object({ section: z.literal("events"), id: z.string().uuid().optional(), values: eventValuesSchema }),
+  z.object({ section: z.literal("rules"), id: z.string().uuid().optional(), values: ruleValuesSchema }),
   z.object({ section: z.literal("results"), id: z.string().uuid().optional(), values: resultValuesSchema }),
   z.object({ section: z.literal("officials"), id: z.string().uuid().optional(), values: officialValuesSchema }),
   z.object({ section: z.literal("homepage"), values: homepageValuesSchema }),
@@ -145,6 +169,7 @@ export const saveCmsSection = createServerFn({ method: "POST" })
     await assertStaff(context.supabase, context.userId);
     const table = {
       events: "cms_events",
+      rules: "cms_rules",
       results: "cms_results",
       officials: "cms_officials",
       homepage: "cms_homepage",
@@ -166,10 +191,10 @@ export const saveCmsSection = createServerFn({ method: "POST" })
 // Delete an event, result, or official after verifying the caller's staff role.
 export const deleteCmsSection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: unknown) => z.object({ section: z.enum(["events", "results", "officials", "homepage"]), id: z.union([z.string().uuid(), z.literal(true)]) }).parse(data))
+  .validator((data: unknown) => z.object({ section: z.enum(["events", "rules", "results", "officials", "homepage"]), id: z.union([z.string().uuid(), z.literal(true)]) }).parse(data))
   .handler(async ({ data, context }) => {
     await assertStaff(context.supabase, context.userId);
-    const table = { events: "cms_events", results: "cms_results", officials: "cms_officials", homepage: "cms_homepage" }[data.section];
+    const table = { events: "cms_events", rules: "cms_rules", results: "cms_results", officials: "cms_officials", homepage: "cms_homepage" }[data.section];
     const id = data.section === "homepage" ? true : data.id;
     const { error } = await (context.supabase as any).from(table).delete().eq("id", id);
     if (error) throw new Error(error.message);

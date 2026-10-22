@@ -8,8 +8,8 @@ export const Route = createFileRoute("/_authenticated/admin/$section")({ compone
 function Soon() {
   const { section } = Route.useParams();
   const item = ADMIN_NAV.find((n) => n.to === `/admin/${section}`);
-  if (["events", "results", "officials", "homepage", "applications"].includes(section)) {
-    return <SectionManager section={section as "events" | "results" | "officials" | "homepage" | "applications"} />;
+  if (["events", "rules", "results", "officials", "homepage", "applications"].includes(section)) {
+    return <SectionManager section={section as "events" | "rules" | "results" | "officials" | "homepage" | "applications"} />;
   }
   return (
     <div className="rounded-xl border bg-white p-8 text-center" style={{ borderColor: IYSF.blueLine }}>

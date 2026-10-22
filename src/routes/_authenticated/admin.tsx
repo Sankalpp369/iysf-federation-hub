@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { LayoutDashboard, Newspaper, CalendarDays, Trophy, Users, Home, FileText, ShieldCheck, Image, Menu, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Newspaper, CalendarDays, Trophy, Users, Home, FileText, ShieldCheck, Image, Menu, X, LogOut, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { IYSF } from "../../components/site-chrome";
 
@@ -19,11 +19,12 @@ export const Route = createFileRoute("/_authenticated/admin")({
 export const ADMIN_NAV = [
   { label: "Dashboard", to: "/admin", icon: LayoutDashboard, live: true },
   { label: "News", to: "/admin/news", icon: Newspaper, live: true },
-  { label: "Events", to: "/admin/events", icon: CalendarDays },
-  { label: "Results", to: "/admin/results", icon: Trophy },
-  { label: "Officials", to: "/admin/officials", icon: Users },
-  { label: "Homepage", to: "/admin/homepage", icon: Home },
-  { label: "Membership applications", to: "/admin/applications", icon: FileText },
+  { label: "Events", to: "/admin/events", icon: CalendarDays, cms: true },
+  { label: "Rules", to: "/admin/rules", icon: BookOpen, cms: true },
+  { label: "Results", to: "/admin/results", icon: Trophy, cms: true },
+  { label: "Officials", to: "/admin/officials", icon: Users, cms: true },
+  { label: "Homepage", to: "/admin/homepage", icon: Home, cms: true },
+  { label: "Membership applications", to: "/admin/applications", icon: FileText, cms: true },
   { label: "Staff", to: "/admin/staff", icon: ShieldCheck, live: true },
   { label: "Media", to: "/admin/media", icon: Image, live: true },
 ] as const;
@@ -44,7 +45,7 @@ function NavList({ onDone }: { onDone?: () => void }) {
           >
             <n.icon size={18} aria-hidden="true" />
             <span className="flex-1">{n.label}</span>
-            {!("live" in n) && <span className="text-[10px] uppercase tracking-wider opacity-60">Soon</span>}
+            {!("live" in n) && !("cms" in n) && <span className="text-[10px] uppercase tracking-wider opacity-60">Soon</span>}
           </Link>
         </li>
       ))}

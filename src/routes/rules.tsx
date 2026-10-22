@@ -3,8 +3,34 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { Search, FileText, Download, Menu, X } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
 import { Link } from "@tanstack/react-router";
+import { listPublicRules } from "@/lib/cms.functions";
+
+type RuleBlock = { type: "p"; text: string };
+type RuleDoc = { id: string; title: string; accent: string; blocks: RuleBlock[] };
+type RuleDownload = { title: string; status: string; tone: "success" | "warning" | "neutral"; description: string; download_url?: string | null };
 
 export const Route = createFileRoute("/rules")({
+  loader: async () => {
+    try {
+      const rows = await listPublicRules() as Array<Record<string, any>>;
+      const docs: RuleDoc[] = rows.filter((row) => row.kind === "document").map((row) => ({
+        id: row.slug,
+        title: row.title,
+        accent: row.accent,
+        blocks: [{ type: "p" as const, text: row.content }],
+      }));
+      const downloads: RuleDownload[] = rows.filter((row) => row.kind === "download").map((row) => ({
+        title: row.title,
+        status: row.availability,
+        tone: row.tone,
+        description: row.description,
+        download_url: /^https:\/\//i.test(row.download_url ?? "") ? row.download_url : null,
+      }));
+      return { docs, downloads, managed: true };
+    } catch {
+      return { docs: DOCS, downloads: DOWNLOADS, managed: false };
+    }
+  },
   head: () => ({
     meta: [
       { title: "Rules & Regulations — IYSF Governance" },
@@ -25,15 +51,6 @@ export const Route = createFileRoute("/rules")({
   }),
   component: RulesPage,
 });
-
-type RuleBlock = { type: "p"; text: string };
-
-type RuleDoc = {
-  id: string;
-  title: string;
-  accent: string;
-  blocks: RuleBlock[];
-};
 
 const DOCS: RuleDoc[] = [
   {
@@ -62,11 +79,11 @@ const DOCS: RuleDoc[] = [
   },
 ];
 
-const DOWNLOADS = [
+const DOWNLOADS: RuleDownload[] = [
   { title: "Posture Guidelines", status: "Current — used through the 2026 World Championship", tone: "success", description: "Judging criteria, athlete eligibility, and competition format for all IYSF-sanctioned events." },
   { title: "New Rulebook 2027", status: "Effective from the 2027 season", tone: "warning", description: "Updated rules with tracked changes, replacing the Posture Guidelines from 2027 onward." },
   { title: "Coaching Manual", status: "Reference guide", tone: "neutral", description: "Posture-by-posture coaching drills and progressions for IYSF-certified coaches." },
-] as const;
+];
 
 function blocksToPlainText(blocks: RuleBlock[]): string {
   return blocks.map((b) => b.text).join(" ");
@@ -90,9 +107,10 @@ function highlight(text: string, query: string) {
 }
 
 function RulesPage() {
+  const { docs: DOCS, downloads: DOWNLOADS } = Route.useLoaderData();
   const [query, setQuery] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [activeId, setActiveId] = useState(DOCS[0].id);
+  const [activeId, setActiveId] = useState(DOCS[0]?.id ?? "");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const q = query.trim().toLowerCase();
@@ -259,9 +277,11 @@ function RulesPage() {
                           </div>
                           <span className={`mt-4 w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold ${doc.tone === "success" ? "bg-emerald-50 text-emerald-800" : doc.tone === "warning" ? "bg-amber-50 text-amber-900" : "bg-black/5 text-[#414042]"}`}>{doc.status}</span>
                           <p className="mt-4 text-sm leading-relaxed text-[#414042]">{doc.description}</p>
-                          <button type="button" disabled className="mt-auto inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-md border border-black/15 px-3.5 py-2 text-sm font-medium text-[#414042] opacity-55" aria-label={`${doc.title} download not yet available`}>
+                          {doc.download_url ? <a href={doc.download_url} target="_blank" rel="noreferrer" className="mt-auto inline-flex w-fit items-center gap-2 rounded-md border border-black/15 px-3.5 py-2 text-sm font-medium text-[#414042] hover:bg-black/5">
                             <Download size={15} aria-hidden="true" /> Download PDF
-                          </button>
+                          </a> : <button type="button" disabled className="mt-auto inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-md border border-black/15 px-3.5 py-2 text-sm font-medium text-[#414042] opacity-55" aria-label={`${doc.title} download not yet available`}>
+                            <Download size={15} aria-hidden="true" /> Download PDF
+                          </button>}
                         </article>
                       ))}
                     </div>
