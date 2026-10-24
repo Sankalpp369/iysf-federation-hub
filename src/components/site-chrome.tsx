@@ -3,6 +3,7 @@ import { Menu, X, Facebook, Instagram, Youtube, ChevronDown } from "lucide-react
 import { Link } from "@tanstack/react-router";
 import logoSrc from "../assets/iysf-logo.png";
 import { useSession } from "@/hooks/use-session";
+import { WORLD_CHAMPIONSHIP_2026 } from "@/data/iysf";
 
 export const IYSF = {
   blue: "#4298D3",
@@ -177,12 +178,12 @@ export function Nav() {
       to="/events/world-championship-2026"
       className="iysf-safe-top flex min-h-8 w-full max-w-full items-center justify-center overflow-hidden px-4 text-center text-[11px] font-bold uppercase leading-none tracking-[0.12em] text-white transition-opacity hover:opacity-90 sm:text-[12px] sm:tracking-[0.18em]"
       style={{ background: IYSF.magenta, fontFamily: "var(--font-sans)" }}
-      aria-label="Register now for the 17th World Yogasana Championship"
+      aria-label={`View ${WORLD_CHAMPIONSHIP_2026.name} in ${WORLD_CHAMPIONSHIP_2026.location}, ${WORLD_CHAMPIONSHIP_2026.countryName}, ${WORLD_CHAMPIONSHIP_2026.date}`}
     >
       {/* Short label on small phones so it never wraps */}
-      <span className="truncate sm:hidden">17th World Championship · Italy · Dec 4–6 →</span>
+      <span className="truncate sm:hidden">{WORLD_CHAMPIONSHIP_2026.edition} World Yogasana · {WORLD_CHAMPIONSHIP_2026.countryName} · {WORLD_CHAMPIONSHIP_2026.date.replace("December", "Dec").replace(", 2026", "")} →</span>
       {/* Full label from sm breakpoint up */}
-      <span className="hidden truncate sm:inline">Register Now — 17th World Yogasana Championship · Italy · Dec 4–6, 2026 →</span>
+      <span className="hidden truncate sm:inline">Register Now — {WORLD_CHAMPIONSHIP_2026.name} · {WORLD_CHAMPIONSHIP_2026.location}, {WORLD_CHAMPIONSHIP_2026.countryName} · {WORLD_CHAMPIONSHIP_2026.date} →</span>
     </Link>
 
     <header

@@ -4,6 +4,7 @@ import { Quote } from "lucide-react";
 import { PageHeader, PageShell, Prose, Section } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
 import { InquiryForm } from "../components/inquiry-form";
+import { WORLD_CHAMPIONSHIP_2026 } from "@/data/iysf";
 
 export const Route = createFileRoute("/sponsorship")({
   head: () => ({
@@ -95,7 +96,7 @@ function SponsorshipPage() {
         <Prose>
           <p>Dear Friends,</p>
 
-          <p>It is with great excitement, humility, and a deeply grateful heart that I invite you to join us for the <strong>17th IYSF World Yoga Asana Championships.</strong></p>
+          <p>It is with great excitement, humility, and a deeply grateful heart that I invite you to join us for the <strong>{WORLD_CHAMPIONSHIP_2026.name}</strong>.</p>
 
           <LetterRest>
           <p>Seventeen World Championships when I look back, I often ask myself how a dream that began in <strong>2003</strong> could have come this far.</p>

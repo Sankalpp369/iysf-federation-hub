@@ -5,12 +5,12 @@ import { Search, MapPin, X } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
 import { useServerFn } from "@tanstack/react-start";
 import { submitEventRegistration } from "@/lib/submissions.functions";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { safeImageSrc } from "@/lib/blocks";
+import { EventsArchive } from "../components/events-archive";
+import type { MapPin as MapPinData } from "../components/events-map";
+import { eventCountryCode, eventToMapPin } from "@/lib/map-data";
 import {
   upcomingEvents,
-  pastEvents,
+  WORLD_CHAMPIONSHIP_2026,
   TIER_COLOR,
   REGIONS,
   type Region,
@@ -43,7 +43,11 @@ export const Route = createFileRoute("/events/")({
 type EventItem = EventRecord;
 
 const UPCOMING: EventItem[] = upcomingEvents();
-const ARCHIVE: EventItem[] = pastEvents();
+
+function browserDate() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
 
 const EventsMap = lazy(() => import("../components/events-map"));
 
@@ -54,21 +58,24 @@ function useHydrated() {
 }
 
 function EventsPage() {
-  const [managedTab, setManagedTab] = useState<"upcoming" | "past">("upcoming");
-  const managedQuery = useQuery({ queryKey: ["public-cms-events"], queryFn: async () => {
-    const { data, error } = await (supabase as any).from("cms_events").select("id,title,slug,starts_at,ends_at,location,cover_image_url,cover_alt,registration_url").eq("status", "published").order("starts_at", { ascending: true });
-    if (error) throw error; return data ?? [];
-  } });
+  const [today, setToday] = useState("");
   const upMore = useMobileMore();
-  const arMore = useMobileMore();
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "All">("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [registerFor, setRegisterFor] = useState<EventItem | null>(null);
+
+  useEffect(() => setToday(browserDate()), []);
+
+  const currentEvents = useMemo(
+    () => UPCOMING.filter((event) => (event.endDateISO ?? event.dateISO) >= today),
+    [today],
+  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return UPCOMING.filter((e) => {
+    return currentEvents.filter((e) => {
       const matchesQ =
         !q ||
         e.name.toLowerCase().includes(q) ||
@@ -76,7 +83,7 @@ function EventsPage() {
       const matchesR = region === "All" || e.region === region;
       return matchesQ && matchesR;
     });
-  }, [query, region]);
+  }, [currentEvents, query, region]);
 
   useEffect(() => {
     if (selectedId && !filtered.some((e) => e.id === selectedId)) {
@@ -86,25 +93,13 @@ function EventsPage() {
 
   const selected = filtered.find((e) => e.id === selectedId) ?? null;
   const hydrated = useHydrated();
+  const pins = useMemo(() => filtered.map(eventToMapPin).filter((pin): pin is MapPinData => Boolean(pin)), [filtered]);
+  const unpinnedEvents = filtered.filter((event) => eventCountryCode(event) === "INT").length;
 
   return (
     <div style={{ fontFamily: "var(--font-sans)", color: "#414042" }}>
       <Nav />
       <main>
-        <section className="bg-[#f4f9fc]">
-          <div className="mx-auto max-w-[1240px] px-5 py-10 md:px-8">
-            <h2 className="text-2xl font-extrabold" style={{ fontFamily: "var(--font-display)" }}>IYSF events</h2>
-            <p className="mt-1 text-sm opacity-75">Upcoming events appear first; past events remain available in the archive.</p>
-            {managedQuery.isLoading && <p className="mt-4 text-sm">Loading events…</p>}
-            {managedQuery.error && <p className="mt-4 text-sm">Events are temporarily unavailable.</p>}
-            <div className="mt-4 flex gap-2"><button onClick={() => setManagedTab("upcoming")} aria-pressed={managedTab === "upcoming"} className="rounded-md px-3 py-2 text-sm font-bold" style={{ background: managedTab === "upcoming" ? "#4298D3" : "white", color: managedTab === "upcoming" ? "white" : "#414042" }}>Upcoming</button><button onClick={() => setManagedTab("past")} aria-pressed={managedTab === "past"} className="rounded-md px-3 py-2 text-sm font-bold" style={{ background: managedTab === "past" ? "#4298D3" : "white", color: managedTab === "past" ? "white" : "#414042" }}>Past events</button></div>
-            <ul className="mt-5 grid gap-4 md:grid-cols-2">{(managedQuery.data ?? []).filter((e: any) => managedTab === "upcoming" ? new Date(e.starts_at).getTime() >= Date.now() : new Date(e.starts_at).getTime() < Date.now()).map((e: any) => <li key={e.id} className="overflow-hidden rounded-xl border bg-white" style={{ borderColor: "#D8EAF5" }}>
-              {safeImageSrc(e.cover_image_url ?? "") && <img src={safeImageSrc(e.cover_image_url ?? "")!} alt={e.cover_alt ?? ""} width={1200} height={525} className="aspect-[16/7] w-full object-cover" loading="lazy" decoding="async" />}
-              <div className="p-4"><p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#4298D3" }}>{new Date(e.starts_at).toLocaleString()}{e.ends_at ? ` – ${new Date(e.ends_at).toLocaleString()}` : ""}</p><h3 className="mt-2 text-lg font-bold">{e.title}</h3><p className="mt-1 text-sm">{e.location}</p><Link to="/events/$slug" params={{ slug: e.slug }} className="mt-3 inline-flex font-semibold" style={{ color: "#DE007A" }}>Event details →</Link>{e.registration_url && <a href={e.registration_url} target="_blank" rel="noreferrer" className="ml-4 mt-3 inline-flex font-semibold" style={{ color: "#4298D3" }}>Register</a>}</div>
-            </li>)}</ul>
-            {!managedQuery.isLoading && !managedQuery.data?.length && <p className="mt-4 text-sm opacity-70">No published IYSF events yet.</p>}
-          </div>
-        </section>
         <section className="bg-white">
           <div className="mx-auto max-w-[1240px] px-5 pt-14 pb-6 md:px-8 md:pt-20 md:pb-8">
             <div
@@ -208,14 +203,10 @@ function EventsPage() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                17th World Championship of Yogasana Sports
+                {WORLD_CHAMPIONSHIP_2026.name}
               </h2>
               <p className="mt-3 text-[15px] font-semibold" style={{ color: "#4298D3" }}>
-                Marina di Camerota, Italy · December 4–6, 2026 · Registration now open
-              </p>
-              <p className="mt-3 max-w-[720px] text-[15px] leading-relaxed" style={{ color: "#3a3a3a" }}>
-                Three days of competition on Italy's Cilento coast, with 150+ athletes from 30+
-                countries across individual, pair, and group categories.
+                {WORLD_CHAMPIONSHIP_2026.location}, {WORLD_CHAMPIONSHIP_2026.countryName} · {WORLD_CHAMPIONSHIP_2026.date}
               </p>
               <span
                 className="mt-5 inline-flex items-center rounded-[12px] px-5 py-3 text-[14px] font-bold"
@@ -227,7 +218,7 @@ function EventsPage() {
           </div>
           <div className="mx-auto max-w-[1240px] px-5 py-10 md:px-8 md:py-14">
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-              <div>
+              <div className={filtered.length === 0 ? "lg:col-span-2" : undefined}>
                 <div
                   className="overflow-hidden rounded-lg border border-black/[0.08]"
                   style={{ height: 460 }}
@@ -244,10 +235,12 @@ function EventsPage() {
                       }
                     >
                       <EventsMap
-                        events={filtered}
+                        pins={pins}
                         selectedId={selectedId}
+                        highlightedId={hoveredId}
                         onSelect={setSelectedId}
-                        tierColor={TIER_COLOR}
+                        onHover={setHoveredId}
+                        label="Map of ongoing and upcoming IYSF events"
                       />
                     </Suspense>
                   ) : (
@@ -258,6 +251,11 @@ function EventsPage() {
                     />
                   )}
                 </div>
+                {unpinnedEvents > 0 && (
+                  <p className="mt-2 text-xs" style={{ color: "#414042" }}>
+                    {unpinnedEvents} online or international {unpinnedEvents === 1 ? "event is" : "events are"} not shown on the map.
+                  </p>
+                )}
 
                 <div
                   aria-live="polite"
@@ -274,109 +272,43 @@ function EventsPage() {
                     </div>
                   )}
                 </div>
+                {hydrated && filtered.length === 0 && (
+                  <p className="mt-4 text-sm" style={{ color: "#414042" }}>
+                    {currentEvents.length === 0
+                      ? "No upcoming events at the moment. Check back soon."
+                      : "No events match your search or region."}
+                  </p>
+                )}
               </div>
 
-              <div>
+              {filtered.length > 0 && <div>
                 <div
                   className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]"
                   style={{ color: "#DE007A" }}
                 >
                   Upcoming
                 </div>
-                {filtered.length === 0 ? (
-                  <EmptyState />
-                ) : (
-                  <ul className="flex max-h-[520px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
+                <ul className="flex max-h-[520px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
                     {filtered.map((e, i) => (
-                      <li key={e.id} className={upMore.hide(i, 2)}>
-                        <EventCard
-                          event={e}
-                          onRegister={() => setRegisterFor(e)}
-                          onSelect={() => setSelectedId(e.id)}
-                          highlighted={e.id === selectedId}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                    <li key={e.id} className={upMore.hide(i, 2)} onMouseEnter={() => setHoveredId(e.id)} onMouseLeave={() => setHoveredId(null)}>
+                      <EventCard
+                        event={e}
+                        onRegister={() => setRegisterFor(e)}
+                        onSelect={() => setSelectedId(e.id)}
+                        highlighted={e.id === selectedId || e.id === hoveredId}
+                      />
+                    </li>
+                  ))}
+                </ul>
                 {filtered.length > 2 && (
                   <MobileMoreButton open={upMore.open} onToggle={() => upMore.setOpen((v) => !v)} more="View full calendar" />
                 )}
-              </div>
+              </div>}
             </div>
           </div>
         </section>
 
-        <section
-          className="border-t border-black/[0.06]"
-          style={{ background: "#FAFAFA" }}
-        >
-          <div className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-20">
-            <div
-              className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]"
-              style={{ color: "#414042" }}
-            >
-              Archive
-            </div>
-            <h2
-              className="text-[26px] leading-[1.08] tracking-[-0.015em] md:text-[36px]"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 800,
-                color: "#414042",
-              }}
-            >
-              Past events
-            </h2>
-
-            <ul className="mt-8 divide-y divide-black/[0.08] rounded-lg border border-black/[0.08] bg-white">
-              {ARCHIVE.map((e, i) => (
-                <li
-                  key={e.id}
-                  className={`${arMore.hide(i, 3)} grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[160px_1fr_1fr_auto] md:items-center md:gap-6 md:px-5`}
-                >
-                  <div
-                    className="text-[13px]"
-                    style={{ fontFamily: "var(--font-mono)", color: "#414042" }}
-                  >
-                    {e.date}
-                  </div>
-                  <div>
-                    <Link
-                      to="/events/$slug"
-                      params={{ slug: e.slug }}
-                      className="text-[15px] hover:underline"
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        color: "#414042",
-                      }}
-                    >
-                      {e.name}
-                    </Link>
-                  </div>
-                  <div className="text-sm" style={{ color: "#414042" }}>
-                    {e.location}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <TierBadge tier={e.tier} muted />
-                    <Link
-                      to="/events/$slug"
-                      params={{ slug: e.slug }}
-                      className="text-xs font-semibold hover:underline"
-                      style={{ color: "#4298D3" }}
-                    >
-                      View event →
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            {ARCHIVE.length > 3 && (
-              <MobileMoreButton open={arMore.open} onToggle={() => arMore.setOpen((v) => !v)} more={`Show all ${ARCHIVE.length} past events`} />
-            )}
-          </div>
-        </section>
+        <EventsArchive />
       </main>
       <Footer />
 
@@ -487,14 +419,13 @@ function EventCard({
           >
             Register
           </button>
-          <Link
-            to="/events/$slug"
-            params={{ slug: event.slug }}
+          <a
+            href={`/events/${event.slug}`}
             className="text-sm font-semibold hover:underline"
             style={{ color: "#4298D3" }}
           >
             View event →
-          </Link>
+          </a>
         </div>
       </div>
     </article>
@@ -513,17 +444,6 @@ function TierBadge({ tier, muted }: { tier: Tier; muted?: boolean }) {
     >
       {tier}
     </span>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div
-      className="rounded-lg border border-dashed border-black/15 px-6 py-10 text-center text-sm"
-      style={{ color: "#414042" }}
-    >
-      No events match your search. Try clearing the filter or switching region.
-    </div>
   );
 }
 

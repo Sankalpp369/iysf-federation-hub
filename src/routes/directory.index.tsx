@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { Search, ExternalLink, X, Users, ArrowRight } from "lucide-react";
 import { Nav, Footer } from "../components/site-chrome";
+import type { MapPin as MapPinData } from "../components/events-map";
+import { federationToMapPin } from "@/lib/map-data";
 import {
   FEDERATIONS,
   REGIONS,
@@ -35,6 +37,8 @@ export const Route = createFileRoute("/directory/")({
 });
 
 const PinMap = lazy(() => import("../components/events-map"));
+const MAPPABLE_FEDERATIONS = FEDERATIONS.filter((federation) => Boolean(federationToMapPin(federation)));
+const UNMAPPABLE_DIRECTORY_COUNT = FEDERATIONS.length - MAPPABLE_FEDERATIONS.length;
 
 function useHydrated() {
   const [h, setH] = useState(false);
@@ -47,10 +51,11 @@ function DirectoryPage() {
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "All">("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return FEDERATIONS.filter((f) => {
+    return MAPPABLE_FEDERATIONS.filter((f) => {
       const matchesQ =
         !q ||
         f.name.toLowerCase().includes(q) ||
@@ -71,16 +76,10 @@ function DirectoryPage() {
 
   const pins = useMemo(
     () =>
-      filtered.map((f) => ({
-        id: f.id,
-        name: f.name,
-        location: `${f.country} · ${f.status}`,
-        lat: f.lat,
-        lng: f.lng,
-        tier: f.status,
-      })),
+      filtered.map(federationToMapPin).filter((pin): pin is MapPinData => Boolean(pin)),
     [filtered]
   );
+  const unpinnedCount = UNMAPPABLE_DIRECTORY_COUNT;
 
   return (
     <div style={{ fontFamily: "var(--font-sans)", color: "#414042" }}>
@@ -182,10 +181,12 @@ function DirectoryPage() {
                       }
                     >
                       <PinMap
-                        events={pins}
+                        pins={pins}
                         selectedId={selectedId}
+                        highlightedId={hoveredId}
                         onSelect={setSelectedId}
-                        tierColor={STATUS_COLOR}
+                        onHover={setHoveredId}
+                        label="Map of IYSF member federations"
                       />
                     </Suspense>
                   ) : (
@@ -196,6 +197,7 @@ function DirectoryPage() {
                     />
                   )}
                 </div>
+                {unpinnedCount > 0 && <p className="mt-2 text-xs" style={{ color: "#414042" }}>{unpinnedCount} placeholder directory {unpinnedCount === 1 ? "entry is" : "entries are"} omitted from both the list and map because no location can be verified.</p>}
 
                 <ul className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                   {(Object.keys(STATUS_COLOR) as MembershipStatus[]).map((s) => (
@@ -242,11 +244,11 @@ function DirectoryPage() {
                 ) : (
                   <ul className="flex max-h-[560px] flex-col gap-3 overflow-auto pr-1 max-sm:grid max-sm:grid-cols-2 max-sm:gap-2">
                     {filtered.map((f, i) => (
-                      <li key={f.id} className={more.hide(i, 4)}>
+                      <li key={f.id} className={more.hide(i, 4)} onMouseEnter={() => setHoveredId(f.id)} onMouseLeave={() => setHoveredId(null)}>
                         <FederationCard
                           federation={f}
                           onSelect={() => setSelectedId(f.id)}
-                          highlighted={f.id === selectedId}
+                          highlighted={f.id === selectedId || f.id === hoveredId}
                         />
                       </li>
                     ))}
@@ -490,7 +492,7 @@ function EmptyState() {
         className="text-[15px]"
         style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
       >
-        No federations match your search
+        No verified federation entries match your search
       </p>
       <p className="mt-2 text-sm" style={{ color: "#414042" }}>
         Try a different keyword or select a different region.

@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { FileText, ArrowRight, ArrowDown, MapPin } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { submitNewsletterSignup } from "@/lib/submissions.functions";
 import { Nav, Footer } from "../components/site-chrome";
+import type { MapPin as MapPinData } from "../components/events-map";
+import { pastEvents, WORLD_CHAMPIONSHIP_2026 } from "@/data/iysf";
+import { eventToMapPin } from "@/lib/map-data";
 import {
   Reveal,
   CountUp,
@@ -152,7 +155,7 @@ function Hero() {
 function Origins() {
   return (
     <section style={{ background: "#F3EFE8" }}>
-      <div className="mx-auto grid max-w-[1240px] items-center gap-10 px-5 py-20 md:grid-cols-2 md:gap-16 md:px-8 md:py-28">
+      <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
           <div
             className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em]"
@@ -174,21 +177,6 @@ function Origins() {
             used today.
           </p>
         </Reveal>
-        <Reveal delay={120}>
-          <div
-            className="flex aspect-[4/3] w-full items-center justify-center rounded-md border border-dashed p-6 text-center"
-            style={{ borderColor: "#B79E73", background: "#EAE1D2" }}
-            role="img"
-            aria-label="Historical photo placeholder — 1973 Calcutta competitions"
-          >
-            <span
-              className="text-xs leading-relaxed"
-              style={{ color: "#8A6A2F", fontFamily: "var(--font-mono)" }}
-            >
-              Historical photo placeholder — 1973 Calcutta competitions
-            </span>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -197,7 +185,7 @@ function Origins() {
 function GhoshCup() {
   return (
     <section className="bg-white">
-      <div className="mx-auto grid max-w-[1240px] gap-10 px-5 py-20 md:grid-cols-[1.3fr_1fr] md:gap-16 md:px-8 md:py-28">
+      <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
           <div
             className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em]"
@@ -231,18 +219,6 @@ function GhoshCup() {
             View the B.K.S. Iyengar endorsement letter (PDF, opens in a new tab)
           </a>
         </Reveal>
-        <Reveal delay={120}>
-          <div
-            className="flex aspect-[3/4] w-full items-center justify-center rounded-md border border-dashed p-6 text-center"
-            style={{ borderColor: "rgba(20,24,31,0.18)", background: "#FAFAFA" }}
-            role="img"
-            aria-label="Portrait placeholder — Ghosh Cup era, Los Angeles 2003 to 2014"
-          >
-            <span className="text-xs" style={{ color: "#414042", fontFamily: "var(--font-mono)" }}>
-              Portrait placeholder — Ghosh Cup era (2003–2014)
-            </span>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -267,7 +243,10 @@ function Lausanne() {
           >
             Founded in Lausanne
           </h2>
-          <p className="mt-6 max-w-[620px] text-base leading-relaxed md:text-[17px]" style={{ color: "#C9D5E8" }}>
+          <p
+            className="mt-6 max-w-[620px] text-base leading-relaxed md:text-[17px]"
+            style={{ color: "#C9D5E8" }}
+          >
             Recognizing the need for unified rules and international governance, the International
             Yoga Sports Federation (IYSF) was founded in Lausanne, Switzerland in 2013, and
             officially registered in 2014. Since then, IYSF has developed the first global scoring
@@ -275,7 +254,6 @@ function Lausanne() {
             international pathways for athletes and coaches alike.
           </p>
         </Reveal>
-
         <div ref={ref} className="flex justify-center">
           <div className="relative flex h-[190px] w-[190px] items-center justify-center">
             <span
@@ -284,7 +262,9 @@ function Lausanne() {
                 borderColor: "rgba(250,175,64,0.35)",
                 opacity: inView ? 1 : 0,
                 transform: inView || reduced ? "scale(1)" : "scale(0.6)",
-                transition: reduced ? undefined : "opacity 700ms ease, transform 900ms cubic-bezier(.2,.7,.3,1)",
+                transition: reduced
+                  ? undefined
+                  : "opacity 700ms ease, transform 900ms cubic-bezier(.2,.7,.3,1)",
               }}
             />
             <span
@@ -293,7 +273,9 @@ function Lausanne() {
                 borderColor: "rgba(250,175,64,0.55)",
                 opacity: inView ? 1 : 0,
                 transform: inView || reduced ? "scale(1)" : "scale(0.6)",
-                transition: reduced ? undefined : "opacity 700ms ease 140ms, transform 900ms cubic-bezier(.2,.7,.3,1) 140ms",
+                transition: reduced
+                  ? undefined
+                  : "opacity 700ms ease 140ms, transform 900ms cubic-bezier(.2,.7,.3,1) 140ms",
               }}
             />
             <div
@@ -301,7 +283,9 @@ function Lausanne() {
               style={{
                 opacity: inView ? 1 : 0,
                 transform: inView || reduced ? "none" : "translateY(-14px)",
-                transition: reduced ? undefined : "opacity 500ms ease 260ms, transform 600ms cubic-bezier(.2,.9,.3,1) 260ms",
+                transition: reduced
+                  ? undefined
+                  : "opacity 500ms ease 260ms, transform 600ms cubic-bezier(.2,.9,.3,1) 260ms",
               }}
             >
               <MapPin size={30} color="#FAAF40" aria-hidden="true" />
@@ -311,7 +295,10 @@ function Lausanne() {
               >
                 Lausanne, CH
               </span>
-              <span className="text-[11px]" style={{ color: "#8FA2C0", fontFamily: "var(--font-mono)" }}>
+              <span
+                className="text-[11px]"
+                style={{ color: "#8FA2C0", fontFamily: "var(--font-mono)" }}
+              >
                 Founded 2013
               </span>
             </div>
@@ -321,15 +308,62 @@ function Lausanne() {
     </section>
   );
 }
-
-const TIMELINE = [
-  { year: "2003–2013", host: "Annual Ghosh Cup", place: "USA", note: "Held annually in Los Angeles, the championship that sparked the global yoga sports movement." },
-  { year: "2014", host: "London", place: "United Kingdom", note: "The first World Championship staged under the newly registered IYSF." },
-  { year: "2016", host: "Pordenone", place: "Italy", note: "Continental participation broadens across Europe." },
-  { year: "2018", host: "Beijing", place: "China", note: "The championship reaches East Asia." },
-  { year: "2021", host: "Online Edition", place: "During COVID-19", note: "A fully remote championship kept the global calendar unbroken." },
-  { year: "2022", host: "Bengaluru", place: "India", note: "A return to the birthplace of the discipline." },
-  { year: "2025", host: "Cyberjaya", place: "Malaysia", note: "The most recent World Championship edition." },
+const TIMELINE: {
+  year: string;
+  host: string;
+  place: string;
+  note: string;
+  upcoming?: boolean;
+}[] = [
+  {
+    year: "2003–2013",
+    host: "Annual Ghosh Cup",
+    place: "USA",
+    note: "Held annually in Los Angeles, the championship that sparked the global yoga sports movement.",
+  },
+  {
+    year: "2014",
+    host: "London",
+    place: "United Kingdom",
+    note: "The first World Championship staged under the newly registered IYSF.",
+  },
+  {
+    year: "2016",
+    host: "Pordenone",
+    place: "Italy",
+    note: "Continental participation broadens across Europe.",
+  },
+  {
+    year: "2018",
+    host: "Beijing",
+    place: "China",
+    note: "The championship reaches East Asia.",
+  },
+  {
+    year: "2021",
+    host: "Online Edition",
+    place: "During COVID-19",
+    note: "A fully remote championship kept the global calendar unbroken.",
+  },
+  {
+    year: "2022",
+    host: "Bengaluru",
+    place: "India",
+    note: "A return to the birthplace of the discipline.",
+  },
+  {
+    year: "2025",
+    host: "Cyberjaya",
+    place: "Malaysia",
+    note: "The most recent World Championship edition.",
+  },
+  {
+    year: "2026",
+    host: WORLD_CHAMPIONSHIP_2026.location,
+    place: WORLD_CHAMPIONSHIP_2026.countryName ?? "",
+    note: `${WORLD_CHAMPIONSHIP_2026.edition} Edition · ${WORLD_CHAMPIONSHIP_2026.date}`,
+    upcoming: true,
+  },
 ];
 
 const ACCENTS = ["#4298D3", "#FAAF40", "#DE007A"];
@@ -382,23 +416,22 @@ function TimelinePoint({
           <div className="mt-0.5 text-sm" style={{ color: "#414042" }}>
             {item.place}
           </div>
-          <button
-            type="button"
-            onClick={onToggle}
-            aria-expanded={open}
-            className="mt-2 text-xs font-semibold underline-offset-4 hover:underline"
-            style={{ color: "#414042" }}
-          >
-            {open ? "Hide detail" : "Show detail"}
-          </button>
-          <Link
-            to="/results"
-            search={{ year: item.year.match(/\d{4}/)?.[0] ?? item.year }}
-            className="ml-3 mt-2 inline-block text-xs font-semibold underline-offset-4 hover:underline"
-            style={{ color }}
-          >
-            View results →
-          </Link>
+          <div className="mt-2 flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded={open}
+              className="text-xs font-semibold underline-offset-4 hover:underline"
+              style={{ color: "#414042" }}
+            >
+              {open ? "Hide detail" : "Show detail"}
+            </button>
+            {item.upcoming && (
+              <span className="inline-flex h-4 items-center rounded-full bg-[#FAAF40]/20 px-2 text-[9px] font-bold uppercase leading-4 tracking-[0.12em] text-[#75500C]">
+                Upcoming
+              </span>
+            )}
+          </div>
           {open && (
             <div
               className="mt-3 max-w-[260px] rounded-md border border-black/10 bg-white p-3 text-xs leading-relaxed"
@@ -496,63 +529,18 @@ function Timeline() {
   );
 }
 
-const COUNTRIES: { name: string; lat: number; lng: number }[] = [
-  { name: "United States", lat: 38.9, lng: -77.0 },
-  { name: "Canada", lat: 45.4, lng: -75.7 },
-  { name: "Mexico", lat: 19.4, lng: -99.1 },
-  { name: "UK", lat: 51.5, lng: -0.13 },
-  { name: "Belgium", lat: 50.85, lng: 4.35 },
-  { name: "France", lat: 48.86, lng: 2.35 },
-  { name: "Italy", lat: 41.9, lng: 12.5 },
-  { name: "Sweden", lat: 59.33, lng: 18.07 },
-  { name: "Latvia", lat: 56.95, lng: 24.11 },
-  { name: "India", lat: 28.61, lng: 77.21 },
-  { name: "Nepal", lat: 27.71, lng: 85.32 },
-  { name: "Malaysia", lat: 3.14, lng: 101.69 },
-  { name: "Australia", lat: -35.28, lng: 149.13 },
-  { name: "Türkiye", lat: 39.93, lng: 32.86 },
-  { name: "Argentina", lat: -34.6, lng: -58.38 },
-  { name: "UAE", lat: 24.45, lng: 54.38 },
-  { name: "Saudi Arabia", lat: 24.71, lng: 46.68 },
-  { name: "Egypt", lat: 30.04, lng: 31.24 },
-  { name: "Morocco", lat: 34.02, lng: -6.84 },
-  { name: "Algeria", lat: 36.75, lng: 3.06 },
-  { name: "Palestine", lat: 31.9, lng: 35.2 },
-  { name: "Côte d'Ivoire", lat: 6.83, lng: -5.29 },
-];
-
 function GlobalMovement() {
   const hydrated = useHydrated();
-  const reduced = usePrefersReducedMotion();
-  const [ref, inView] = useInView<HTMLDivElement>(0.2);
-  const [lit, setLit] = useState(0);
-
-  useEffect(() => {
-    if (reduced) {
-      setLit(COUNTRIES.length);
-      return;
-    }
-    if (!inView) return;
-    let i = 0;
-    const t = setInterval(() => {
-      i += 1;
-      setLit(i);
-      if (i >= COUNTRIES.length) clearInterval(t);
-    }, 90);
-    return () => clearInterval(t);
-  }, [inView, reduced]);
-
-  const pins = COUNTRIES.slice(0, lit).map((c, i) => ({
-    id: `${c.name}-${i}`,
-    name: c.name,
-    location: "Member or forming federation",
-    lat: c.lat,
-    lng: c.lng,
-    tier: "member",
-  }));
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const historyEvents = useMemo(() => pastEvents().filter((event) => (event.endDateISO ?? event.dateISO) < today), [today]);
+  const pins = useMemo(() => historyEvents.map(eventToMapPin).filter((pin): pin is MapPinData => Boolean(pin)), [historyEvents]);
+  const onlineCount = historyEvents.length - pins.length;
 
   return (
-    <section className="bg-white" ref={ref}>
+    <section className="bg-white">
       <div className="mx-auto max-w-[1240px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
           <div
@@ -565,21 +553,17 @@ function GlobalMovement() {
             className="max-w-[18ch] text-[30px] leading-[1.08] tracking-[-0.015em] md:text-[42px]"
             style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "#414042" }}
           >
-            Federations across five continents
+            Championships across the world
           </h2>
           <p className="mt-6 max-w-[720px] text-base leading-relaxed md:text-[17px]" style={{ color: "#414042" }}>
-            Today, IYSF supports national federations in over 25 countries... We are actively
-            expanding our community, supporting federations across Africa, the Middle East, Asia,
-            the Americas, and Europe, while working toward establishing continental councils and
-            regional championships.
+            Explore past IYSF championship locations and the corresponding event records. Online
+            editions remain in the event list even when they have no physical map location.
           </p>
         </Reveal>
 
         <div className="mt-10 grid gap-8 md:grid-cols-[1.25fr_1fr] md:gap-12">
-          <div
-            className="h-[300px] overflow-hidden rounded-lg border border-black/10 md:h-[420px]"
-            style={{ background: "#FAFAFA" }}
-          >
+          <div className="rounded-lg border border-black/10">
+            <div className="h-[300px] overflow-hidden md:h-[420px]" style={{ background: "#FAFAFA" }}>
             {hydrated ? (
               <Suspense
                 fallback={
@@ -589,22 +573,26 @@ function GlobalMovement() {
                 }
               >
                 <WorldMap
-                  events={pins}
-                  selectedId={null}
-                  onSelect={() => {}}
-                  tierColor={{ member: "#4298D3" }}
+                  pins={pins}
+                  selectedId={selectedId}
+                  highlightedId={hoveredId}
+                  onSelect={setSelectedId}
+                  onHover={setHoveredId}
+                  label="Map of past IYSF championships"
                 />
               </Suspense>
             ) : (
               <div className="h-full w-full" aria-hidden="true" />
             )}
+            </div>
+            {onlineCount > 0 && <p className="mt-2 text-xs" style={{ color: "#414042" }}>{onlineCount} online or international {onlineCount === 1 ? "event is" : "events are"} not shown on the map.</p>}
           </div>
 
           <div>
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: 25, suffix: "+", label: "countries" },
-                { value: 5, suffix: "", label: "continents" },
+                { value: historyEvents.length, suffix: "", label: "past events" },
+                { value: pins.length, suffix: "", label: "map locations" },
               ].map((s) => (
                 <div key={s.label} className="rounded-lg border border-black/10 p-5">
                   <div
@@ -623,24 +611,16 @@ function GlobalMovement() {
               ))}
             </div>
 
-            <ul className="mt-6 flex flex-wrap gap-2" aria-label="Countries with IYSF federations">
-              {COUNTRIES.map((c, i) => (
-                <li
-                  key={c.name}
-                  className="rounded-full border px-3 py-1.5 text-[13px]"
-                  style={{
-                    borderColor: "rgba(20,24,31,0.12)",
-                    color: i < lit ? "#414042" : "#8A8F98",
-                    background: i < lit ? "rgba(66,152,211,0.10)" : "transparent",
-                    transition: reduced ? undefined : "background 400ms ease, color 400ms ease",
-                  }}
-                >
-                  {c.name}
+            <ul className="mt-6 max-h-[300px] divide-y divide-black/[0.08] overflow-auto rounded-lg border border-black/[0.08] bg-white" aria-label="Past IYSF championship events">
+              {historyEvents.map((event) => (
+                <li key={event.id} onMouseEnter={() => setHoveredId(event.id)} onMouseLeave={() => setHoveredId(null)}>
+                  <Link to="/events/$slug" params={{ slug: event.slug }} onClick={() => setSelectedId(event.id)} className="block px-4 py-3 hover:bg-black/[0.03]" style={{ background: selectedId === event.id || hoveredId === event.id ? "rgba(66,152,211,0.10)" : undefined }}>
+                    <span className="block text-xs" style={{ color: "#4298D3", fontFamily: "var(--font-mono)" }}>{event.year}</span>
+                    <span className="mt-1 block text-sm font-semibold" style={{ color: "#414042", fontFamily: "var(--font-display)" }}>{event.name}</span>
+                    <span className="mt-0.5 block text-xs" style={{ color: "#414042" }}>{event.location}</span>
+                  </Link>
                 </li>
               ))}
-              <li className="rounded-full px-3 py-1.5 text-[13px] italic" style={{ color: "#414042" }}>
-                and others rejoining
-              </li>
             </ul>
           </div>
         </div>
@@ -709,7 +689,7 @@ function Olympic() {
             />
           </div>
           <p className="mt-3 text-xs leading-relaxed" style={{ color: "#8FA2C0" }}>
-            Target figure — 40+ active and forming federations is a stated goal.
+                    Target figure — 40+ active and forming federations is a stated goal.
           </p>
         </div>
       </div>
@@ -770,7 +750,7 @@ function JoinMovement() {
             className="mt-12 max-w-[760px] text-[19px] leading-snug md:text-[26px]"
             style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "#414042" }}
           >
-            Together, we're writing the next chapter of yoga's evolution as a sport — honoring
+              Together, we're writing the next chapter of yoga's evolution as a sport — honoring
             tradition, embracing excellence, and inspiring the world.
           </p>
         </Reveal>

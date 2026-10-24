@@ -9,6 +9,7 @@ import { fmtDate } from "../components/news-article";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { safeHref, safeImageSrc } from "@/lib/blocks";
+import { WORLD_CHAMPIONSHIP_2026 } from "@/data/iysf";
 import aboutCompetition from "../assets/about-competition.jpg";
 import aboutSport from "../assets/about-sport.jpg";
 import aboutChampions from "../assets/about-champions.jpg";
@@ -80,7 +81,7 @@ function Hero({ settings }: { settings?: any }) {
         height={646}
         fetchPriority="high"
         decoding="async"
-        alt="17th World Yogasana Championship — Marina di Camerota, Italy, December 4–6, 2026"
+        alt={`${WORLD_CHAMPIONSHIP_2026.name} — ${WORLD_CHAMPIONSHIP_2026.location}, ${WORLD_CHAMPIONSHIP_2026.countryName}, ${WORLD_CHAMPIONSHIP_2026.date}`}
         className="block aspect-[1280/646] w-full bg-white object-cover object-top max-h-[50svh] sm:max-h-[60svh] md:max-h-[72svh] md:object-center"
       />
       {/* Gradient overlay for text contrast */}
@@ -167,7 +168,7 @@ function StatStrip() {
 function AboutPreview() {
   return (
     <section id="about" className="bg-white">
-      <div className="mx-auto grid max-w-[1320px] items-center gap-8 px-4 py-12 sm:px-5 sm:py-16 md:grid-cols-2 md:px-8 md:py-24 lg:gap-16">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-6 px-4 py-8 sm:px-5 sm:py-10 md:grid-cols-2 md:px-8 md:py-16 lg:gap-12">
         <Reveal>
           <div>
             <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
@@ -225,12 +226,12 @@ function AboutPreview() {
 function MembershipCta() {
   return (
     <section style={{ background: IYSF.orange }}>
-      <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-6 px-4 py-12 text-center sm:px-5 md:flex-row md:items-center md:px-8 md:py-16 md:text-left">
+      <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-3 px-4 py-6 text-center sm:px-5 md:flex-row md:items-center md:px-8 md:py-8 md:text-left">
         <div>
-          <h2 className="max-w-[720px] text-[24px] leading-tight sm:text-[30px] md:text-[36px]" style={H2({ color: "#3A2400" })}>
+          <h2 className="max-w-[720px] text-[21px] leading-tight sm:text-[26px] md:text-[30px]" style={H2({ color: "#3A2400" })}>
             Bring Your Federation Into IYSF
           </h2>
-          <p className="mt-3 max-w-[560px] text-sm md:text-base" style={{ color: "#3A2400" }}>
+          <p className="mt-1 max-w-[560px] text-sm leading-snug" style={{ color: "#3A2400" }}>
             Membership gives your athletes a graded route to continental and world competition,
             and your officials the certification to run it.
           </p>
@@ -273,7 +274,7 @@ function WhyJoin() {
   ];
   return (
     <section style={{ background: IYSF.blueWash }}>
-      <div className="mx-auto max-w-[1320px] px-4 py-12 sm:px-5 sm:py-16 md:px-8 md:py-24">
+      <div className="mx-auto max-w-[1320px] px-4 py-8 sm:px-5 sm:py-10 md:px-8 md:py-16">
         <Reveal>
           <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
             Why join IYSF
@@ -334,29 +335,39 @@ function News() {
   const { news } = Route.useLoaderData();
   return (
     <section id="news" className="bg-white">
-      <div className="mx-auto max-w-[1320px] px-4 pb-12 pt-12 sm:px-5 sm:pb-16 sm:pt-12 md:px-8 md:pb-24">
+      <div className="mx-auto max-w-[1320px] px-4 pb-8 pt-8 sm:px-5 sm:pb-10 sm:pt-10 md:px-8 md:pb-16 md:pt-12">
         <Reveal>
           <h2 className="text-[28px] sm:text-[36px] md:text-[44px]" style={H2()}>
             News
           </h2>
         </Reveal>
-        <ul className="mt-6 max-w-[860px]" style={{ borderTop: `1px solid ${IYSF.blueLine}` }}>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
           {news.length === 0 && <li className="py-4 text-sm">No news published yet.</li>}
           {news.map((n) => (
-            <li key={n.id} style={{ borderBottom: `1px solid ${IYSF.blueLine}` }}>
+            <li key={n.id} className="min-w-0 overflow-hidden rounded-xl border" style={{ borderColor: IYSF.blueLine }}>
               <Link
                 to="/news/$slug"
                 params={{ slug: n.slug }}
-                className="flex min-h-[52px] items-center justify-between gap-3 py-4 text-[15px] font-bold leading-snug hover:underline md:text-[17px]"
-                style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}
+                className="group block h-full"
               >
-                <span className="min-w-0 break-words">
-                  <time dateTime={n.published_at ?? undefined} className="block text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
+                <img
+                  src={safeImageSrc(n.cover_image_url ?? "") ?? heroChampionship}
+                  alt={n.cover_alt?.trim() || n.title}
+                  width={1200}
+                  height={675}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-video w-full object-cover"
+                />
+                <span className="flex min-h-[88px] flex-col p-3">
+                  <time dateTime={n.published_at ?? undefined} className="text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: IYSF.blue, fontFamily: "var(--font-sans)" }}>
                     {fmtDate(n.published_at)}
                   </time>
-                  {n.title}
+                  <span className="mt-1 flex items-start justify-between gap-2 text-[15px] font-bold leading-snug group-hover:underline md:text-base" style={{ color: IYSF.charcoal, fontFamily: "var(--font-display)" }}>
+                    <span className="min-w-0 break-words">{n.title}</span>
+                    <ArrowRight size={16} aria-hidden="true" className="mt-0.5 shrink-0" style={{ color: IYSF.magenta }} />
+                  </span>
                 </span>
-                <ArrowRight size={16} aria-hidden="true" className="shrink-0" style={{ color: IYSF.magenta }} />
               </Link>
             </li>
           ))}

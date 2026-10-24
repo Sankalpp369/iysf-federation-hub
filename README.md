@@ -250,3 +250,7 @@ The application requires these public variables for Supabase authentication and 
 Set them in your local environment (for example, `.env.local`, which is ignored by Git) and in the deployment environment. Never put secrets in a `VITE_` variable.
 
 Server-side staff administration (listing, inviting, and removing staff) requires the server-only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Keep the service-role key out of browser code and source control. Staff administration shows a clear error when it is not configured. Private media delivery also requires the server-only service-role key; the media endpoint returns an explicit configuration error when absent.
+
+## Events archive
+
+The interactive archive reads its event records from `src/data/events.json`. Add new entries there with `id`, `startDate` (`YYYY-MM-DD`), `endDate` (empty for a one-day event), `approx`, `countryCode`, `countryName`, `name`, `type`, `registrationStatus`, and `year`. Keep the optional `description`, `location`, and `link` fields, even when empty. Add a matching flag and theme in `src/data/country-themes.ts` for any new country code. The archive derives upcoming/past status from the visitor's current date; approximate dates display a confirmation note.

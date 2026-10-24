@@ -8,52 +8,35 @@ import {
   Car,
   ChevronDown,
   FileText,
-  Globe2,
-  ImageIcon,
   Mail,
   MapPin,
   Plane,
   Train,
   Trophy,
-  Users,
 } from "lucide-react";
 import { PageShell, Section, Prose } from "../components/page-shell";
 import { IYSF } from "../components/site-chrome";
 import { useServerFn } from "@tanstack/react-start";
 import { submitNewsletterSignup } from "@/lib/submissions.functions";
+import { WORLD_CHAMPIONSHIP_2026 } from "@/data/iysf";
 
 export const Route = createFileRoute("/events/world-championship-2026")({
   head: () => ({
     meta: [
-      { title: "17th World Championship of Yogasana Sports — Italy 2026" },
-      {
-        name: "description",
-        content:
-          "Marina di Camerota, Italy, December 4–6, 2026. Registration is open for the 17th edition of the world championship: 150+ athletes, 30+ countries, three days of competition.",
-      },
-      {
-        property: "og:title",
-        content: "17th World Championship of Yogasana Sports — Italy 2026",
-      },
-      {
-        property: "og:description",
-        content:
-          "Marina di Camerota, Italy — December 4–6, 2026. Registration now open for the 17th edition.",
-      },
+      { title: `${WORLD_CHAMPIONSHIP_2026.name} — ${WORLD_CHAMPIONSHIP_2026.countryName} 2026` },
+      { name: "description", content: `${WORLD_CHAMPIONSHIP_2026.location}, ${WORLD_CHAMPIONSHIP_2026.countryName}, ${WORLD_CHAMPIONSHIP_2026.date}.` },
+      { property: "og:title", content: `${WORLD_CHAMPIONSHIP_2026.name} — ${WORLD_CHAMPIONSHIP_2026.countryName} 2026` },
+      { property: "og:description", content: `${WORLD_CHAMPIONSHIP_2026.location}, ${WORLD_CHAMPIONSHIP_2026.countryName} — ${WORLD_CHAMPIONSHIP_2026.date}.` },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-  }),
-  component: WorldChampionship2026,
+  }),  component: WorldChampionship2026,
 });
 
 const GLANCE: [string, string, typeof Trophy][] = [
-  ["17th", "consecutive edition", Trophy],
-  ["150+", "athletes expected", Users],
-  ["30+", "countries represented", Globe2],
+  [WORLD_CHAMPIONSHIP_2026.edition ?? "17th", "Edition", Trophy],
   ["3", "days of competition", CalendarDays],
 ];
-
 const EXPECT = [
   {
     title: "Elite competition",
@@ -70,15 +53,6 @@ const EXPECT = [
     accent: IYSF.orange,
     body: "The 17th edition carries forward a championship shaped by generations of practitioners, now arriving on Italy's Cilento coast.",
   },
-];
-
-const GALLERY = [
-  "Opening Ceremony",
-  "Individual Category",
-  "Competition Floor",
-  "Medal Ceremony",
-  "Individual Category – Italy Podium",
-  "Group Category – Italy Podium",
 ];
 
 function FaqItem({
@@ -171,17 +145,6 @@ function WorldChampionship2026() {
       <section className="bg-white">
         <div className="mx-auto max-w-[1240px] px-5 pt-12 pb-10 md:px-8 md:pt-16">
           <div
-            className="flex aspect-[4/3] w-full sm:aspect-[2/1] sm:min-h-[240px] flex-col items-center justify-center gap-3 rounded-[16px] border border-dashed text-center"
-            style={{ borderColor: IYSF.blueLine, boxShadow: IYSF.blueShadow }}
-            role="img"
-            aria-label="Championship artwork placeholder"
-          >
-            <ImageIcon size={28} color={IYSF.blue} aria-hidden="true" />
-            <span className="text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: IYSF.charcoal }}>
-              Championship artwork placeholder
-            </span>
-          </div>
-          <div
             className="mt-8 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white"
             style={{ background: IYSF.magenta }}
           >
@@ -191,17 +154,17 @@ function WorldChampionship2026() {
             className="mt-4 max-w-[900px] text-[36px] leading-[1.04] tracking-[-0.02em] md:text-[56px]"
             style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: IYSF.charcoal }}
           >
-            17th World Championship of Yogasana Sports
+            {WORLD_CHAMPIONSHIP_2026.name}
           </h1>
           <div
             className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-semibold"
             style={{ color: IYSF.blue }}
           >
             <span className="inline-flex items-center gap-2">
-              <MapPin size={16} aria-hidden="true" /> Marina di Camerota, Italy
+              <MapPin size={16} aria-hidden="true" /> {WORLD_CHAMPIONSHIP_2026.location}, {WORLD_CHAMPIONSHIP_2026.countryName}
             </span>
             <span className="inline-flex items-center gap-2">
-              <CalendarDays size={16} aria-hidden="true" /> December 4–6, 2026
+              <CalendarDays size={16} aria-hidden="true" /> {WORLD_CHAMPIONSHIP_2026.date}
             </span>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -281,17 +244,16 @@ function WorldChampionship2026() {
               Palazzetto dello Sport
             </div>
             <div className="mt-2 text-[15px]" style={{ color: IYSF.charcoal }}>
-              Marina di Camerota, Campania, Italy
+            {WORLD_CHAMPIONSHIP_2026.location}, {WORLD_CHAMPIONSHIP_2026.countryName}
             </div>
             <div
               className="mt-4 text-[12px] font-bold uppercase tracking-[0.16em]"
               style={{ color: IYSF.blue, fontFamily: "var(--font-mono)" }}
             >
-              In use: December 4–6, 2026
+              In use: {WORLD_CHAMPIONSHIP_2026.date}
             </div>
             <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#3a3a3a" }}>
-              The official competition venue, hosting all rounds across the three days. Directions
-              and access details will be added as they are confirmed.
+              The official competition venue, hosting all rounds across the three days.
             </p>
             <blockquote
               className="mt-5 border-l-[3px] py-1 pl-4 text-[15px] italic leading-relaxed"
@@ -437,33 +399,6 @@ function WorldChampionship2026() {
         </div>
       </Section>
 
-      <Section heading="Moments from the Malaysian Championship" kicker="Photo gallery" tint>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {GALLERY.map((caption) => (
-            <li
-              key={caption}
-              className="overflow-hidden rounded-[12px] border bg-white"
-              style={{ borderColor: IYSF.blueLine }}
-            >
-              <div
-                className="flex aspect-[4/3] flex-col items-center justify-center gap-3 border-b border-dashed"
-                style={{ background: IYSF.blueWash, borderColor: IYSF.blueLine }}
-                role="img"
-                aria-label={`${caption} photo placeholder`}
-              >
-                <ImageIcon size={24} color={IYSF.blue} aria-hidden="true" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: IYSF.charcoal }}>
-                  Photo placeholder
-                </span>
-              </div>
-              <div className="px-4 py-3 text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: IYSF.charcoal }}>
-                {caption}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
       <Section heading="Join us in Italy">
         <div className="grid gap-5 md:grid-cols-2">
           <div
@@ -477,7 +412,7 @@ function WorldChampionship2026() {
               For athletes
             </h3>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "#3a3a3a" }}>
-              Register to compete and secure your place among 150+ athletes from 30+ countries.
+              Register to compete at the 17th World Yogasana Championship.
               Registration confirms category entry and official credentials for the 17th World
               Championship.
             </p>

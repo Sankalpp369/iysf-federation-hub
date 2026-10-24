@@ -26,14 +26,14 @@ export const Route = createFileRoute("/events/$slug")({
         {
           name: "description",
           content: event
-            ? event.summary
+            ? (event.summary ?? `${event.name} · ${event.date} · ${event.location}`)
             : "The requested event could not be found in the IYSF calendar.",
         },
         { property: "og:title", content: `${name} — IYSF Events` },
         {
           property: "og:description",
           content: event
-            ? event.summary
+            ? (event.summary ?? `${event.name} · ${event.date} · ${event.location}`)
             : "The requested event could not be found in the IYSF calendar.",
         },
         { property: "og:type", content: "website" },
@@ -130,7 +130,7 @@ function EventDetailPage() {
               {event.name}
             </h1>
             <div className="mt-3 text-sm" style={{ color: "#414042" }}>
-              {event.venue} · {event.location} · {event.region}
+              {[event.venue, event.location, event.region].filter(Boolean).join(" · ")}
             </div>
             <p className="mt-6 max-w-[680px] text-base" style={{ color: "#414042" }}>
               {event.summary}
@@ -150,7 +150,7 @@ function EventDetailPage() {
 
         <section className="border-t border-black/[0.06] bg-white">
           <div className="mx-auto max-w-[1240px] px-5 py-10 md:px-8 md:py-14">
-            <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-10">
               <div>
                 <div
                   className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]"
@@ -171,43 +171,28 @@ function EventDetailPage() {
                 </div>
               </div>
 
-              <div>
-                <div
-                  className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]"
-                  style={{ color: "#DE007A" }}
-                >
-                  Schedule
+
+              {event.schedule?.length ? (
+                <div>
+                  <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em]" style={{ color: "#DE007A" }}>
+                    Schedule
+                  </div>
+                  <ul className="divide-y divide-black/[0.08] rounded-lg border border-black/[0.08]">
+                    {event.schedule.map((s, i) => (
+                      <li key={i} className="px-4 py-3">
+                        <div className="text-[12px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#414042" }}>{s.day}</div>
+                        <div className="mt-1 text-[15px]" style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "#414042" }}>{s.label}</div>
+                        <div className="mt-1 text-sm" style={{ color: "#414042" }}>{s.detail}</div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="divide-y divide-black/[0.08] rounded-lg border border-black/[0.08]">
-                  {event.schedule.map((s, i) => (
-                    <li key={i} className="px-4 py-3">
-                      <div
-                        className="text-[12px] font-semibold uppercase tracking-[0.14em]"
-                        style={{ color: "#414042" }}
-                      >
-                        {s.day}
-                      </div>
-                      <div
-                        className="mt-1 text-[15px]"
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 700,
-                          color: "#414042",
-                        }}
-                      >
-                        {s.label}
-                      </div>
-                      <div className="mt-1 text-sm" style={{ color: "#414042" }}>
-                        {s.detail}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              ) : null}
             </div>
           </div>
         </section>
 
+{(hostFederation || federations.length > 0) && (
         <section className="border-t border-black/[0.06]" style={{ background: "#FAFAFA" }}>
           <div className="mx-auto max-w-[1240px] px-5 py-10 md:px-8 md:py-14">
             {hostFederation && (
@@ -258,15 +243,11 @@ function EventDetailPage() {
                     {f.name}
                   </Link>
                 ))}
-                {federations.length === 0 && (
-                  <span className="text-sm" style={{ color: "#414042" }}>
-                    Federation participation to be confirmed.
-                  </span>
-                )}
               </div>
             </div>
           </div>
         </section>
+        )}
 
         {event.status === "upcoming" ? (
           <RegistrationSection event={event} />
@@ -312,13 +293,6 @@ function EventDetailPage() {
                   </ol>
                 )}
                 <div className="mt-6 flex flex-wrap gap-4">
-                  <Link
-                    to="/results"
-                    className="rounded-md px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5"
-                    style={{ background: "#FAAF40", color: "#3A2400" }}
-                  >
-                    Results coming soon →
-                  </Link>
                   <Link
                     to="/results"
                     className="text-sm font-semibold hover:underline"

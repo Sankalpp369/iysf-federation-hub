@@ -108,12 +108,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-        integrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
-        crossOrigin: "",
-      },
     ],
   }),
   shellComponent: RootShell,

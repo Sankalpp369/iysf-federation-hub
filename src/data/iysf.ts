@@ -1,4 +1,6 @@
 
+import eventData from "./events.json";
+
 export type Region =
   | "Africa"
   | "Asia"
@@ -225,6 +227,16 @@ export type EventRecord = {
   status: "upcoming" | "past";
   date: string;
   dateISO: string;
+  startDate?: string;
+  endDate?: string;
+  endDateISO?: string;
+  approx?: boolean;
+  type?: "Competition";
+  edition?: string;
+  countryCode?: string;
+  countryName?: string;
+  latitude?: number;
+  longitude?: number;
   year: string;
   venue: string;
   location: string;
@@ -232,157 +244,77 @@ export type EventRecord = {
   lng: number;
   hostFederationId: string | null;
   divisions: Division[];
-  summary: string;
-  schedule: ScheduleItem[];
+  summary?: string;
+  schedule?: ScheduleItem[];
   results?: Partial<Record<Division, Standing[]>>;
 };
 
-const PLACEHOLDER_SCHEDULE: ScheduleItem[] = [
-  { day: "Day 1", label: "Accreditation & technical meeting", detail: "Placeholder — delegation check-in, judge briefing, draw of order." },
-  { day: "Day 2", label: "Compulsory rounds", detail: "Placeholder — Junior and Adult compulsory routines across both floors." },
-  { day: "Day 3", label: "Optional rounds & finals", detail: "Placeholder — optional routines, Masters division, medal ceremony." },
-];
+type ChampionshipSource = {
+  id: number;
+  slug: string;
+  name: string;
+  edition: string;
+  type: "Competition";
+  startDate: string;
+  endDate: string;
+  approx: boolean;
+  countryCode: string;
+  countryName: string;
+  year: number;
+  location: string;
+  latitude: number;
+  longitude: number;
+};
 
-function standings(prefix: string, feds: string[]): Standing[] {
-  return feds.map((federationId, i) => ({
-    rank: i + 1,
-    athlete: `${prefix} athlete placeholder ${i + 1}`,
-    federationId,
-    score: "——.——",
-  }));
+const championshipSource = eventData.find(
+  (record) => (record as { edition?: string }).edition === "17th",
+) as ChampionshipSource | undefined;
+
+if (!championshipSource) {
+  throw new Error("The 17th World Yogasana Championship record is missing from events.json.");
 }
 
-function resultsFor(feds: string[]): Partial<Record<Division, Standing[]>> {
-  return {
-    Junior: standings("Junior", feds),
-    Adult: standings("Adult", [...feds].reverse()),
-    Masters: standings("Masters", feds),
-  };
+function formatEventDate(startDate: string, endDate: string) {
+  const start = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${(endDate || startDate)}T00:00:00Z`);
+  const month = new Intl.DateTimeFormat("en", { month: "long", timeZone: "UTC" }).format(start);
+  const endMonth = new Intl.DateTimeFormat("en", { month: "long", timeZone: "UTC" }).format(end);
+  if (month === endMonth && start.getUTCFullYear() === end.getUTCFullYear()) {
+    return `${month} ${start.getUTCDate()}–${end.getUTCDate()}, ${end.getUTCFullYear()}`;
+  }
+  const fmt = new Intl.DateTimeFormat("en", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+  return !endDate || startDate === endDate ? fmt.format(start) : `${fmt.format(start)} – ${fmt.format(end)}`;
 }
 
-const UPCOMING_EVENTS: EventRecord[] = [
-  {
-    id: "u1",
-    slug: "world-championship-2026",
-    name: "17th World Championship of Yogasana Sports",
-    tier: "World Championship",
-    region: "Europe",
-    status: "upcoming",
-    date: "December 4–6, 2026",
-    dateISO: "2026-12-04",
-    year: "2026",
-    venue: "Palazzetto dello Sport",
-    location: "Marina di Camerota, Italy",
-    lat: 40.0,
-    lng: 15.365,
-    hostFederationId: "f1",
-    divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "The 17th consecutive edition of the championship, staged on Italy's Cilento coast across individual, pair, and group categories under IYSF judging standards. Registration is open.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-  {
-    id: "u2",
-    slug: "asian-qualifier-2026",
-    name: "Asian Continental Qualifier 2026",
-    tier: "Continental Qualifier",
-    region: "Asia",
-    status: "upcoming",
-    date: "— / — / 2026",
-    dateISO: "2026-02-01",
-    year: "2026",
-    venue: "Venue placeholder",
-    location: "Host city placeholder, Asia",
-    lat: 28.61,
-    lng: 77.21,
-    hostFederationId: "f2",
-    divisions: ["Junior", "Adult"],
-    summary:
-      "Placeholder summary — continental qualification round awarding World Championship quota places to Asian member federations.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-  {
-    id: "u3",
-    slug: "junior-circuit-2026-north-america",
-    name: "Junior Circuit 2026 — North America",
-    tier: "Junior Circuit",
-    region: "North America",
-    status: "upcoming",
-    date: "— / — / 2026",
-    dateISO: "2026-03-15",
-    year: "2026",
-    venue: "Venue placeholder",
-    location: "Host city placeholder, North America",
-    lat: 40.71,
-    lng: -74.0,
-    hostFederationId: "f3",
-    divisions: ["Junior"],
-    summary:
-      "Placeholder summary — junior development round for athletes progressing toward continental selection.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-  {
-    id: "u4",
-    slug: "academy-camp-2026-oceania",
-    name: "Academy Camp 2026 — Oceania",
-    tier: "Academy Camp",
-    region: "Oceania",
-    status: "upcoming",
-    date: "— / — / 2026",
-    dateISO: "2026-04-20",
-    year: "2026",
-    venue: "Venue placeholder",
-    location: "Host city placeholder, Oceania",
-    lat: -33.87,
-    lng: 151.21,
-    hostFederationId: "f4",
-    divisions: ["Junior", "Adult"],
-    summary:
-      "Placeholder summary — a non-competitive Academy camp covering judging standards, coaching method and athlete safeguarding.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-  {
-    id: "u5",
-    slug: "african-qualifier-2026",
-    name: "African Continental Qualifier 2026",
-    tier: "Continental Qualifier",
-    region: "Africa",
-    status: "upcoming",
-    date: "— / — / 2026",
-    dateISO: "2026-05-05",
-    year: "2026",
-    venue: "Venue placeholder",
-    location: "Host city placeholder, Africa",
-    lat: -1.29,
-    lng: 36.82,
-    hostFederationId: "f5",
-    divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "Placeholder summary — continental qualification round for African member and provisional federations.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-  {
-    id: "u6",
-    slug: "south-american-qualifier-2026",
-    name: "South American Continental Qualifier 2026",
-    tier: "Continental Qualifier",
-    region: "South America",
-    status: "upcoming",
-    date: "— / — / 2026",
-    dateISO: "2026-06-10",
-    year: "2026",
-    venue: "Venue placeholder",
-    location: "Host city placeholder, South America",
-    lat: -23.55,
-    lng: -46.63,
-    hostFederationId: "f6",
-    divisions: ["Junior", "Adult"],
-    summary:
-      "Placeholder summary — continental qualification round awarding World Championship quota places in South America.",
-    schedule: PLACEHOLDER_SCHEDULE,
-  },
-];
+export const WORLD_CHAMPIONSHIP_2026: EventRecord = {
+  id: String(championshipSource.id),
+  slug: championshipSource.slug,
+  name: championshipSource.name,
+  edition: championshipSource.edition,
+  type: championshipSource.type,
+  approx: championshipSource.approx,
+  tier: "World Championship",
+  region: "Europe",
+  status: "upcoming",
+  date: formatEventDate(championshipSource.startDate, championshipSource.endDate),
+  dateISO: championshipSource.startDate,
+  startDate: championshipSource.startDate,
+  endDate: championshipSource.endDate,
+  endDateISO: championshipSource.endDate,
+  countryCode: championshipSource.countryCode,
+  countryName: championshipSource.countryName,
+  year: String(championshipSource.year),
+  venue: championshipSource.location,
+  location: championshipSource.location,
+  latitude: championshipSource.latitude,
+  longitude: championshipSource.longitude,
+  lat: championshipSource.latitude,
+  lng: championshipSource.longitude,
+  hostFederationId: null,
+  divisions: ["Junior", "Adult", "Masters"],
+};
 
+const UPCOMING_EVENTS: EventRecord[] = [WORLD_CHAMPIONSHIP_2026];
 const PAST_EVENTS: EventRecord[] = [
   {
     id: "p2025",
@@ -393,17 +325,14 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2025",
     dateISO: "2025-01-01",
+    countryCode: "MY",
     year: "2025",
-    venue: "Venue placeholder",
+    venue: "",
     location: "Cyberjaya, Malaysia",
     lat: 2.92,
     lng: 101.65,
-    hostFederationId: "f2",
+    hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "The most recent World Championship edition, staged in Cyberjaya, Malaysia. Standings below are placeholders pending publication of the official results.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f2", "f1", "f6", "f8"]),
   },
   {
     id: "p2022",
@@ -414,17 +343,14 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2022",
     dateISO: "2022-01-01",
+    countryCode: "IN",
     year: "2022",
-    venue: "Venue placeholder",
+    venue: "",
     location: "Bengaluru, India",
     lat: 12.97,
     lng: 77.59,
-    hostFederationId: "f2",
+    hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "A return to the birthplace of the discipline. Standings below are placeholders pending publication of the official results.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f2", "f7", "f1", "f5"]),
   },
   {
     id: "p2021",
@@ -435,6 +361,7 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2021",
     dateISO: "2021-01-01",
+    countryCode: "INT",
     year: "2021",
     venue: "Remote — video submission",
     location: "Online edition, during COVID-19",
@@ -442,10 +369,6 @@ const PAST_EVENTS: EventRecord[] = [
     lng: 6.63,
     hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "A fully remote championship that kept the global calendar unbroken through the pandemic. Standings below are placeholders.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f1", "f2", "f3", "f6"]),
   },
   {
     id: "p2018",
@@ -456,17 +379,14 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2018",
     dateISO: "2018-01-01",
+    countryCode: "CN",
     year: "2018",
-    venue: "Venue placeholder",
+    venue: "",
     location: "Beijing, China",
     lat: 39.9,
     lng: 116.4,
-    hostFederationId: "f7",
+    hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "The championship reaches East Asia. Standings below are placeholders pending archival confirmation.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f7", "f2", "f1", "f8"]),
   },
   {
     id: "p2016",
@@ -477,17 +397,14 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2016",
     dateISO: "2016-01-01",
+    countryCode: "IT",
     year: "2016",
-    venue: "Venue placeholder",
+    venue: "",
     location: "Pordenone, Italy",
     lat: 45.96,
     lng: 12.66,
-    hostFederationId: "f1",
+    hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "Continental participation broadens across Europe. Standings below are placeholders pending archival confirmation.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f1", "f8", "f2", "f3"]),
   },
   {
     id: "p2014",
@@ -498,17 +415,14 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2014",
     dateISO: "2014-01-01",
+    countryCode: "GB",
     year: "2014",
-    venue: "Venue placeholder",
+    venue: "",
     location: "London, United Kingdom",
     lat: 51.51,
     lng: -0.13,
-    hostFederationId: "f8",
+    hostFederationId: null,
     divisions: ["Junior", "Adult", "Masters"],
-    summary:
-      "The first World Championship staged under the newly registered IYSF. Standings below are placeholders pending archival confirmation.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: resultsFor(["f8", "f1", "f2", "f6"]),
   },
   {
     id: "p2003",
@@ -519,17 +433,15 @@ const PAST_EVENTS: EventRecord[] = [
     status: "past",
     date: "2003–2013",
     dateISO: "2003-01-01",
+    endDateISO: "2013-12-31",
+    countryCode: "US",
     year: "2003–2013",
     venue: "Los Angeles, USA",
     location: "Los Angeles, United States",
     lat: 34.05,
     lng: -118.24,
-    hostFederationId: "f3",
+    hostFederationId: null,
     divisions: ["Adult"],
-    summary:
-      "Held annually in Los Angeles, the championship that sparked the global yoga sports movement and preceded the founding of IYSF. Standings are placeholders.",
-    schedule: PLACEHOLDER_SCHEDULE,
-    results: { Adult: standings("Adult", ["f3", "f1", "f2"]) },
   },
 ];
 
